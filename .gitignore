@@ -9,6 +9,9 @@ a.out
 *.swp
 *.jou
 *.log
+
+*.DS_Store
+
 */*/ip/*/*
 */*/*/ip/*/*
 
