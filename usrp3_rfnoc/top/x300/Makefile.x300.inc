@@ -128,9 +128,8 @@ VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(SHORT_HASH)
 
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
-	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300_project.tcl),$(TOP_MODULE),$(PART_ID))
-# bin: .prereqs $$(DESIGN_SRCS) ip
-#	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
+	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
+#	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300_project.tcl),$(TOP_MODULE),$(PART_ID))
 
 hls: .prereqs hls_ip bin
 
