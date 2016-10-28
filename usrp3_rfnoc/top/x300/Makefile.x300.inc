@@ -5,9 +5,14 @@
 ##################################################
 # Project Setup
 ##################################################
+ifdef BUILD_GPR
+TOP_MODULE = x300_gpr
+else
 TOP_MODULE = x300
-# NAME = <Input arg> 
-# PART_ID = <Input arg> 
+endif
+
+# NAME = <Input arg>
+# PART_ID = <Input arg>
 
 ##################################################
 # Include other makefiles
@@ -15,6 +20,9 @@ TOP_MODULE = x300
 
 BASE_DIR = $(abspath ..)
 IP_DIR = $(abspath ./ip)
+GPR_DIR = $(abspath ../../../../../source)
+GPR_IP_DIR = $(abspath ../../../../../ip)
+
 include $(BASE_DIR)/../tools/make/viv_design_builder.mak
 
 include $(IP_DIR)/Makefile.inc
@@ -38,6 +46,9 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/x300/Makefile.srcs
+include $(GPR_DIR)/radar/Makefile.srcs
+include $(GPR_DIR)/wavegen/Makefile.srcs
+include $(GPR_IP_DIR)/Makefile.inc
 
 ##################################################
 # Sources
@@ -46,6 +57,8 @@ TOP_SRCS = \
 x300.v \
 x300_pcie_int.v \
 x300_core.v \
+$(GPR_DIR)/x300_gpr.v \
+$(GPR_DIR)/x300_gpr_core.v \
 x300_sfpp_io_core.v \
 x300_zpu_config.vhd \
 soft_ctrl.v \
@@ -54,6 +67,12 @@ gen_ddrlvds.v \
 bus_int.v \
 x300.xdc \
 timing.xdc
+
+ifdef BUILD_GPR
+GPR_SRCS = $(RADAR_SRCS) $(WAVEGEN_SRCS)
+else
+GPR_SRCS =
+endif
 
 ifdef BUILD_10G
 SFP_SERDES_SRCS += $(XGE_SRCS) $(XGE_INTERFACE_SRCS) $(abspath x300_10ge.xdc) $(TEN_GIGE_PHY_SRCS) $(IP_TEN_GIGE_PHY_XCI_SRCS)
@@ -95,7 +114,8 @@ $(ZPU_CORE_SRCS) $(WISHBONE_SRCS) \
 $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) \
-$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS)
+$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
+$(GPR_SRCS) $(GPR_IP_SRCS)
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
 
@@ -108,7 +128,9 @@ VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(SHORT_HASH)
 
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
-	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
+	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300_project.tcl),$(TOP_MODULE),$(PART_ID))
+# bin: .prereqs $$(DESIGN_SRCS) ip
+#	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
 
 hls: .prereqs hls_ip bin
 
