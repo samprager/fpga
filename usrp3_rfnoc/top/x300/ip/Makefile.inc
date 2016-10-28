@@ -19,6 +19,12 @@ include $(IP_DIR)/radio_clk_gen/Makefile.inc
 include $(IP_DIR)/ten_gig_eth_pcs_pma/Makefile.inc
 include $(IP_DIR)/aurora_64b66b_pcs_pma/Makefile.inc
 
+include $(IP_DIR)/axi_waveform_bram_ctrl/Makefile.inc
+include $(IP_DIR)/axi_waveform_datamover/Makefile.inc
+include $(IP_DIR)/axis_data_fifo_0/Makefile.inc
+include $(IP_DIR)/fifo_generator_adc/Makefile.inc
+include $(IP_DIR)/SP_DDS/Makefile.inc
+
 IP_XCI_SRCS = \
 $(IP_AXI4_BRAM_SRCS) \
 $(IP_AXI64_4K_2CLK_FIFO_SRCS) \
@@ -28,7 +34,12 @@ $(IP_BUS_CLK_GEN_SRCS) \
 $(IP_FIFO_4K_2CLK_SRCS) \
 $(IP_FIFO_SHORT_2CLK_SRCS) \
 $(IP_PCIE_CLK_GEN_SRCS) \
-$(IP_RADIO_CLK_GEN_SRCS)
+$(IP_RADIO_CLK_GEN_SRCS) \
+$(IP_AXI_WAVEFORM_BRAM_SRCS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_SRCS) \
+$(IP_AXIS_DATA_FIFO_SRCS) \
+$(IP_FIFO_GENERATOR_ADC_SRCS) \
+$(IP_SP_DDS_SRCS)
 
 IP_ONE_GIGE_PHY_XCI_SRCS = \
 $(IP_ONE_GIG_ETH_PCS_PMA_SRCS) \
@@ -64,7 +75,12 @@ $(IP_ONE_GIG_ETH_PCS_PMA_OUTS) \
 $(IP_PCIE_CLK_GEN_OUTS) \
 $(IP_RADIO_CLK_GEN_OUTS) \
 $(IP_TEN_GIG_ETH_PCS_PMA_OUTS) \
-$(IP_AURORA_64B66B_PCS_PMA_OUTS)
+$(IP_AURORA_64B66B_PCS_PMA_OUTS) \
+$(IP_AXI_WAVEFORM_BRAM_OUTS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_OUTS) \
+$(IP_AXIS_DATA_FIFO_OUTS) \
+$(IP_FIFO_GENERATOR_ADC_OUTS) \
+$(IP_SP_DDS_OUTS)
 
 # Currently unused
 # $(IP_INPUT_SAMPLE_FIFO_OUTS) \
@@ -73,4 +89,3 @@ $(IP_AURORA_64B66B_PCS_PMA_OUTS)
 ip: $(IP_SYNTH_OUTPUTS) $(IP_CODEGEN_SRCS)
 
 .PHONY: ip
-

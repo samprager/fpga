@@ -20,8 +20,6 @@ endif
 
 BASE_DIR = $(abspath ..)
 IP_DIR = $(abspath ./ip)
-GPR_DIR = $(abspath ../../../../../source)
-GPR_IP_DIR = $(abspath ../../../../../ip)
 
 include $(BASE_DIR)/../tools/make/viv_design_builder.mak
 
@@ -46,8 +44,8 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/x300/Makefile.srcs
-include $(GPR_DIR)/radar/Makefile.srcs
-include $(GPR_DIR)/wavegen/Makefile.srcs
+include $(LIB_DIR)/radar/Makefile.srcs
+include $(LIB_DIR)/wavegen/Makefile.srcs
 
 ##################################################
 # Sources
@@ -56,8 +54,8 @@ TOP_SRCS = \
 x300.v \
 x300_pcie_int.v \
 x300_core.v \
-$(GPR_DIR)/x300_gpr.v \
-$(GPR_DIR)/x300_gpr_core.v \
+x300_gpr.v \
+x300_gpr_core.v \
 x300_sfpp_io_core.v \
 x300_zpu_config.vhd \
 soft_ctrl.v \
@@ -128,7 +126,6 @@ VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(SHORT_HASH)
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
 	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
-#	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300_project.tcl),$(TOP_MODULE),$(PART_ID))
 
 hls: .prereqs hls_ip bin
 
