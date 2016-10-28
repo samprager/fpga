@@ -5,9 +5,14 @@
 ##################################################
 # Project Setup
 ##################################################
+ifdef BUILD_GPR
+TOP_MODULE = x300_gpr
+else
 TOP_MODULE = x300
-# NAME = <Input arg> 
-# PART_ID = <Input arg> 
+endif
+
+# NAME = <Input arg>
+# PART_ID = <Input arg>
 
 ##################################################
 # Include other makefiles
@@ -32,6 +37,8 @@ include ../../lib/io_port2/Makefile.srcs
 include ../../lib/axi/Makefile.srcs
 include ../../lib/radio/Makefile.srcs
 include ../../lib/io_cap_gen/Makefile.srcs
+include ../../lib/radar/Makefile.srcs
+include ../../lib/wavegen/Makefile.srcs
 
 ##################################################
 # Sources
@@ -40,6 +47,8 @@ TOP_SRCS = \
 x300.v \
 x300_pcie_int.v \
 x300_core.v \
+x300_gpr.v \
+x300_gpr_core.v \
 x300_zpu_config.vhd \
 soft_ctrl.v \
 dbuf_bootram.v \
@@ -48,6 +57,12 @@ gen_ddrlvds.v \
 bus_int.v \
 x300.xdc \
 timing.xdc
+
+ifdef BUILD_GPR
+GPR_SRCS = $(RADAR_SRCS) $(WAVEGEN_SRCS)
+else
+GPR_SRCS =
+endif
 
 ifdef BUILD_10G
 ETH_SRCS += $(XGE_SRCS) $(XGE_INTERFACE_SRCS) $(abspath x300_10ge.xdc) $(TEN_GIGE_PHY_SRCS) $(IP_TEN_GIGE_PHY_XCI_SRCS)
@@ -78,7 +93,8 @@ $(VRT_SRCS) $(UDP_SRCS) $(COREGEN_SRCS) $(EXTRAM_SRCS) \
 $(ZPU_CORE_SRCS) $(WISHBONE_SRCS) \
 $(ETH_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
-$(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS)
+$(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) \
+$(GPR_SRCS)
 
 
 ##################################################

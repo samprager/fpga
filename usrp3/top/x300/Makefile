@@ -2,7 +2,7 @@
 # Copyright 2012-2014 Ettus Research LLC
 #
 
-# NOTE: All comments prefixed with a "##" will be displayed as a part of the "make help" target 
+# NOTE: All comments prefixed with a "##" will be displayed as a part of the "make help" target
 ##-------------------
 ##USRP X3X0 FPGA Help
 ##-------------------
@@ -29,6 +29,7 @@ HYBRID_DEFS=ETH10G_PORT1=1 BUILD_1G=1 BUILD_10G=1 $(OPTIONS)
 XGIGE_DEFS=ETH10G_PORT0=1 ETH10G_PORT1=1 BUILD_10G=1 $(OPTIONS)
 HYBRID_SRAM_DEFS=ETH10G_PORT1=1 BUILD_1G=1 BUILD_10G=1 NO_DRAM_FIFOS=1 SRAM_FIFO_SIZE=16 $(OPTIONS)
 XGIGE_SRAM_DEFS=ETH10G_PORT0=1 ETH10G_PORT1=1 BUILD_10G=1 NO_DRAM_FIFOS=1 SRAM_FIFO_SIZE=16 $(OPTIONS)
+GPR_DEFS=ETH10G_PORT1=1 BUILD_1G=1 BUILD_10G=1 BUILD_GPR=1 $(OPTIONS)
 
 # vivado_build($1=Device, $2=Definitions)
 vivado_build = make -f Makefile.x300.inc bin NAME=$@ ARCH=kintex7 PART_ID=$1/ffg900/-2 $2 EXTRA_DEFS="$2"
@@ -91,6 +92,10 @@ X300_XGS: ##USRP X300. 10GigE on both SFP+ ports. SRAM TX FIFO.
 	$(call vivado_build,xc7k325t,$(XGIGE_SRAM_DEFS))
 	$(call post_build,X300,XGS)
 
+X300_RFNOC_GPR: ##USRP X300 GPR. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+	$(call vivado_build,xc7k325t,$(GPR_DEFS))
+	$(call post_build,X300,GPR)	
+
 clean:    ##Clean up all target build outputs.
 	@echo "Cleaning targets..."
 	@rm -rf build-X3*_*
@@ -108,6 +113,6 @@ help:     ##Show this help message.
 ##
 ##Supported Options
 ##-----------------
-##GUI=1     Launch the build in the Vivado GUI. 
+##GUI=1     Launch the build in the Vivado GUI.
 
 .PHONY: all clean cleanall help
