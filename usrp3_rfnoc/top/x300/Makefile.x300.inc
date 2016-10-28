@@ -48,7 +48,6 @@ include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/x300/Makefile.srcs
 include $(GPR_DIR)/radar/Makefile.srcs
 include $(GPR_DIR)/wavegen/Makefile.srcs
-include $(GPR_IP_DIR)/Makefile.inc
 
 ##################################################
 # Sources
@@ -115,7 +114,7 @@ $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) \
 $(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
-$(GPR_SRCS) $(GPR_IP_SRCS)
+$(GPR_SRCS)
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
 
