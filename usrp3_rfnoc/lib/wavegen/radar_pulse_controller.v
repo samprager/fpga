@@ -24,7 +24,7 @@ module radar_pulse_controller #(
   parameter ADC_SAMPLE_COUNT_INIT = 32'h000001fe,
   parameter CHIRP_PRF_INT_COUNT_INIT = 32'h00000000,
   parameter CHIRP_PRF_FRAC_COUNT_INIT = 32'h1d4c0000,
-  parameter RADAR_POLICY_INIT = 32'd0,
+  parameter RADAR_POLICY_INIT = 32'd0, // autonomous (0) or dependent (1)
 
   parameter SR_PRF_INT_ADDR = 0,
   parameter SR_PRF_FRAC_ADDR = 1,
@@ -44,7 +44,8 @@ module radar_pulse_controller #(
   input set_stb, input [7:0] set_addr, input [31:0] set_data,
 
   output [31:0] num_adc_samples,
-  output [63:0] radar_prf,
+  output [63:0] prf_out,
+  output [31:0] policy_out,
   input awg_data_valid,
   output adc_run,
   output adc_last,
@@ -360,6 +361,7 @@ assign num_adc_samples = adc_sample_count + 1'b1;
 
 assign adc_run = adc_run_int | awg_data_valid;
 assign adc_last = adc_last_int;
-assign radar_prf = chirp_prf_count_max;
+assign prf_out = chirp_prf_count_max;
+assign policy_out = policy;
 
 endmodule

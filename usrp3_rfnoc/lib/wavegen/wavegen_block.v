@@ -32,8 +32,9 @@ module wavegen_block #(
  )(
         input clk,
         input rst,
-        output [15:0] awg_out_i, output [15:0] awg_out_q,
+        output [31:0] awg_out_iq,
         output awg_data_valid, output awg_data_last,
+        input awg_data_ready,
         output [31:0] awg_data_len,
 
         input set_stb, input [7:0] set_addr, input [31:0] set_data,
@@ -100,12 +101,10 @@ wire wf_read_ready;
 wire [31:0] wfout_size;
 wire [31:0] chirp_out_size;
 
-wire [15:0] wfrm_data_i;
-wire [15:0] wfrm_data_q;
+wire [31:0] wfrm_data_iq;
 wire wfrm_data_valid, wfrm_data_last;
 
-wire [15:0] chirp_data_i;
-wire [15:0] chirp_data_q;
+wire [31:0] chirp_data_iq;
 wire chirp_data_valid, chirp_data_last;
 
 wire [31:0] adc_counter;
@@ -145,10 +144,11 @@ setting_reg #(.my_addr(SR_CH_FREQ_OFFSET_ADDR), .at_reset(CHIRP_FREQ_OFFSET_INIT
 chirpgen #(.DDS_LATENCY(DDS_LATENCY)) chirpgen_inst(
     .clk  (clk),
 	.rst	(rst),
-	.chirp_out_i  (chirp_data_i),			//i data to dac, 16-bit
-	.chirp_out_q  (chirp_data_q),		    // q data to dac, 16-bit,
+	.chirp_out_i  (chirp_data_iq[31:16]),			//i data to dac, 16-bit
+	.chirp_out_q  (chirp_data_iq[15:0]),		    // q data to dac, 16-bit,
     .chirp_out_valid (chirp_data_valid),
     .chirp_out_last(chirp_data_last),
+    .chirp_out_ready(awg_data_ready),
 
   .chirp_ready (dds_ready),
   .chirp_done (dds_done),
@@ -183,8 +183,8 @@ waveform_dds waveform_dds_inst(
 
     .wfrm_data_valid(wfrm_data_valid),
     .wfrm_data_last(wfrm_data_last),
-    .wfrm_data_i(wfrm_data_i),
-    .wfrm_data_q(wfrm_data_q)
+    .wfrm_data_iq(wfrm_data_iq),
+    .wfrm_data_ready(awg_data_ready)
 );
 
 // accepts waveform sample data from ethernet as input and outputs
@@ -252,8 +252,7 @@ assign awg_active = ((dds_source_select & wfrm_active)|(!dds_source_select & dds
 assign awg_ready =  ((dds_source_select & wfrm_ready)|(!dds_source_select & dds_ready));
 
 
-assign awg_out_i = dds_source_select ? wfrm_data_i : chirp_data_i;
-assign awg_out_q = dds_source_select ? wfrm_data_q : chirp_data_q;
+assign awg_out_iq = dds_source_select ? wfrm_data_iq : chirp_data_iq;
 assign awg_data_valid = dds_source_select ? wfrm_data_valid : chirp_data_valid;
 assign awg_data_last = dds_source_select ? wfrm_data_last : chirp_data_last;
 

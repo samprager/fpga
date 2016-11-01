@@ -9,4 +9,7 @@ waveform_formatter.v \
 waveform_stream.v \
 wavegen_block.v \
 chirpgen.v \
+wavegen_regs.vh \
+noc_block_wavegen.v \
+radar_pulse_controller.v \
 )

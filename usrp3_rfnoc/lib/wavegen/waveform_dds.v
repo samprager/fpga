@@ -40,10 +40,10 @@ module waveform_dds(
     input                                 wfrm_axis_tlast,
     output                                wfrm_axis_tready,
 
-    output      [15:0]                    wfrm_data_i,
-    output      [15:0]                    wfrm_data_q,
+    output      [31:0]                    wfrm_data_iq,
     output                                wfrm_data_valid,
-    output                                wfrm_data_last
+    output                                wfrm_data_last,
+    input                                 wfrm_data_ready
    );
 
 
@@ -53,6 +53,7 @@ localparam     IDLE        = 3'b000,
 
 reg      [31:0]            wfrm_data_iq_r = 'b0;
 reg                        wfrm_data_valid_r;
+reg                        wfrm_data_last_r;
 
 
 reg         [2:0]          next_gen_state;
@@ -78,10 +79,11 @@ begin
         wfrm_data_valid_r <= 1;
       end else begin
         wfrm_data_iq_r <= wfrm_data_iq_r;
-        wfrm_data_valid_r <= 0;
+        if (wfrm_axis_tready_int)
+            wfrm_data_valid_r <= 0;
       end
   end
-  else begin
+  else if (wfrm_data_ready) begin
     wfrm_data_iq_r <= 'b0;
     wfrm_data_valid_r <= 0;
   end
@@ -97,7 +99,7 @@ end
 //     wfrm_axis_tready_int <= 0;
 // end
 
-assign wfrm_axis_tready_int = (gen_state == DATA);
+assign wfrm_axis_tready_int = (gen_state == DATA & wfrm_data_ready);
 
 always @(posedge axi_tclk)
 begin
@@ -130,6 +132,16 @@ end
 always @(posedge axi_tclk)
 begin
    if (axi_treset)
+     wfrm_data_last_r <= 0;
+   else if (gen_state == DATA & wfrm_axis_tlast & wfrm_axis_tvalid & wfrm_axis_tready_int)
+     wfrm_data_last_r <= 1;
+   else if (wfrm_data_ready)
+     wfrm_data_last_r <= 0;
+end
+
+always @(posedge axi_tclk)
+begin
+   if (axi_treset)
      chirp_active <= 0;
    else if (gen_state == DATA & wfrm_axis_tvalid)
      chirp_active <= 1;
@@ -149,7 +161,7 @@ begin
             next_gen_state = DATA;
       end
       DATA : begin
-         if (wfrm_axis_tlast & wfrm_axis_tvalid)
+         if (wfrm_axis_tlast & wfrm_axis_tvalid & wfrm_axis_tready_int)
             next_gen_state = IDLE;
       end
       default : begin
@@ -168,10 +180,10 @@ begin
    end
 end
 
-assign wfrm_data_last = chirp_done;
+// assign wfrm_data_last = chirp_done;
+assign wfrm_data_last = wfrm_data_last_r;
 assign wfrm_data_valid = wfrm_data_valid_r;
-assign wfrm_data_i = wfrm_data_iq_r[15:0];
-assign wfrm_data_q = wfrm_data_iq_r[31:16];
+assign wfrm_data_iq = wfrm_data_iq_r;
 assign wfrm_axis_tready = wfrm_axis_tready_int;
 
 
