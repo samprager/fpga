@@ -28,6 +28,7 @@ module chirpgen #(
         output [15:0] chirp_out_q,
         output chirp_out_valid,
         output chirp_out_last,
+        input chirp_out_ready,
 
         output chirp_ready,
         output chirp_done,
@@ -105,7 +106,7 @@ SP_DDS sp_dds_inst (
         dds_aresetn_r <= 1'b1;
         dds_latency_counter <= 'b0;
     end
-    else if (chirp_active_r) begin
+    else if (chirp_active_r & chirp_out_ready) begin
         dds_phase_tvalid_r <= 1'b1;
         dds_aresetn_r <= 1'b1;
         if (chirp_done_r) begin
@@ -134,11 +135,21 @@ SP_DDS sp_dds_inst (
                 chirp_count <= 'b0;
             end
         end
-    end
-    else begin
-        chirp_i <= 'b0;
-        chirp_q <= 'b0;
-        chirp_valid <= 1'b0;
+    end else if (chirp_active_r) begin
+        dds_phase_tvalid_r <= 1'b0;
+        if (dds_dout_tvalid) begin
+            chirp_i <= dds_dout_tdata[15:0];
+            chirp_q <= dds_dout_tdata[31:16];
+            chirp_count <= chirp_count + 1'b1;
+            chirp_valid <= 1'b1;
+        end
+    end else begin
+        if (chirp_out_ready) begin
+            chirp_i <= 'b0;
+            chirp_q <= 'b0;
+            chirp_valid <= 1'b0;
+        end
+
         if (|dds_latency_counter) begin
             dds_phase_tvalid_r <= 1'b1;
             dds_latency_counter <= dds_latency_counter - 1'b1;

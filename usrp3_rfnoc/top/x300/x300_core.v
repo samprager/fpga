@@ -212,27 +212,6 @@ module x300_core (
    // Number of Radio Cores Instantiated
    localparam NUM_RADIO_CORES = 2;
 
-   //////////////////////////////////////////////////////////////////////////////////////////////
-   // RFNoC
-   //////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Included automatically instantiated CEs sources file created by RFNoC mod tool
-`ifdef RFNOC
- `ifdef X300
-   `include "rfnoc_ce_auto_inst_x300.v"
- `endif
- `ifdef X310
-   `include "rfnoc_ce_auto_inst_x310.v"
- `endif
-`else
- `ifdef X300
-   `include "rfnoc_ce_default_inst_x300.v"
- `endif
- `ifdef X310
-   `include "rfnoc_ce_default_inst_x310.v"
- `endif
-`endif
-
    /////////////////////////////////////////////////////////////////////////////////
    // Internal time synchronization
    /////////////////////////////////////////////////////////////////////////////////
@@ -248,6 +227,32 @@ module x300_core (
       .ref_clk(ext_ref_clk), .timebase_clk(radio_clk),
       .pps_in(pps), .pps_out(pps_rclk), .pps_count(pps_detect)
    );
+
+
+   //////////////////////////////////////////////////////////////////////////////////////////////
+   // RFNoC
+   //////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Included automatically instantiated CEs sources file created by RFNoC mod tool
+`ifdef RFNOC
+ `ifdef X300
+    `ifdef AWG
+        `include "rfnoc_ce_gpr_inst_x300.v"
+     `else
+        `include "rfnoc_ce_auto_inst_x300.v"
+    `endif
+ `endif
+ `ifdef X310
+   `include "rfnoc_ce_auto_inst_x310.v"
+ `endif
+`else
+ `ifdef X300
+   `include "rfnoc_ce_default_inst_x300.v"
+ `endif
+ `ifdef X310
+   `include "rfnoc_ce_default_inst_x310.v"
+ `endif
+`endif
 
    /////////////////////////////////////////////////////////////////////////////////
    // Bus Int containing soft CPU control, routing fabric

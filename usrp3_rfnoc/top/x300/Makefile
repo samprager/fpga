@@ -27,6 +27,7 @@ XG_DEFS=BUILD_10G=1 SFP0_10GBE=1 SFP1_10GBE=1 $(OPTIONS)
 HA_DEFS=BUILD_1G=1 BUILD_AURORA=1 SFP0_1GBE=1 SFP1_AURORA=1 $(OPTIONS)
 XA_DEFS=BUILD_10G=1 BUILD_AURORA=1 SFP0_10GBE=1 SFP1_AURORA=1 $(OPTIONS)
 GPR_DEFS=BUILD_1G=1 BUILD_10G=1 SFP0_1GBE=1 SFP1_10GBE=1 BUILD_GPR=1 $(OPTIONS)
+AWG_DEFS=BUILD_1G=1 BUILD_10G=1 SFP0_1GBE=1 SFP1_10GBE=1 BUILD_AWG=1 $(OPTIONS)
 
 # vivado_build($1=Target, $2=Device, $3=Definitions)
 vivado_build = make -f Makefile.x300.inc $1 NAME=$@ ARCH=$(XIL_ARCH_$2) PART_ID=$(XIL_PART_ID_$2) $3 EXTRA_DEFS="$3"
@@ -117,6 +118,11 @@ X300_RFNOC_HLS_HG: ##USRP X300. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC 
 X300_RFNOC_GPR: ##USRP X300 GPR. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
 	$(call vivado_build,bin,X300,$(GPR_DEFS) RFNOC=1 X300=1)
 	$(call post_build,X300,RFNOC_GPR)
+
+X300_RFNOC_AWG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+	$(call vivado_build,bin,X300,$(AWG_DEFS) RFNOC=1 X300=1 AWG=1)
+	$(call post_build,X300,RFNOC_AWG)
+
 
 clean:    ##Clean up all target build outputs.
 	@echo "Cleaning targets..."

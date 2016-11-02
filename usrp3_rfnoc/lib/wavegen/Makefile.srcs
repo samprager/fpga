@@ -5,8 +5,12 @@
 WAVEGEN_SRCS = $(abspath $(addprefix $(BASE_DIR)/../lib/wavegen/, \
 bram_stream_wrapper.v \
 waveform_dds.v \
-waveform_formatter.v \
+waveform_decoder.v \
 waveform_stream.v \
 wavegen_block.v \
 chirpgen.v \
+wavegen_regs.vh \
+noc_block_wavegen.v \
+radar_pulse_controller.v \
+rx_command_gen.v \
 )
