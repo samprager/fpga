@@ -1,13 +1,8 @@
 `timescale 1ns/1ps
-<<<<<<< HEAD
 `define SIM_TIMEOUT_US 20000
 `define NS_PER_TICK 1
 `define NUM_TEST_CASES 7
-=======
-`define SIM_TIMEOUT_US 10000
-`define NS_PER_TICK 1
-`define NUM_TEST_CASES 5
->>>>>>> 331cd88ee915259178298a03a27d69822ad67cf3
+
 
 `include "sim_exec_report.vh"
 `include "sim_clks_rsts.vh"
