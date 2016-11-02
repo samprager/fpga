@@ -13,4 +13,4 @@ wavegen_regs.vh \
 noc_block_wavegen.v \
 radar_pulse_controller.v \
 rx_command_gen.v \
-)
+))

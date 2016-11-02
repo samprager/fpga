@@ -1,7 +1,13 @@
 `timescale 1ns/1ps
+<<<<<<< HEAD
 `define SIM_TIMEOUT_US 20000
 `define NS_PER_TICK 1
 `define NUM_TEST_CASES 7
+=======
+`define SIM_TIMEOUT_US 10000
+`define NS_PER_TICK 1
+`define NUM_TEST_CASES 5
+>>>>>>> 331cd88ee915259178298a03a27d69822ad67cf3
 
 `include "sim_exec_report.vh"
 `include "sim_clks_rsts.vh"
@@ -205,7 +211,6 @@ module noc_block_wavegen_tb();
     // Write a ramp to Waveform Samples
     wfrm_id = wfrm_id + 1;
     wfrm_len = WFRM_SPP*num_pkts;
-
     $display("Uploading Waveform %d Samples in %d packets", wfrm_len, num_pkts);
     for (int j = 0; j< num_pkts; j++) begin
         wfrm_ind = j;

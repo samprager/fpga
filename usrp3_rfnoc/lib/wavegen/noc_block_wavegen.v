@@ -64,6 +64,7 @@ module noc_block_wavegen #(
   // assign cmdout_tdata = 64'd0;
   // assign cmdout_tlast = 1'b0;
   // assign cmdout_tvalid = 1'b0;
+
   assign ackin_tready = 1'b1;
 
   ////////////////////////////////////////////////////////////
