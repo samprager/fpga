@@ -31,38 +31,39 @@
     .pps(pps), .sync_in(time_sync_r), .sync_out(),.rx_stb(1'b1),
     .debug(ce_debug[0]));
 
-  noc_block_fir_filter inst_noc_block_fir_filter (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
-    .i_tdata(ce_o_tdata[1]), .i_tlast(ce_o_tlast[1]), .i_tvalid(ce_o_tvalid[1]), .i_tready(ce_o_tready[1]),
-    .o_tdata(ce_i_tdata[1]), .o_tlast(ce_i_tlast[1]), .o_tvalid(ce_i_tvalid[1]), .o_tready(ce_i_tready[1]),
-    .debug(ce_debug[1]));
+  // noc_block_fir_filter inst_noc_block_fir_filter (
+  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
+  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
+  //   .i_tdata(ce_o_tdata[1]), .i_tlast(ce_o_tlast[1]), .i_tvalid(ce_o_tvalid[1]), .i_tready(ce_o_tready[1]),
+  //   .o_tdata(ce_i_tdata[1]), .o_tlast(ce_i_tlast[1]), .o_tvalid(ce_i_tvalid[1]), .o_tready(ce_i_tready[1]),
+  //   .debug(ce_debug[1]));
 
   noc_block_fft inst_noc_block_fft (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
-    .i_tdata(ce_o_tdata[2]), .i_tlast(ce_o_tlast[2]), .i_tvalid(ce_o_tvalid[2]), .i_tready(ce_o_tready[2]),
-    .o_tdata(ce_i_tdata[2]), .o_tlast(ce_i_tlast[2]), .o_tvalid(ce_i_tvalid[2]), .o_tready(ce_i_tready[2]),
-    .debug(ce_debug[2]));
+      .bus_clk(bus_clk), .bus_rst(bus_rst),
+      .ce_clk(ce_clk), .ce_rst(ce_rst),
+      .i_tdata(ce_o_tdata[1]), .i_tlast(ce_o_tlast[1]), .i_tvalid(ce_o_tvalid[1]), .i_tready(ce_o_tready[1]),
+      .o_tdata(ce_i_tdata[1]), .o_tlast(ce_i_tlast[1]), .o_tvalid(ce_i_tvalid[1]), .o_tready(ce_i_tready[1]),
+      .debug(ce_debug[1]));
+
 
   noc_block_window inst_noc_block_window (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
-    .i_tdata(ce_o_tdata[3]), .i_tlast(ce_o_tlast[3]), .i_tvalid(ce_o_tvalid[3]), .i_tready(ce_o_tready[3]),
-    .o_tdata(ce_i_tdata[3]), .o_tlast(ce_i_tlast[3]), .o_tvalid(ce_i_tvalid[3]), .o_tready(ce_i_tready[3]),
-    .debug(ce_debug[3]));
+      .bus_clk(bus_clk), .bus_rst(bus_rst),
+      .ce_clk(ce_clk), .ce_rst(ce_rst),
+      .i_tdata(ce_o_tdata[2]), .i_tlast(ce_o_tlast[2]), .i_tvalid(ce_o_tvalid[2]), .i_tready(ce_o_tready[2]),
+      .o_tdata(ce_i_tdata[2]), .o_tlast(ce_i_tlast[2]), .o_tvalid(ce_i_tvalid[2]), .o_tready(ce_i_tready[2]),
+      .debug(ce_debug[2]));
 
   noc_block_fosphor inst_noc_block_fosphor (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
-    .i_tdata(ce_o_tdata[4]), .i_tlast(ce_o_tlast[4]), .i_tvalid(ce_o_tvalid[4]), .i_tready(ce_o_tready[4]),
-    .o_tdata(ce_i_tdata[4]), .o_tlast(ce_i_tlast[4]), .o_tvalid(ce_i_tvalid[4]), .o_tready(ce_i_tready[4]),
-    .debug(ce_debug[4]));
+      .bus_clk(bus_clk), .bus_rst(bus_rst),
+      .ce_clk(ce_clk), .ce_rst(ce_rst),
+      .i_tdata(ce_o_tdata[3]), .i_tlast(ce_o_tlast[3]), .i_tvalid(ce_o_tvalid[3]), .i_tready(ce_o_tready[3]),
+      .o_tdata(ce_i_tdata[3]), .o_tlast(ce_i_tlast[3]), .o_tvalid(ce_i_tvalid[3]), .o_tready(ce_i_tready[3]),
+      .debug(ce_debug[3]));
 
   // Fill remaining crossbar ports with loopback FIFOs
   genvar n;
   generate
-    for (n = 5; n < NUM_CE; n = n + 1) begin
+    for (n = 4; n < NUM_CE; n = n + 1) begin
       noc_block_axi_fifo_loopback inst_noc_block_axi_fifo_loopback (
         .bus_clk(bus_clk), .bus_rst(bus_rst),
         .ce_clk(ce_clk), .ce_rst(ce_rst),
