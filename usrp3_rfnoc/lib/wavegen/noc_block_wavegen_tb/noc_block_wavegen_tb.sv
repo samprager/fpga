@@ -16,7 +16,24 @@ module noc_block_wavegen_tb();
   localparam NUM_CE         = 1;  // Number of Computation Engines / User RFNoC blocks to simulate
   localparam NUM_STREAMS    = 1;  // Number of test bench streams
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
-  `RFNOC_ADD_BLOCK(noc_block_wavegen, 0);
+  //`RFNOC_ADD_BLOCK(noc_block_wavegen, 0);
+
+  `RFNOC_ADD_BLOCK_CUSTOM(noc_block_wavegen, 0 /* xbar port 0 */)
+noc_block_wavegen noc_block_wavegen(
+  .bus_clk(bus_clk),
+  .bus_rst(bus_rst),
+  .ce_clk(ce_clk),
+  .ce_rst(ce_rst),
+  .i_tdata(noc_block_wavegen_i_tdata),
+  .i_tlast(noc_block_wavegen_i_tlast),
+  .i_tvalid(noc_block_wavegen_i_tvalid),
+  .i_tready(noc_block_wavegen_i_tready),
+  .o_tdata(noc_block_wavegen_o_tdata),
+  .o_tlast(noc_block_wavegen_o_tlast),
+  .o_tvalid(noc_block_wavegen_o_tvalid),
+  .o_tready(noc_block_wavegen_o_tready),
+  .pps(0), .sync_in(0), .sync_out(), .rx_stb(1'b1),
+  .debug());
 
  /********************************************************
  ** DUT, due to non-standard I/O we cannot use `RFNOC_ADD_BLOCK()
@@ -79,6 +96,8 @@ module noc_block_wavegen_tb();
     logic [15:0] wfrm_id = 'b0;
     logic [15:0] wfrm_ind = 'b0;
     logic [15:0] wfrm_len = WFRM_SPP;
+
+    logic [63:0] start_time;
 
 
     /********************************************************
@@ -265,94 +284,160 @@ module noc_block_wavegen_tb();
     ** Test 6 -- Send Multi Packet Length Waveform Repeat ID - should fail
     ********************************************************/
     // Sending an impulse will readback the FIR filter coefficients
-    `TEST_CASE_START("Test Repeat ID sample Upload");
-
-    // Write a constant to Waveform Samples
-
-    $display("Repeating Wfrm ID and Uploading %d Samples in %d packets", wfrm_len, num_pkts);
-    for (int j = 0; j< num_pkts; j++) begin
-        wfrm_ind = j;
-        send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
-        for (int i = 0; i < num_samps-1; i++) begin
-          tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
-        end
-        temp = num_samps-1;
-        tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
-    end
-    $display("Now sending immediate commmand");
-    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
-                   {1'b1 /* Start immediately */, 31'b0});
-    // Have to set time lower bytes to trigger the command being stored, although time is not used.
-    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
-
-    /* Send Immediate Pulse command */
-    /* Send and check impulse */
-    fork
-      begin
-        logic [31:0] recv_val;
-        logic last;
-        logic [15:0] i_samp, q_samp;
-
-        $display("Receive Wavegen output - Should still be ramp");
-        for (int j = 0; j< num_pkts; j++) begin
-            for (int i = 0; i < num_samps; i++) begin
-              tb_streamer.pull_word({i_samp, q_samp}, last);
-              // Check I / Q values, should be a ramp
-              $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
-              `ASSERT_ERROR(i_samp == i, s);
-              $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
-              `ASSERT_ERROR(q_samp == i, s);
-              // Check tlast
-              if ((i == num_samps-1) & (j==num_pkts-1)) begin
-                `ASSERT_ERROR(last, "Last not asserted on final word!");
-              end else begin
-                `ASSERT_ERROR(~last, "Last asserted early!");
-              end
-            end
-        end
-      end
-    join
-    `TEST_CASE_DONE(1);
+    // `TEST_CASE_START("Test Repeat ID sample Upload");
+    //
+    // // Write a constant to Waveform Samples
+    //
+    // $display("Repeating Wfrm ID and Uploading %d Samples in %d packets", wfrm_len, num_pkts);
+    // for (int j = 0; j< num_pkts; j++) begin
+    //     wfrm_ind = j;
+    //     send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    //     for (int i = 0; i < num_samps-1; i++) begin
+    //       tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
+    //     end
+    //     temp = num_samps-1;
+    //     tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
+    // end
+    // $display("Now sending immediate commmand");
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
+    //                {1'b1 /* Start immediately */, 31'b0});
+    // // Have to set time lower bytes to trigger the command being stored, although time is not used.
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
+    //
+    // /* Send Immediate Pulse command */
+    // /* Send and check impulse */
+    // fork
+    //   begin
+    //     logic [31:0] recv_val;
+    //     logic last;
+    //     logic [15:0] i_samp, q_samp;
+    //
+    //     $display("Receive Wavegen output - Should still be ramp");
+    //     for (int j = 0; j< num_pkts; j++) begin
+    //         for (int i = 0; i < num_samps; i++) begin
+    //           tb_streamer.pull_word({i_samp, q_samp}, last);
+    //           // Check I / Q values, should be a ramp
+    //           $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+    //           `ASSERT_ERROR(i_samp == i, s);
+    //           $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+    //           `ASSERT_ERROR(q_samp == i, s);
+    //           // Check tlast
+    //           if ((i == num_samps-1) & (j==num_pkts-1)) begin
+    //             `ASSERT_ERROR(last, "Last not asserted on final word!");
+    //           end else begin
+    //             `ASSERT_ERROR(~last, "Last asserted early!");
+    //           end
+    //         end
+    //     end
+    //   end
+    // join
+    // `TEST_CASE_DONE(1);
 
     /********************************************************
     ** Test 7 -- Send Multi Packet Length Waveform No Index Increment - should fail
     ********************************************************/
     // Sending an impulse will readback the FIR filter coefficients
-    `TEST_CASE_START("Test Incorrect Index sample Upload");
+    // `TEST_CASE_START("Test Incorrect Index sample Upload");
+    //
+    // // Write a constant to Waveform Samples
+    // wfrm_id = wfrm_id + 1;
+    //
+    // $display("Repeating Adding incorrect Ind and Uploading %d Samples in %d packets", wfrm_len, num_pkts);
+    // for (int j = 0; j< num_pkts; j++) begin
+    //     wfrm_ind = j;
+    //     send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    //     for (int i = 0; i < num_samps-1; i++) begin
+    //       tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {i[15:0],i[15:0]});
+    //     end
+    //     temp = num_samps-1;
+    //     tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {temp[15:0],temp[15:0]});
+    //
+    //     send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    //     for (int i = 0; i < num_samps-1; i++) begin
+    //       tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
+    //     end
+    //     temp = num_samps-1;
+    //     tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
+    //
+    //     wfrm_ind = j+2;
+    //     send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    //     for (int i = 0; i < num_samps-1; i++) begin
+    //       tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
+    //     end
+    //     temp = num_samps-1;
+    //     tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
+    // end
+    // $display("Now sending immediate commmand");
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
+    //                {1'b1 /* Start immediately */, 31'b0});
+    // // Have to set time lower bytes to trigger the command being stored, although time is not used.
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
+    //
+    // /* Send Immediate Pulse command */
+    // /* Send and check impulse */
+    // fork
+    //   begin
+    //     logic [31:0] recv_val;
+    //     logic last;
+    //     logic [15:0] i_samp, q_samp;
+    //
+    //     $display("Receive Wavegen output - Should still be ramp");
+    //     for (int j = 0; j< num_pkts; j++) begin
+    //         for (int i = 0; i < num_samps; i++) begin
+    //           tb_streamer.pull_word({i_samp, q_samp}, last);
+    //           // Check I / Q values, should be a ramp
+    //           $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+    //           `ASSERT_ERROR(i_samp == i, s);
+    //           $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+    //           `ASSERT_ERROR(q_samp == i, s);
+    //           // Check tlast
+    //           if ((i == num_samps-1) & (j==num_pkts-1)) begin
+    //             `ASSERT_ERROR(last, "Last not asserted on final word!");
+    //           end else begin
+    //             `ASSERT_ERROR(~last, "Last asserted early!");
+    //           end
+    //         end
+    //     end
+    //   end
+    // join
+    // `TEST_CASE_DONE(1);
+
+    /********************************************************
+    ** Test 8 -- Send Delayed Pulse Command
+    ********************************************************/
+    // Sending an impulse will readback the FIR filter coefficients
+    `TEST_CASE_START("Send Delayed Pulse Command");
 
     // Write a constant to Waveform Samples
     wfrm_id = wfrm_id + 1;
+    wfrm_ind = 0;
+    wfrm_len = num_samps;
 
-    $display("Repeating Adding incorrect Ind and Uploading %d Samples in %d packets", wfrm_len, num_pkts);
-    for (int j = 0; j< num_pkts; j++) begin
-        wfrm_ind = j;
-        send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
-        for (int i = 0; i < num_samps-1; i++) begin
-          tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {i[15:0],i[15:0]});
-        end
-        temp = num_samps-1;
-        tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {temp[15:0],temp[15:0]});
-
-        send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
-        for (int i = 0; i < num_samps-1; i++) begin
-          tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
-        end
-        temp = num_samps-1;
-        tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
-
-        wfrm_ind = j+2;
-        send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
-        for (int i = 0; i < num_samps-1; i++) begin
-          tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {28'hbadc0de,i[3:0]});
-        end
-        temp = num_samps-1;
-        tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {28'hbadc0de,temp[3:0]});
+    $display("Uploading %d Samples in 1 packet", wfrm_len);
+    send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    for (int i = 0; i < num_samps-1; i++) begin
+      tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {16'hFEED,i[15:0]});
     end
-    $display("Now sending immediate commmand");
-    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
-                   {1'b1 /* Start immediately */, 31'b0});
-    // Have to set time lower bytes to trigger the command being stored, although time is not used.
-    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
+    temp = num_samps-1;
+    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {16'hFEED,temp[15:0]});
+
+    $display("Reading Vita Time");
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_VITA_TIME, readback);
+    $display("Read Vita time: %d",readback);
+
+    start_time = readback+64'ha00;
+    $display("Sending command for pulse to start at time %d", start_time);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_COMMAND,
+                   {1'b0 /* Start at time */, 31'b0});
+    // Set start time
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_HI, start_time[63:32]);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_LO, start_time[31:0]);
+    $display("Command Sent");
+    // $display("Now sending immediate commmand");
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
+    //                {1'b1 /* Start immediately */, 31'b0});
+    // // Have to set time lower bytes to trigger the command being stored, although time is not used.
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
 
     /* Send Immediate Pulse command */
     /* Send and check impulse */
@@ -361,27 +446,27 @@ module noc_block_wavegen_tb();
         logic [31:0] recv_val;
         logic last;
         logic [15:0] i_samp, q_samp;
-
-        $display("Receive Wavegen output - Should still be ramp");
-        for (int j = 0; j< num_pkts; j++) begin
-            for (int i = 0; i < num_samps; i++) begin
-              tb_streamer.pull_word({i_samp, q_samp}, last);
-              // Check I / Q values, should be a ramp
-              $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
-              `ASSERT_ERROR(i_samp == i, s);
-              $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
-              `ASSERT_ERROR(q_samp == i, s);
-              // Check tlast
-              if ((i == num_samps-1) & (j==num_pkts-1)) begin
-                `ASSERT_ERROR(last, "Last not asserted on final word!");
-              end else begin
-                `ASSERT_ERROR(~last, "Last asserted early!");
-              end
-            end
+        /* Send Immediate Pulse command */
+        /* Send and check impulse */
+        $display("Receive Wavegen output");
+        for (int i = 0; i < num_samps; i++) begin
+          tb_streamer.pull_word({i_samp, q_samp}, last);
+          // Check I / Q values, should be a ramp
+          $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+          `ASSERT_ERROR(i_samp == 16'hFEED, s);
+          $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+          `ASSERT_ERROR(q_samp == i, s);
+          // Check tlast
+          if (i == num_samps-1) begin
+            `ASSERT_ERROR(last, "Last not asserted on final word!");
+          end else begin
+            `ASSERT_ERROR(~last, "Last asserted early!");
+          end
         end
       end
     join
     `TEST_CASE_DONE(1);
+
     `TEST_BENCH_DONE;
 
   end
