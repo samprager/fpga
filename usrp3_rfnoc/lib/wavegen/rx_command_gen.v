@@ -22,8 +22,7 @@ module rx_command_gen #(
     parameter FIFO_SIZE = 5,
     parameter [7:0] SR_RX_CTRL_COMMAND      = 152,
     parameter [7:0] SR_RX_CTRL_TIME_HI      = 153,
-    parameter  [7:0] SR_RX_CTRL_TIME_LO      = 154,
-    parameter TIME_DELAY = 100
+    parameter  [7:0] SR_RX_CTRL_TIME_LO      = 154
     )(
       input clk,
       input reset,
@@ -38,6 +37,7 @@ module rx_command_gen #(
       input [63:0] vita_time,
       input [15:0] dst_sid,
       input [15:0] src_sid,
+      input has_time,
 
       input awg_init,
       input adc_run,
@@ -67,7 +67,7 @@ module rx_command_gen #(
 
     wire [31:0] numlines;
 
-    wire send_imm = 1'b1;
+    wire send_imm = ~has_time;
     wire chain = 1'b0;
     wire reload = 1'b0;
     wire stop = 1'b0;
@@ -107,7 +107,7 @@ module rx_command_gen #(
             IDLE : begin
             if(run_wait & adc_run) begin
                 command_i_r <= {send_imm,chain,reload,stop,numlines[27:0]};
-                time_i_r <= vita_time + TIME_DELAY;
+                time_i_r <= vita_time;
                 addr_i_r <= SR_RX_CTRL_COMMAND;
                 cmd_tvalid_r <= 1'b1;
                 cmd_tlast_r <= 0;

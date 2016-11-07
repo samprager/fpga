@@ -24,12 +24,10 @@ module radar_pulse_controller #(
   parameter ADC_SAMPLE_COUNT_INIT = 32'h000001ff,
   parameter CHIRP_PRF_INT_COUNT_INIT = 32'h00000000,
   parameter CHIRP_PRF_FRAC_COUNT_INIT = 32'h1d4c0000,
-  parameter RADAR_POLICY_INIT = 32'd0, // autonomous (0) or dependent (1)
 
   parameter SR_PRF_INT_ADDR = 0,
   parameter SR_PRF_FRAC_ADDR = 1,
   parameter SR_ADC_SAMPLE_ADDR = 2,
-  parameter SR_RADAR_CTRL_POLICY = 3,
   parameter SR_RADAR_CTRL_COMMAND = 4,
   parameter SR_RADAR_CTRL_TIME_HI = 5,
   parameter SR_RADAR_CTRL_TIME_LO = 6,
@@ -45,7 +43,9 @@ module radar_pulse_controller #(
 
   output [31:0] num_adc_samples,
   output [63:0] prf_out,
-  output [31:0] policy_out,
+  input [31:0] policy,
+  output [63:0] timestamp,
+  output has_time,
   input awg_data_valid,
   output adc_run,
   output adc_last,
@@ -65,8 +65,7 @@ localparam     IDLE        = 3'b000,
                PROCESS     = 3'b100,    // process adc samples
                OVERHEAD    = 3'b101;    // clean up before idle
 
-localparam AUTONOMOUS_MODE = 32'b0;
-localparam DEPENDENT_MODE = 32'b1;
+
 localparam OVERHEAD_COUNT_MAX = 2;
 localparam PROCESS_COUNT_MAX = 64;
 
@@ -103,13 +102,18 @@ reg[31:0] adc_collect_count_max = ADC_SAMPLE_COUNT_INIT;
 
 wire [31:0] command_i;
 wire [63:0] time_i;
-wire [31:0] policy;
 wire store_command;
 
 wire send_imm, chain, reload, stop;
 wire [27:0] numlines;
 wire [63:0] rcvtime;
 wire use_timestamps;
+
+wire manual_mode = policy[0];
+wire forward_timestamp = policy[1];
+
+reg send_imm_r;
+reg [63:0] rcvtime_r;
 
 wire now, early, late;
 wire command_valid;
@@ -129,10 +133,6 @@ setting_reg #(.my_addr(SR_PRF_FRAC_ADDR), .at_reset(CHIRP_PRF_FRAC_COUNT_INIT)) 
 setting_reg #(.my_addr(SR_ADC_SAMPLE_ADDR), .at_reset(ADC_SAMPLE_COUNT_INIT)) sr_adc_sample_count (
   .clk(clk),.rst(reset),.strobe(set_stb),.addr(set_addr),
   .in(set_data),.out(adc_sample_count),.changed(update_adc_sample_count));
-
- setting_reg #(.my_addr(SR_RADAR_CTRL_POLICY), .at_reset(RADAR_POLICY_INIT)) sr_policy (
-    .clk(clk),.rst(reset),.strobe(set_stb),.addr(set_addr),
-    .in(set_data),.out(policy),.changed());
 
   setting_reg #(.my_addr(SR_RADAR_CTRL_COMMAND))
   sr_cmd (
@@ -161,6 +161,7 @@ setting_reg #(.my_addr(SR_ADC_SAMPLE_ADDR), .at_reset(ADC_SAMPLE_COUNT_INIT)) sr
     time_compare time_compare (
       .clk(clk), .reset(reset),
       .time_now(vita_time), .trigger_time(rcvtime), .now(now), .early(early), .late(late), .too_early());
+
 
  always @(posedge clk)
   begin
@@ -240,22 +241,34 @@ always @(posedge clk)
 begin
   if(reset)
     command_ready <= 1'b0;
-  else if ((gen_state == IDLE & (policy ==  DEPENDENT_MODE & command_valid & (send_imm | late | now)))|(policy ==  AUTONOMOUS_MODE))
+  else if ((gen_state == IDLE & (manual_mode & command_valid & (send_imm | late | now | forward_timestamp)))|(~manual_mode))
     command_ready <= 1'b1;
   else
     command_ready <= 1'b0;
 end
 
-always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm)
+always @(posedge clk)
+begin
+  if(reset) begin
+    send_imm_r <= 1'b0;
+    rcvtime_r <= 'b0;
+  end
+  else if (command_ready & command_valid) begin
+        send_imm_r <= send_imm;
+        rcvtime_r <= rcvtime;
+  end
+end
+
+always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm or forward_timestamp or manual_mode)
 begin
    next_gen_state = gen_state;
    case (gen_state)
       IDLE : begin
          if (awg_ready) begin //& (&fmc150_status_vector[3:1]))
-            if (policy == AUTONOMOUS_MODE)
+            if (~manual_mode)
                 next_gen_state = ACTIVE;
-            if (policy ==  DEPENDENT_MODE & command_valid) begin
-               if (now | send_imm) begin
+            if (manual_mode & command_valid) begin
+               if (now | send_imm | forward_timestamp) begin
                     next_gen_state = CHIRP;
                end
             end
@@ -265,7 +278,7 @@ begin
       ACTIVE : begin
          if (awg_ready & (chirp_count == 0)) //& (&fmc150_status_vector[3:1]))
             next_gen_state = CHIRP;
-         else if (policy ==  DEPENDENT_MODE )
+         else if (manual_mode )
             next_gen_state = IDLE;
       end
       CHIRP : begin
@@ -362,6 +375,8 @@ assign num_adc_samples = adc_sample_count + 1'b1;
 assign adc_run = adc_run_int | awg_data_valid;
 assign adc_last = adc_last_int;
 assign prf_out = chirp_prf_count_max;
-assign policy_out = policy;
+assign has_time = (forward_timestamp & manual_mode & ~send_imm_r)
+assign timestamp = (forward_timestamp & manual_mode) ? rcvtime_r : vita_time;
+
 
 endmodule

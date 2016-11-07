@@ -37,6 +37,7 @@ module noc_block_wavegen #(
   wire [15:0] src_sid;
   wire [15:0] resp_in_dst_sid, resp_out_dst_sid;
   wire [63:0]                     vita_time;
+  wire [31:0]                     test_readback;
 
   noc_shell #(
     .NOC_ID(NOC_ID),
@@ -146,7 +147,10 @@ assign m_axis_data_tready = 1'b1;
   localparam CHIRP_COUNT_MAX_INIT = 32'h00000dff; // 3584 samples
   localparam CHIRP_FREQ_OFFSET_INIT = 32'h0b00; // 2816 -> 10.56 MHz min freq
   localparam AWG_CTRL_WORD_INIT = 32'h10;
-  localparam RADAR_POLICY_INIT = 32'd1; // autonomous (0) or dependent (1)
+  localparam RADAR_POLICY_INIT = 32'd1;
+  // POLICY[0] : auto(0) or manual(1).
+  // POLICY[1] : use cmd time(0) or forward cmd time(1)
+  // POLICY[3] : do not send rx cmd (0) or send rx cmd1)
 
   wire awg_ready;
   wire awg_done;
@@ -160,6 +164,8 @@ assign m_axis_data_tready = 1'b1;
   wire [31:0] num_adc_samples;
   wire [63:0] prf;
   wire [31:0] policy;
+  wire [63:0] timestamp;
+  wire has_time;
 
    wire [31:0] awg_data_len;         // payload len in samples
    wire [127:0] awg_data_tuser;
@@ -175,6 +181,8 @@ assign m_axis_data_tready = 1'b1;
   always @(*) begin
     case (rb_addr)
       RB_VITA_TIME  : rb_data <= vita_time;
+      RB_VITA_LASTPPS : rb_data <= vita_time_lastpps;
+      RB_TEST         : rb_data <= {32'd0,test_readback};
       RB_AWG_LEN   : rb_data <= {32'd0, awg_data_len};
       RB_ADC_LEN   : rb_data <= {32'd0, num_adc_samples};
       // All others default to daughter board control readback data
@@ -211,6 +219,14 @@ assign m_axis_data_tready = 1'b1;
       .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(awg_control_word),.changed());
 
+  // Set this register to put a test value on the readback mux.
+  setting_reg #(.my_addr(SR_TEST), .width(32)) sr_test (
+    .clk(ce_clk), .rst(ce_rst), .strobe(set_stb), .addr(set_addr), .in(set_data),
+    .out(test_readback), .changed());
+
+ setting_reg #(.my_addr(SR_RADAR_CTRL_POLICY), .at_reset(RADAR_POLICY_INIT)) sr_policy (
+       .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
+       .in(set_data),.out(policy),.changed());
 
     wavegen_block #(
         .CHIRP_TUNING_COEF_INIT(CHIRP_TUNING_COEF_INIT),
@@ -264,12 +280,10 @@ assign m_axis_data_tready = 1'b1;
         .ADC_SAMPLE_COUNT_INIT(ADC_SAMPLE_COUNT_INIT),
         .CHIRP_PRF_INT_COUNT_INIT(CHIRP_PRF_INT_COUNT_INIT),
         .CHIRP_PRF_FRAC_COUNT_INIT(CHIRP_PRF_FRAC_COUNT_INIT),
-        .RADAR_POLICY_INIT(RADAR_POLICY_INIT),
 
         .SR_PRF_INT_ADDR(SR_PRF_INT_ADDR),
         .SR_PRF_FRAC_ADDR(SR_PRF_FRAC_ADDR),
         .SR_ADC_SAMPLE_ADDR(SR_ADC_SAMPLE_ADDR),
-        .SR_RADAR_CTRL_POLICY(SR_RADAR_CTRL_POLICY),
         .SR_RADAR_CTRL_COMMAND(SR_RADAR_CTRL_COMMAND),
         .SR_RADAR_CTRL_TIME_HI(SR_RADAR_CTRL_TIME_HI),
         .SR_RADAR_CTRL_TIME_LO(SR_RADAR_CTRL_TIME_LO),
@@ -286,7 +300,10 @@ assign m_axis_data_tready = 1'b1;
       .num_adc_samples (num_adc_samples),
       .awg_data_valid(s_axis_data_tvalid),
       .prf_out(prf),
-      .policy_out(policy),
+      .policy(policy),
+
+      .timestamp(timestamp),
+      .has_time(has_time),
 
       .awg_ready (awg_ready),
       .awg_done (awg_done),
@@ -310,15 +327,16 @@ assign m_axis_data_tready = 1'b1;
           .awg_data_len(awg_data_len),
           .num_adc_samples (num_adc_samples),
           .src_sid(src_sid), .dst_sid(next_dst_sid),
-          .vita_time(vita_time),
+          .vita_time(timestamp),
+          .has_time(has_time),
           .awg_init (awg_init),
           .adc_run (adc_run),
           .adc_enable (adc_enable));
 
     cvita_hdr_encoder cvita_hdr_encoder (
-      .pkt_type(2'd0), .eob(1'b1), .has_time(1'b0),
+      .pkt_type(2'd0), .eob(1'b1), .has_time(has_time),
       .seqnum(12'd0), .payload_length({awg_data_len[13:0],2'b00}), .dst_sid(next_dst_sid), .src_sid(src_sid),
-      .vita_time(vita_time),
+      .vita_time(timestamp),
       .header(s_axis_data_tuser));
 
   // Command and response packet mux
@@ -329,8 +347,8 @@ assign m_axis_data_tready = 1'b1;
   //   .o_tdata(cmdout_tdata), .o_tlast(cmdout_tlast), .o_tvalid(cmdout_tvalid), .o_tready(cmdout_tready));
   assign cmdout_tdata = rx_cmdout_tdata;
   assign cmdout_tlast = rx_cmdout_tlast;
-  assign cmdout_tvalid = rx_cmdout_tvalid;
-  assign rx_cmdout_tready = cmdout_tready;
+  assign cmdout_tvalid = (policy[3]) ? rx_cmdout_tvalid : 0;
+  assign rx_cmdout_tready = (policy[3]) ? cmdout_tready : 1;
 
   assign resp_tready = 1'b1;
 
