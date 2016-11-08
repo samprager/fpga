@@ -11,6 +11,11 @@ localparam [7:0] SR_PRF_INT_ADDR = 204;
 localparam [7:0] SR_PRF_FRAC_ADDR = 205;
 localparam [7:0] SR_ADC_SAMPLE_ADDR = 206;
 
+/* SR_RADAR_CTRL_POLICY register key */
+// POLICY[0] : auto(0) or manual(1).
+// POLICY[1] : use cmd time(0) or forward cmd time(1)
+// POLICY[2] : do not send rx cmd (0) or send rx cmd1)
+
 localparam [7:0] SR_RADAR_CTRL_POLICY = 207;
 localparam [7:0] SR_RADAR_CTRL_COMMAND = 208;
 localparam [7:0] SR_RADAR_CTRL_TIME_HI = 209;
@@ -18,6 +23,7 @@ localparam [7:0] SR_RADAR_CTRL_TIME_LO = 210;
 localparam [7:0] SR_RADAR_CTRL_CLEAR_CMDS = 211;
 localparam [7:0] SR_AWG_RELOAD = 212;
 localparam [7:0] SR_AWG_RELOAD_LAST = 213;
+localparam [7:0] SR_RADAR_CTRL_MAXLEN = 214;
 
 /* Control readback registers */
 

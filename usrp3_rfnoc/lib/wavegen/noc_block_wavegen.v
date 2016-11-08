@@ -103,7 +103,7 @@ module noc_block_wavegen #(
     .sync_out(sync_out));
 
   axi_wrapper #(
-    .SIMPLE_MODE(0))
+    .SIMPLE_MODE(0), .RESIZE_OUTPUT_PACKET(0))
   inst_axi_wrapper (
     .clk(ce_clk), .reset(ce_rst),
     .clear_tx_seqnum(clear_tx_seqnum),
@@ -148,9 +148,10 @@ assign m_axis_data_tready = 1'b1;
   localparam CHIRP_FREQ_OFFSET_INIT = 32'h0b00; // 2816 -> 10.56 MHz min freq
   localparam AWG_CTRL_WORD_INIT = 32'h10;
   localparam RADAR_POLICY_INIT = 32'd1;
+  localparam MAX_SPP_INIT = 32'd64;
   // POLICY[0] : auto(0) or manual(1).
   // POLICY[1] : use cmd time(0) or forward cmd time(1)
-  // POLICY[3] : do not send rx cmd (0) or send rx cmd1)
+  // POLICY[2] : do not send rx cmd (0) or send rx cmd1)
 
   wire awg_ready;
   wire awg_done;
@@ -164,11 +165,17 @@ assign m_axis_data_tready = 1'b1;
   wire [31:0] num_adc_samples;
   wire [63:0] prf;
   wire [31:0] policy;
+  wire [31:0] max_spp;
   wire [63:0] timestamp;
   wire has_time;
 
+  wire [31:0] awg_data_tdata;
+  wire [127:0] awg_data_tuser;
+  wire        awg_data_tlast;
+  wire        awg_data_tvalid;
+  wire        awg_data_tready;
+
    wire [31:0] awg_data_len;         // payload len in samples
-   wire [127:0] awg_data_tuser;
 
    wire [31:0] m_axis_awg_reload_tdata;
    wire        m_axis_awg_reload_tvalid, m_axis_awg_reload_tready, m_axis_awg_reload_tlast;
@@ -228,6 +235,11 @@ assign m_axis_data_tready = 1'b1;
        .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
        .in(set_data),.out(policy),.changed());
 
+   setting_reg #(.my_addr(SR_RADAR_CTRL_MAXLEN), .at_reset(MAX_SPP_INIT)) sr_max_spp (
+         .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
+         .in(set_data),.out(max_spp),.changed());
+
+
     wavegen_block #(
         .CHIRP_TUNING_COEF_INIT(CHIRP_TUNING_COEF_INIT),
         .CHIRP_COUNT_MAX_INIT (CHIRP_COUNT_MAX_INIT),
@@ -247,10 +259,10 @@ assign m_axis_data_tready = 1'b1;
 
         .resp_tdata(resp_tdata), .resp_tlast(resp_tlast), .resp_tvalid(resp_tvalid), .resp_tready(resp_tready),
 
-        .awg_out_iq(s_axis_data_tdata),
-        .awg_data_valid(s_axis_data_tvalid),
-        .awg_data_last(s_axis_data_tlast),
-        .awg_data_ready(s_axis_data_tready),
+        .awg_out_iq(awg_data_tdata),
+        .awg_data_valid(awg_data_tvalid),
+        .awg_data_last(awg_data_tlast),
+        .awg_data_ready(awg_data_tready),
         .awg_data_len(awg_data_len),
 
         .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
@@ -275,6 +287,7 @@ assign m_axis_data_tready = 1'b1;
         .adc_enable   (adc_enable)
 
     );
+
     radar_pulse_controller #(
         .CLK_FREQ (CHIRP_CLK_FREQ),
         .ADC_SAMPLE_COUNT_INIT(ADC_SAMPLE_COUNT_INIT),
@@ -298,7 +311,7 @@ assign m_axis_data_tready = 1'b1;
       .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
 
       .num_adc_samples (num_adc_samples),
-      .awg_data_valid(s_axis_data_tvalid),
+      .awg_data_valid(awg_data_tvalid),
       .prf_out(prf),
       .policy(policy),
 
@@ -319,8 +332,7 @@ assign m_axis_data_tready = 1'b1;
         .FIFO_SIZE(5),
         .SR_RX_CTRL_COMMAND(SR_RX_CTRL_COMMAND),
         .SR_RX_CTRL_TIME_HI(SR_RX_CTRL_TIME_HI),
-        .SR_RX_CTRL_TIME_LO(SR_RX_CTRL_TIME_LO),
-        .TIME_DELAY(100)
+        .SR_RX_CTRL_TIME_LO(SR_RX_CTRL_TIME_LO)
     ) rx_command_gen(
           .clk(ce_clk), .reset(ce_rst), .clear(1'b0),
           .cmdout_tdata(rx_cmdout_tdata), .cmdout_tlast(rx_cmdout_tlast), .cmdout_tvalid(rx_cmdout_tvalid),.cmdout_tready(rx_cmdout_tready),
@@ -329,15 +341,28 @@ assign m_axis_data_tready = 1'b1;
           .src_sid(src_sid), .dst_sid(next_dst_sid),
           .vita_time(timestamp),
           .has_time(has_time),
+          .send_cmds(policy[2]),
           .awg_init (awg_init),
           .adc_run (adc_run),
           .adc_enable (adc_enable));
+
+
+  axi_burst_packetizer axi_burst_packetizer
+     (.clk(ce_clk), .reset(ce_rst),
+      .max_spp(max_spp),
+      .i_tdata(awg_data_tdata), .i_tuser(awg_data_tuser), .i_tlast(awg_data_tlast), .i_tvalid(awg_data_tvalid), .i_tready(awg_data_tready),
+      .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));   
 
     cvita_hdr_encoder cvita_hdr_encoder (
       .pkt_type(2'd0), .eob(1'b1), .has_time(has_time),
       .seqnum(12'd0), .payload_length({awg_data_len[13:0],2'b00}), .dst_sid(next_dst_sid), .src_sid(src_sid),
       .vita_time(timestamp),
-      .header(s_axis_data_tuser));
+      .header(awg_data_tuser));
+
+
+  // assign payload_length = (max_spp == 0) ? {awg_data_len[13:0],2'b00} : (awg_data_len >= (samp_count + max_spp)) ? {max_spp[13:0],2'b00} : {last_pkt_len[13:0],2'b00} ;
+  // assign eob = ((max_spp == 0) | (awg_data_len < (samp_count + max_spp))) ? 1'b1 : 1'b0;
+
 
   // Command and response packet mux
   // axi_mux  #(.WIDTH(64), .PRE_FIFO_SIZE(0), .POST_FIFO_SIZE(1), .SIZE(2))
@@ -347,8 +372,10 @@ assign m_axis_data_tready = 1'b1;
   //   .o_tdata(cmdout_tdata), .o_tlast(cmdout_tlast), .o_tvalid(cmdout_tvalid), .o_tready(cmdout_tready));
   assign cmdout_tdata = rx_cmdout_tdata;
   assign cmdout_tlast = rx_cmdout_tlast;
-  assign cmdout_tvalid = (policy[3]) ? rx_cmdout_tvalid : 0;
-  assign rx_cmdout_tready = (policy[3]) ? cmdout_tready : 1;
+  assign cmdout_tvalid = rx_cmdout_tvalid;
+  assign rx_cmdout_tready = cmdout_tready;
+  // assign cmdout_tvalid = (policy[3]) ? rx_cmdout_tvalid : 0;
+  // assign rx_cmdout_tready = (policy[3]) ? cmdout_tready : 1;
 
   assign resp_tready = 1'b1;
 

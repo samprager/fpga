@@ -38,6 +38,7 @@ module rx_command_gen #(
       input [15:0] dst_sid,
       input [15:0] src_sid,
       input has_time,
+      input send_cmds,
 
       input awg_init,
       input adc_run,
@@ -54,9 +55,9 @@ module rx_command_gen #(
 
     wire [1:0] pkt_type = 2'b10;
     wire        eob = 1'b0;
-    wire        has_time = 1'b0;
+   // wire        has_time = 1'b0;
     wire [11:0] seqnum = 12'd0; // don't care
-    wire [15:0] payload_length = 16'd0;//don't care (payload length in bytes)
+    wire [15:0] payload_length = 16'd16; //don't care (payload length in bytes)
 
     wire [63:0] cmd_tdata;
     wire cmd_tlast, cmd_tvalid, cmd_tready;
@@ -81,7 +82,7 @@ module rx_command_gen #(
     assign numlines = awg_data_len + num_adc_samples;
 
     cvita_hdr_encoder cvita_hdr_encoder(
-      .pkt_type(pkt_type),.eob(eob), .has_time(has_time),
+      .pkt_type(pkt_type),.eob(eob), .has_time(1'b0),
       .seqnum(seqnum),
       .payload_length(payload_length),
       .src_sid(src_sid), .dst_sid(dst_sid),
@@ -110,10 +111,11 @@ module rx_command_gen #(
                 time_i_r <= vita_time;
                 addr_i_r <= SR_RX_CTRL_COMMAND;
                 cmd_tvalid_r <= 1'b1;
-                cmd_tlast_r <= 0;
+                // cmd_tlast_r <= 0;
+                cmd_tlast_r <= 1'b1;
                 run_wait <= 0;
                 state <= SEND_CMD;
-            end else if (awg_init) begin
+            end else if (awg_init & send_cmds) begin
                 run_wait <= 1;
                 if (cmd_tready) begin
                     cmd_tvalid_r <= 0;
@@ -139,7 +141,8 @@ module rx_command_gen #(
                     command_i_r <= time_i_r[63:32];
                     addr_i_r <= SR_RX_CTRL_TIME_HI;
                     cmd_tvalid_r <= 1;
-                    cmd_tlast_r <= 0;
+                    // cmd_tlast_r <= 0;
+                    cmd_tlast_r <= 1;
                 end
             end
           end

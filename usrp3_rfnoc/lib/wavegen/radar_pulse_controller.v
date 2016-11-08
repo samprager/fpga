@@ -66,8 +66,8 @@ localparam     IDLE        = 3'b000,
                OVERHEAD    = 3'b101;    // clean up before idle
 
 
-localparam OVERHEAD_COUNT_MAX = 2;
-localparam PROCESS_COUNT_MAX = 64;
+localparam OVERHEAD_COUNT_MAX = 1;
+localparam PROCESS_COUNT_MAX = 63;
 
 reg [2:0] next_gen_state;
 reg [2:0] gen_state;
@@ -115,10 +115,14 @@ wire forward_timestamp = policy[1];
 reg send_imm_r;
 reg [63:0] rcvtime_r;
 
+reg [63:0] vita_time_next_chirp;
+
 wire now, early, late;
 wire command_valid;
 reg command_ready;
 wire clear_cmds;
+
+wire now_next, early_next, late_next;
 
 // assign chirp_parameters_out = {ch_ctrl_word_rrr,ch_freq_offset_rrr,ch_tuning_coef_rrr,ch_counter_max_rrr};
 
@@ -162,6 +166,9 @@ setting_reg #(.my_addr(SR_ADC_SAMPLE_ADDR), .at_reset(ADC_SAMPLE_COUNT_INIT)) sr
       .clk(clk), .reset(reset),
       .time_now(vita_time), .trigger_time(rcvtime), .now(now), .early(early), .late(late), .too_early());
 
+      time_compare time_compare_next (
+        .clk(clk), .reset(reset),
+        .time_now(vita_time), .trigger_time(timestamp), .now(now_next), .early(early_next), .late(late_next), .too_early());
 
  always @(posedge clk)
   begin
@@ -194,10 +201,21 @@ end
 always @(posedge clk)
 begin
   if(reset)
+    vita_time_next_chirp <= 0;
+  else if (gen_state == ACTIVE & chirp_count == chirp_prf_count_max) begin
+    vita_time_next_chirp <= vita_time + chirp_prf_count_max;
+  end
+end
+
+always @(posedge clk)
+begin
+  if(reset)
     chirp_count <= 0;
   else if (gen_state == ACTIVE) begin
     if (update_prf_count_max)
         chirp_count <= chirp_prf_count_max;
+    else if (forward_timestamp)     // send pulse immediately and add timestamp
+        chirp_count <= 0;
     else if (|chirp_count)
         chirp_count <= chirp_count - 1;
   end else begin
@@ -259,7 +277,7 @@ begin
   end
 end
 
-always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm or forward_timestamp or manual_mode)
+always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm or forward_timestamp or manual_mode or now_next or late_next)
 begin
    next_gen_state = gen_state;
    case (gen_state)
@@ -290,13 +308,13 @@ begin
             next_gen_state = PROCESS;
       end
       PROCESS : begin
-         if (process_count == 1) begin
+         if (process_count == 0) begin
             //next_gen_state = WAIT;
             next_gen_state = OVERHEAD;
          end
       end
-      OVERHEAD : begin
-         if (overhead_count == 1) begin
+      OVERHEAD : begin // Do not return to IDLE until previous chirp is transmitted
+         if (overhead_count == 0 & (now_next | late_next)) begin
             next_gen_state = IDLE;
          end
       end
@@ -375,8 +393,8 @@ assign num_adc_samples = adc_sample_count + 1'b1;
 assign adc_run = adc_run_int | awg_data_valid;
 assign adc_last = adc_last_int;
 assign prf_out = chirp_prf_count_max;
-assign has_time = (forward_timestamp & manual_mode & ~send_imm_r)
-assign timestamp = (forward_timestamp & manual_mode) ? rcvtime_r : vita_time;
+assign has_time = (forward_timestamp & ((manual_mode & ~send_imm_r)|(~manual_mode))) ? 1'b1 : 1'b0;
+assign timestamp = (forward_timestamp & manual_mode & ~send_imm_r) ? rcvtime_r : (forward_timestamp & ~manual_mode) ? vita_time_next_chirp : vita_time;
 
 
 endmodule
