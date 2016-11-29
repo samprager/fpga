@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `define SIM_TIMEOUT_US 20000
 `define NS_PER_TICK 1
-`define NUM_TEST_CASES 12
+`define NUM_TEST_CASES 13
 
 
 `include "sim_exec_report.vh"
@@ -732,6 +732,47 @@ noc_block_wavegen noc_block_wavegen(
           // Check tlast
           if (((i+1)%6 == 0)|(i==num_samps-1)) begin
             `ASSERT_ERROR(last, "Last not asserted on 6th or final word!");
+          end else begin
+            `ASSERT_ERROR(~last, "Last asserted early!");
+          end
+        end
+      end
+    join
+    `TEST_CASE_DONE(1);
+
+    /********************************************************
+    ** Test 13 -- Change Mode to Chirp Pulse
+    ********************************************************/
+    // Sending an impulse will readback the FIR filter coefficients
+    `TEST_CASE_START("Changing to Chirp Source");
+    wfrm_len = 10;
+
+    $display("Changing Chirp Counter Length to %16x (max count = %16x)",wfrm_len,wfrm_len-1);
+    // Change CTRL Policy to dependent mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_CH_COUNTER_ADDR, {16'd0,wfrm_len-1});
+
+    $display("Changing Ctrl Word to Chirp: %16x", CTRL_WORD_SEL_CHIRP);
+    // Change CTRL word to CTRL_WORD_SEL_CHIRP mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_AWG_CTRL_WORD_ADDR, CTRL_WORD_SEL_CHIRP);
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_CTRL, readback);
+    $display("Read Ctrl Word: %16x", readback);
+
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_LEN, readback);
+    $display("AWG Length Word: %16x", readback);
+    /* Send and check impulse */
+    fork
+      begin
+        logic [31:0] recv_val;
+        logic last;
+        logic [15:0] i_samp, q_samp;
+        /* Send Immediate Pulse command */
+        /* Send and check impulse */
+        $display("Receive Wavegen output");
+        for (int i = 0; i < num_samps; i++) begin
+          tb_streamer.pull_word({i_samp, q_samp}, last);
+          // Check tlast
+          if (i == num_samps-1) begin
+            `ASSERT_ERROR(last, "Last not asserted on final word!");
           end else begin
             `ASSERT_ERROR(~last, "Last asserted early!");
           end
