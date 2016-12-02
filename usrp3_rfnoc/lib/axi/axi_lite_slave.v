@@ -39,8 +39,8 @@ module axi_lite_slave
    output [31 : 0] m_axi_rdata,  // Read data.
    output [1 : 0] m_axi_rresp,   // Read response. This signal indicates the status of the read transfer
    output m_axi_rvalid,          // Read valid. This signal indicates that the channel is signaling the required read data. 
-   input m_axi_rready,           // Read ready. This signal indicates that the master can accept the read data and response
+   input m_axi_rready           // Read ready. This signal indicates that the master can accept the read data and response
    //
    //
    //
-   )
+   );

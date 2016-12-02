@@ -9,3 +9,7 @@ a.out
 *.swp
 *.jou
 *.log
+
+*.DS_Store
+
+

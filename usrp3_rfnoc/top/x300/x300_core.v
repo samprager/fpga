@@ -212,27 +212,6 @@ module x300_core (
    // Number of Radio Cores Instantiated
    localparam NUM_RADIO_CORES = 2;
 
-   //////////////////////////////////////////////////////////////////////////////////////////////
-   // RFNoC
-   //////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Included automatically instantiated CEs sources file created by RFNoC mod tool
-`ifdef RFNOC
- `ifdef X300
-   `include "rfnoc_ce_auto_inst_x300.v"
- `endif
- `ifdef X310
-   `include "rfnoc_ce_auto_inst_x310.v"
- `endif
-`else
- `ifdef X300
-   `include "rfnoc_ce_default_inst_x300.v"
- `endif
- `ifdef X310
-   `include "rfnoc_ce_default_inst_x310.v"
- `endif
-`endif
-
    /////////////////////////////////////////////////////////////////////////////////
    // Internal time synchronization
    /////////////////////////////////////////////////////////////////////////////////
@@ -248,6 +227,32 @@ module x300_core (
       .ref_clk(ext_ref_clk), .timebase_clk(radio_clk),
       .pps_in(pps), .pps_out(pps_rclk), .pps_count(pps_detect)
    );
+
+
+   //////////////////////////////////////////////////////////////////////////////////////////////
+   // RFNoC
+   //////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Included automatically instantiated CEs sources file created by RFNoC mod tool
+`ifdef RFNOC
+ `ifdef X300
+    `ifdef AWG
+        `include "rfnoc_ce_gpr_inst_x300.v"
+     `else
+        `include "rfnoc_ce_auto_inst_x300.v"
+    `endif
+ `endif
+ `ifdef X310
+   `include "rfnoc_ce_auto_inst_x310.v"
+ `endif
+`else
+ `ifdef X300
+   `include "rfnoc_ce_default_inst_x300.v"
+ `endif
+ `ifdef X310
+   `include "rfnoc_ce_default_inst_x310.v"
+ `endif
+`endif
 
    /////////////////////////////////////////////////////////////////////////////////
    // Bus Int containing soft CPU control, routing fabric
@@ -487,7 +492,7 @@ module x300_core (
       .NUM_FIFOS(2),
       .DEFAULT_FIFO_BASE({30'h02000000, 30'h00000000}),
       .DEFAULT_FIFO_SIZE({30'h01FFFFFF, 30'h01FFFFFF}),
-      .STR_SINK_FIFOSIZE(14),
+      .STR_SINK_FIFOSIZE(12),
       .DEFAULT_BURST_TIMEOUT({12'd280, 12'd280}),
       .EXTENDED_DRAM_BIST(1)
    ) inst_noc_block_dram_fifo (

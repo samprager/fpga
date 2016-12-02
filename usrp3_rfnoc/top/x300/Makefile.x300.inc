@@ -5,9 +5,14 @@
 ##################################################
 # Project Setup
 ##################################################
+ifdef BUILD_GPR
+TOP_MODULE = x300_gpr
+else
 TOP_MODULE = x300
-# NAME = <Input arg> 
-# PART_ID = <Input arg> 
+endif
+
+# NAME = <Input arg>
+# PART_ID = <Input arg>
 
 ##################################################
 # Include other makefiles
@@ -15,6 +20,7 @@ TOP_MODULE = x300
 
 BASE_DIR = $(abspath ..)
 IP_DIR = $(abspath ./ip)
+
 include $(BASE_DIR)/../tools/make/viv_design_builder.mak
 
 include $(IP_DIR)/Makefile.inc
@@ -38,6 +44,8 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/x300/Makefile.srcs
+include $(LIB_DIR)/radar/Makefile.srcs
+include $(LIB_DIR)/wavegen/Makefile.srcs
 
 ##################################################
 # Sources
@@ -46,6 +54,8 @@ TOP_SRCS = \
 x300.v \
 x300_pcie_int.v \
 x300_core.v \
+x300_gpr.v \
+x300_gpr_core.v \
 x300_sfpp_io_core.v \
 x300_zpu_config.vhd \
 soft_ctrl.v \
@@ -54,6 +64,18 @@ gen_ddrlvds.v \
 bus_int.v \
 x300.xdc \
 timing.xdc
+
+ifdef BUILD_GPR
+GPR_SRCS = $(RADAR_SRCS) $(WAVEGEN_SRCS)
+else
+GPR_SRCS =
+endif
+
+ifdef BUILD_AWG
+	AWG_SRCS = $(WAVEGEN_SRCS)
+else
+	AWG_SRCS =
+endif
 
 ifdef BUILD_10G
 SFP_SERDES_SRCS += $(XGE_SRCS) $(XGE_INTERFACE_SRCS) $(abspath x300_10ge.xdc) $(TEN_GIGE_PHY_SRCS) $(IP_TEN_GIGE_PHY_XCI_SRCS)
@@ -95,7 +117,8 @@ $(ZPU_CORE_SRCS) $(WISHBONE_SRCS) \
 $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) \
-$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS)
+$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
+$(GPR_SRCS) $(AWG_SRCS)
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
 
