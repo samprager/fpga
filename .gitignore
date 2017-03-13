@@ -9,6 +9,7 @@ a.out
 *.swp
 *.jou
 *.log
+*.pyc
 
 *.DS_Store
 
