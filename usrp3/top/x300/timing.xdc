@@ -67,15 +67,10 @@ set_clock_groups -asynchronous -group [get_clocks bus_clk] -group [get_clocks io
 set_clock_groups -asynchronous -group [get_clocks ioport2_clk] -group [get_clocks rio40_clk]
 set_clock_groups -asynchronous -group [get_clocks bus_clk] -group [get_clocks radio_clk]
 set_clock_groups -asynchronous -group [get_clocks bus_clk_div2] -group [get_clocks radio_clk]
-<<<<<<< HEAD:usrp3_rfnoc/top/x300/timing.xdc
-set_clock_groups -asynchronous -group [get_clocks ioport2_clk] -group [get_clocks IoPort2Wrapperx/RxLowSpeedClk]
-set_clock_groups -asynchronous -group [get_clocks bus_clk] -group [get_clocks FPGA_REFCLK_10MHz]
-=======
 set_clock_groups -asynchronous -group [get_clocks ioport2_clk]  -group [get_clocks IoPort2Wrapperx/RxLowSpeedClk]
 set_clock_groups -asynchronous -group [get_clocks bus_clk]      -group [get_clocks FPGA_REFCLK_10MHz]
 set_clock_groups -asynchronous -group [get_clocks ce_clk]       -group [get_clocks bus_clk]
 set_clock_groups -asynchronous -group [get_clocks ce_clk]       -group [get_clocks radio_clk]
->>>>>>> upstream/rfnoc-devel:usrp3/top/x300/timing.xdc
 
 
 #*******************************************************************************
@@ -513,16 +508,10 @@ set_max_delay -from [get_ports GPS_LOCK_OK] 25.000
 # Reset paths
 # All asynchronous resets must be held for at least 20ns
 # which is 2+2 radio_clk cycles @200MHz or 2+2 bus_clk cycles @166MHz
-<<<<<<< HEAD:usrp3_rfnoc/top/x300/timing.xdc
-set_max_delay -to [get_pins int_reset_sync/reset_int*/PRE] 12.000
-set_max_delay -to [get_pins int_div2_reset_sync/reset_int*/PRE] 12.000
-set_max_delay -to [get_pins radio_reset_sync/reset_int*/PRE] 10.000
-=======
 set_max_delay -to [get_pins {int_reset_sync/reset_int*/PRE}]        12.000
 set_max_delay -to [get_pins {int_div2_reset_sync/reset_int*/PRE}]   12.000
 set_max_delay -to [get_pins {ce_reset_sync/reset_int*/PRE}]         12.000
 set_max_delay -to [get_pins {radio_reset_sync/reset_int*/PRE}]      10.000
->>>>>>> upstream/rfnoc-devel:usrp3/top/x300/timing.xdc
 
 #*******************************************************************************
 ## Asynchronous paths
@@ -531,10 +520,4 @@ set_false_path -to [get_pins -hier -filter {NAME =~ */synchronizer_false_path/st
 set_false_path -to [get_ports LED_*]
 set_false_path -to [get_ports {SFPP*_RS0 SFPP*_RS1 SFPP*_SCL SFPP*_SDA SFPP*_TxDisable}]
 set_false_path -from [get_ports {SFPP*_ModAbs SFPP*_RxLOS SFPP*_SCL SFPP*_SDA SFPP*_TxFault}]
-<<<<<<< HEAD:usrp3_rfnoc/top/x300/timing.xdc
-set_false_path -to [get_ports GPSDO_PWR_ENA]
-
-
-=======
 set_false_path -to   [get_ports GPSDO_PWR_ENA]
->>>>>>> upstream/rfnoc-devel:usrp3/top/x300/timing.xdc
