@@ -209,7 +209,7 @@ assign m_axis_data_tready = 1'b1;
     .ADDR_LAST(SR_AWG_RELOAD_LAST),
     .WIDTH(32),
     .USE_FIFO(1),
-    .FIFO_SIZE(16))
+    .FIFO_SIZE(2))
   set_awg_samples (
     .clk(ce_clk),
     .reset(ce_rst),
