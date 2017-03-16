@@ -1,3 +1,10 @@
+//
+// Written by Samuel Prager
+//
+// 2017
+// MiXIL
+// University of Southern California
+//
 
 module axi_burst_packetizer
    (input clk, input reset,

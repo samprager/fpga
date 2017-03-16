@@ -1,6 +1,22 @@
+//////////////////////////////////////////////////////////////////////////////////
+// Company:MiXIL
+// Engineer: Samuel Prager
 //
-// Copyright 2014-2015 Ettus Research
+// Create Date: 07/14/2016 07:29:14 PM
+// Design Name:
+// Module Name: noc_block_wavegen
+// Project Name:
+// Target Devices:
+// Tool Versions:
+// Description:
 //
+// Dependencies:
+//
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module noc_block_wavegen #(
   parameter NOC_ID = 64'hDFA0_0000_0000_0000,
@@ -351,7 +367,7 @@ assign m_axis_data_tready = 1'b1;
      (.clk(ce_clk), .reset(ce_rst),
       .max_spp(max_spp),
       .i_tdata(awg_data_tdata), .i_tuser(awg_data_tuser), .i_tlast(awg_data_tlast), .i_tvalid(awg_data_tvalid), .i_tready(awg_data_tready),
-      .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));   
+      .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
 
     cvita_hdr_encoder cvita_hdr_encoder (
       .pkt_type(2'd0), .eob(1'b1), .has_time(has_time),
