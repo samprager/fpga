@@ -2,7 +2,7 @@
 # Copyright 2015 Ettus Research LLC
 #
 
-# NOTE: All comments prefixed with a "##" will be displayed as a part of the "make help" target 
+# NOTE: All comments prefixed with a "##" will be displayed as a part of the "make help" target
 ##-------------------
 ##USRP E3X0 FPGA Help
 ##-------------------
@@ -71,6 +71,14 @@ E310_dram_test: ##Build USRP E310 design with DRAM test.
 E310_dram_test_sg3: ##Build USRP E310 design with DRAM test.
 	$(call vivado_build,bin,xc7z020,3,E310 DRAM_TEST E3XX_SG3)
 	$(call post_build,E310,_dram_test_,sg3)
+
+E310_RFNOC_AWG: ##Build USRP E310 with RFNoC enabled.
+	$(call vivado_build,bin,xc7z020,1,RFNOC=1 E310=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,E310,_RFNOC,RFNOC_AWG)
+
+E310_RFNOC_AWG_sg3: ##Build USRP E310 with RFNoC enabled.
+	$(call vivado_build,bin,xc7z020,3,RFNOC=1 E310=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,E310,_RFNOC,_sg3,RFNOC_AWG)
 
 clean: ##Clean up all itarget build outputs.
 	@echo "Cleaning targets..."

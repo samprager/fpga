@@ -34,6 +34,7 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/e300/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
+include $(LIB_DIR)/wavegen/Makefile.srcs
 
 ##################################################
 # Sources
@@ -43,6 +44,12 @@ TOP_SRCS = e3xx_ps.v \
            spi_slave.v \
            axi_pmu.v \
            axi_dummy.v
+
+ifdef BUILD_AWG
+	AWG_SRCS = $(WAVEGEN_SRCS)
+else
+	AWG_SRCS =
+endif
 
 ifeq (E310,$(findstring E310, $(EXTRA_DEFS)))
 TOP_SRCS += e310.v
@@ -88,7 +95,8 @@ DESIGN_SRCS = $(abspath $(TOP_SRCS)) \
           $(RFNOC_SRCS) \
           $(RFNOC_OOT_SRCS) \
           $(LIB_IP_XCI_SRCS) \
-          $(HLS_IP_GEN_SRCS)
+          $(HLS_IP_GEN_SRCS) \
+          $(AWG_SRCS)
 
 ##################################################
 # Git Hash
