@@ -24,12 +24,19 @@
     .o_tdata(ce_i_tdata[0]), .o_tlast(ce_i_tlast[0]), .o_tvalid(ce_i_tvalid[0]), .o_tready(ce_i_tready[0]),
     .debug(ce_debug[0]));
 
-  noc_block_window inst_noc_block_window (
+  noc_block_axi_fifo_loopback inst_axi_fifo_loopback2 (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(ce_clk), .ce_rst(ce_rst),
     .i_tdata(ce_o_tdata[1]), .i_tlast(ce_o_tlast[1]), .i_tvalid(ce_o_tvalid[1]), .i_tready(ce_o_tready[1]),
     .o_tdata(ce_i_tdata[1]), .o_tlast(ce_i_tlast[1]), .o_tvalid(ce_i_tvalid[1]), .o_tready(ce_i_tready[1]),
     .debug(ce_debug[1]));
+
+  // noc_block_window inst_noc_block_window (
+  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
+  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
+  //   .i_tdata(ce_o_tdata[1]), .i_tlast(ce_o_tlast[1]), .i_tvalid(ce_o_tvalid[1]), .i_tready(ce_o_tready[1]),
+  //   .o_tdata(ce_i_tdata[1]), .o_tlast(ce_i_tlast[1]), .o_tvalid(ce_i_tvalid[1]), .o_tready(ce_i_tready[1]),
+  //   .debug(ce_debug[1]));
 
   noc_block_fft inst_noc_block_fft (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
@@ -53,14 +60,21 @@
     .pps(pps), .sync_out(),.rx_stb(1'b1),
     .debug(ce_debug[3]));
 
-  noc_block_axi_fifo_loopback inst_axi_fifo_loopback2 (
+
+  // noc_block_fir_filter inst_noc_block_fir_filter (
+  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
+  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
+  //   .i_tdata(ce_o_tdata[5]), .i_tlast(ce_o_tlast[5]), .i_tvalid(ce_o_tvalid[5]), .i_tready(ce_o_tready[5]),
+  //   .o_tdata(ce_i_tdata[5]), .o_tlast(ce_i_tlast[5]), .o_tvalid(ce_i_tvalid[5]), .o_tready(ce_i_tready[5]),
+  //   .debug(ce_debug[5]));
+  noc_block_duc #( .NUM_CHAINS(2)) inst_noc_block_duc (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(ce_clk), .ce_rst(ce_rst),
     .i_tdata(ce_o_tdata[4]), .i_tlast(ce_o_tlast[4]), .i_tvalid(ce_o_tvalid[4]), .i_tready(ce_o_tready[4]),
     .o_tdata(ce_i_tdata[4]), .o_tlast(ce_i_tlast[4]), .o_tvalid(ce_i_tvalid[4]), .o_tready(ce_i_tready[4]),
     .debug(ce_debug[4]));
-
-  noc_block_fir_filter inst_noc_block_fir_filter (
+    
+  noc_block_ddc #( .NUM_CHAINS(2)) inst_noc_block_ddc (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(ce_clk), .ce_rst(ce_rst),
     .i_tdata(ce_o_tdata[5]), .i_tlast(ce_o_tlast[5]), .i_tvalid(ce_o_tvalid[5]), .i_tready(ce_o_tready[5]),
