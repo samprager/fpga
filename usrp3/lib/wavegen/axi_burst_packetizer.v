@@ -50,7 +50,9 @@ cvita_hdr_decoder cvita_hdr_decoder (
    assign o_tlast = (pkt_count_r == max_spp) |  i_tlast;
    assign o_tvalid = i_tvalid;
    assign i_tready = o_tready;
-   assign payload_length_out = {payload_length[13:0],2'b00};
+   //assign payload_length_out = {payload_length[13:0],2'b00};
+   assign payload_length_out = payload_length[15:0];
+
 
    always @(posedge clk) begin
       if (reset)
