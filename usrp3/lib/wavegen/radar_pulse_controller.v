@@ -67,7 +67,7 @@ localparam     IDLE        = 3'b000,
 
 
 localparam OVERHEAD_COUNT_MAX = 1;
-localparam PROCESS_COUNT_MAX = 63;
+localparam PROCESS_COUNT_MAX = 1;
 
 reg [2:0] next_gen_state;
 reg [2:0] gen_state;
