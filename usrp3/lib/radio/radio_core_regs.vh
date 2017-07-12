@@ -9,6 +9,8 @@ localparam [7:0] SR_CLEAR_CMDS           = 131;
 localparam [7:0] SR_LOOPBACK             = 132;
 localparam [7:0] SR_TEST                 = 133;
 localparam [7:0] SR_CODEC_IDLE           = 134;
+localparam [7:0] SR_MY_RX_CHANNEL_SWAP   = 137;
+localparam [7:0] SR_MY_TX_CHANNEL_SWAP   = 138;
 // TX / RX Control statemachines
 localparam [7:0] SR_TX_CTRL_ERROR_POLICY = 144;
 localparam [7:0] SR_RX_CTRL_COMMAND      = 152;
