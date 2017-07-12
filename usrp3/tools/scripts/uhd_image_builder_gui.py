@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2016 Ettus Research LLC
+Copyright 2016-2017 Ettus Research
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,323 +16,587 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""
-uhd_image_builder GUI
-"""
-import sip
-sip.setapi('QVariant', 2)
+from __future__ import print_function
 import os
-import subprocess
-import uhd_image_builder
 import sys
-import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+import signal
+import threading
 import xml.etree.ElementTree as ET
+from PyQt5 import (QtGui,
+                   QtCore,
+                   QtWidgets)
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtCore import (pyqtSlot,
+                          Qt,
+                          QModelIndex)
+import uhd_image_builder
 
-class MainWindow(QWidget):
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+class MainWindow(QtWidgets.QWidget):
     """
     UHD_IMAGE_BUILDER
     """
+    # pylint: disable=too-many-instance-attributes
+
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.initGUI()
-
-    def initGUI(self):
-        ettusSources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'lib',\
-            'rfnoc', 'Makefile.srcs')
-
         ##################################################
         # Initial Values
         ##################################################
         self.target = 'x300'
         self.device = 'x310'
-        self.buildTarget = 'X310_RFNOC_HG'
+        self.build_target = 'X310_RFNOC_HG'
         self.max_allowed_blocks = 10
+        self.cmd_dict = {"target": '-t {}'.format(self.build_target),
+                         "device": '-d {}'.format(self.device),
+                         "fill_fifos": '',
+                         "viv_gui": '',
+                         "cleanall": '',
+                         "show_file": ''}
+        self.cmd_name = ['./uhd_image_builder.py', ]
+        self.cmd_prefix = list(self.cmd_name)
+        self.instantiation_file = os.path.join(uhd_image_builder.get_scriptpath(),
+                                               '..', '..', 'top', self.target,
+                                               'rfnoc_ce_auto_inst_' + self.device.lower() +
+                                               '.v')
 
+        # List of blocks that are part of our library but that do not take place
+        # on the process this tool provides
+        self.blacklist = ['noc_block_radio_core', 'noc_block_axi_dma_fifo', 'noc_block_pfb']
+        self.lock = threading.Lock()
+        self.init_gui()
+
+    def init_gui(self):
+        """
+        Initializes GUI init values and constants
+        """
+        # pylint: disable=too-many-statements
+
+        ettus_sources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'lib',\
+            'rfnoc', 'Makefile.srcs')
+        ##################################################
+        # Grid Layout
+        ##################################################
+        grid = QGridLayout()
+        grid.setSpacing(15)
         ##################################################
         # Buttons
         ##################################################
-        ootBtn = QPushButton('Add OOT Blocks', self)
-        ootBtn.setToolTip('Add your custom Out-of-tree blocks')
-        ootBtn.move(80, 420)
-        fromGRCBtn = QPushButton('Import from GRC', self)
-        fromGRCBtn.move(340, 420)
-        show_file_btn = QPushButton('Show instantiation File', self)
-        show_file_btn.move(540, 420)
-        AddBtn = QPushButton('>>', self)
-        AddBtn.move(550, 100)
-        AddBtn.setFixedSize(150, 50)
-        RemBtn = QPushButton('<<', self)
-        RemBtn.move(550, 220)
-        RemBtn.setFixedSize(150, 50)
-        genBitBtn = QPushButton('Generate .bit file', self)
-        genBitBtn.move(775, 420)
+        oot_btn = QtWidgets.QPushButton('Add OOT Blocks', self)
+        oot_btn.setToolTip('Add your custom Out-of-tree blocks')
+        grid.addWidget(oot_btn, 9, 0)
+        from_grc_btn = QtWidgets.QPushButton('Import from GRC', self)
+        grid.addWidget(from_grc_btn, 9, 2)
+        show_file_btn = QtWidgets.QPushButton('Show instantiation File', self)
+        grid.addWidget(show_file_btn, 9, 1)
+        add_btn = QtWidgets.QPushButton('>>', self)
+        grid.addWidget(add_btn, 2, 2)
+        rem_btn = QtWidgets.QPushButton('<<', self)
+        grid.addWidget(rem_btn, 3, 2)
+        self.gen_bit_btn = QtWidgets.QPushButton('Generate .bit file', self)
+        grid.addWidget(self.gen_bit_btn, 9, 3)
 
         ##################################################
         # Checkbox
         ##################################################
-        self.fillWithFifos = QCheckBox('Fill with FIFOs', self)
-        self.fillWithFifos.move(560, 300)
-        self.vivGui = QCheckBox('Open Vivado GUI', self)
-        self.vivGui.move(560, 320)
-        self.cleanall = QCheckBox('Clean IP', self)
-        self.cleanall.move(560, 340)
+        self.fill_with_fifos = QtWidgets.QCheckBox('Fill with FIFOs', self)
+        self.viv_gui = QtWidgets.QCheckBox('Open Vivado GUI', self)
+        self.cleanall = QtWidgets.QCheckBox('Clean IP', self)
+        grid.addWidget(self.fill_with_fifos, 5, 2)
+        grid.addWidget(self.viv_gui, 6, 2)
+        grid.addWidget(self.cleanall, 7, 2)
 
         ##################################################
-        # Connection of the buttons with their signals
+        # uhd_image_builder command display
         ##################################################
-        ootBtn.clicked.connect(self.fileDiag)
-        fromGRCBtn.clicked.connect(self.fileGRCDiag)
-        show_file_btn.clicked.connect(self.showFile)
-        AddBtn.clicked.connect(self.addToDesign)
-        RemBtn.clicked.connect(self.removeFromDesign)
-        genBitBtn.clicked.connect(self.genBit)
+        label_cmd_display = QtWidgets.QLabel(self)
+        label_cmd_display.setText("uhd_image_builder command:")
+        label_cmd_display.setAlignment(QtCore.Qt.AlignRight)
+        grid.addWidget(label_cmd_display, 10, 0)
+        self.cmd_display = QtWidgets.QTextEdit(self)
+        self.cmd_display.setMaximumHeight(label_cmd_display.sizeHint().height() * 3)
+        self.cmd_display.setReadOnly(True)
+        self.cmd_display.setText("".join(self.cmd_name))
+        grid.addWidget(self.cmd_display, 10, 1, 1, 3)
 
         ##################################################
         # Panels - QTreeModels
         ##################################################
         ### Far-left Panel: Build targets
-        self.targets = QTreeView(self)
-        self.targets.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.modelTargets= QStandardItemModel(self)
-        self.modelTargets.setHorizontalHeaderItem(0, QStandardItem("Select build target"))
-        self.targets.setModel(self.modelTargets)
-        self.populateTargets('x300')
-        self.populateTargets('e300')
-        self.targets.setCurrentIndex(self.modelTargets.index(0, 0))
-        self.targets.show()
-        self.targets.move(20, 10)
-        self.targets.setFixedSize(250,400)
+        self.targets = QtWidgets.QTreeView(self)
+        self.targets.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.model_targets = QtGui.QStandardItemModel(self)
+        self.model_targets.setHorizontalHeaderItem(0, QtGui.QStandardItem("Select build target"))
+        self.targets.setModel(self.model_targets)
+        self.populate_target('x300')
+        self.populate_target('e300')
+        grid.addWidget(self.targets, 0, 0, 8, 1)
 
         ### Central Panel: Available blocks
         ### Create tree to categorize Ettus Block and OOT Blocks in different lists
-        self.blocksAvailable = QTreeView(self)
-        self.blocksAvailable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.blocksAvailable.setContextMenuPolicy(Qt.CustomContextMenu)
-        EttusBlocks = QStandardItem("Ettus-provided Blocks")
-        self.populateList(EttusBlocks,ettusSources)
-
-        ootSources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
+        self.blocks_available = QtWidgets.QTreeView(self)
+        self.blocks_available.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.blocks_available.setContextMenuPolicy(Qt.CustomContextMenu)
+        ettus_blocks = QtGui.QStandardItem("Ettus-provided Blocks")
+        ettus_blocks.setEnabled(False)
+        ettus_blocks.setForeground(Qt.black)
+        self.populate_list(ettus_blocks, ettus_sources)
+        oot_sources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
             'x300', 'Makefile.srcs')
-        self.OOT = QStandardItem("OOT Blocks for X300 devices")
-        self.populateList(self.OOT,ootSources)
-        self.modelBlocksAvailable = QStandardItemModel(self)
-        self.modelBlocksAvailable.appendRow(EttusBlocks)
-        self.modelBlocksAvailable.appendRow(self.OOT)
-        self.modelBlocksAvailable.setHorizontalHeaderItem(0, QStandardItem("List of blocks available"))
-        self.blocksAvailable.setModel(self.modelBlocksAvailable)
-        self.blocksAvailable.move(290,10)
-        self.blocksAvailable.setFixedSize(250,400)
-
-        self.targets.connect(self.targets.selectionModel(),
-                SIGNAL('selectionChanged(QItemSelection, QItemSelection)'),
-                self.ootlist) #check when the selection of this changes
+        self.oot = QtGui.QStandardItem("OOT Blocks for X300 devices")
+        self.oot.setEnabled(False)
+        self.oot.setForeground(Qt.black)
+        self.populate_list(self.oot, oot_sources)
+        self.model_blocks_available = QtGui.QStandardItemModel(self)
+        self.model_blocks_available.appendRow(ettus_blocks)
+        self.model_blocks_available.appendRow(self.oot)
+        self.model_blocks_available.setHorizontalHeaderItem(
+            0, QtGui.QStandardItem("List of blocks available")
+            )
+        self.blocks_available.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.blocks_available.setModel(self.model_blocks_available)
+        grid.addWidget(self.blocks_available, 0, 1, 8, 1)
 
         ### Far-right Panel: Blocks in current design
-        self.blocksInDesign = QTreeView(self)
-        self.blocksInDesign.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.modelInDesign= QStandardItemModel(self)
-        self.modelInDesign.setHorizontalHeaderItem(0, QStandardItem("Blocks in current design"))
-        self.blocksInDesign.setModel(self.modelInDesign)
-        self.blocksInDesign.move(710,10)
-        self.blocksInDesign.setFixedSize(250,400)
+        self.blocks_in_design = QtWidgets.QTreeView(self)
+        self.blocks_in_design.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.model_in_design = QtGui.QStandardItemModel(self)
+        self.model_in_design.setHorizontalHeaderItem(
+            0, QtGui.QStandardItem("Blocks in current design"))
+        self.blocks_in_design.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.blocks_in_design.setModel(self.model_in_design)
+        grid.addWidget(self.blocks_in_design, 0, 3, 8, 1)
 
-        self.setFixedSize(980, 460)
+        ##################################################
+        # Informative Labels
+        ##################################################
+        block_num_hdr = QtWidgets.QLabel(self)
+        block_num_hdr.setText("Blocks in current design")
+        block_num_hdr.setStyleSheet(" QLabel {font-weight: bold; color: black}")
+        block_num_hdr.setAlignment(QtCore.Qt.AlignHCenter)
+        grid.addWidget(block_num_hdr, 0, 2)
+        self.block_num = QtWidgets.QLabel(self)
+        self.block_num.setText("-")
+        self.block_num.setAlignment(QtCore.Qt.AlignHCenter)
+        grid.addWidget(self.block_num, 1, 2)
+        self.block_num.setStyleSheet(" QLabel {color: green}")
+        self.generating_bitstream = QtWidgets.QLabel(self)
+        self.generating_bitstream.setText("")
+        self.generating_bitstream.setAlignment(QtCore.Qt.AlignHCenter)
+        grid.addWidget(self.generating_bitstream, 11, 0, 1, 5)
+        self.generating_bitstream.setStyleSheet(" QLabel {font-weight: bold; color: black}")
+
+        ##################################################
+        # Connection of the buttons with their signals
+        ##################################################
+        self.fill_with_fifos.clicked.connect(self.fill_slot)
+        self.fill_with_fifos.clicked.connect(self.cmd_display_slot)
+        self.viv_gui.clicked.connect(self.viv_gui_slot)
+        self.viv_gui.clicked.connect(self.cmd_display_slot)
+        self.cleanall.clicked.connect(self.cleanall_slot)
+        self.cleanall.clicked.connect(self.cmd_display_slot)
+        oot_btn.clicked.connect(self.file_dialog)
+        from_grc_btn.clicked.connect(self.blocks_to_add_slot)
+        from_grc_btn.clicked.connect(self.cmd_display_slot)
+        from_grc_btn.clicked.connect(self.file_grc_dialog)
+        add_btn.clicked.connect(self.add_to_design)
+        add_btn.clicked.connect(self.blocks_to_add_slot)
+        add_btn.clicked.connect(self.check_blk_num)
+        add_btn.clicked.connect(self.cmd_display_slot)
+        rem_btn.clicked.connect(self.remove_from_design)
+        rem_btn.clicked.connect(self.blocks_to_add_slot)
+        rem_btn.clicked.connect(self.cmd_display_slot)
+        show_file_btn.clicked.connect(self.show_file)
+        show_file_btn.clicked.connect(self.cmd_display_slot)
+        show_file_btn.clicked.connect(self.run_command)
+        self.gen_bit_btn.clicked.connect(self.generate_bit)
+        self.gen_bit_btn.clicked.connect(self.cmd_display_slot)
+        self.gen_bit_btn.clicked.connect(self.run_command)
+        self.targets.clicked.connect(self.ootlist)
+        self.targets.clicked.connect(self.set_target_and_device)
+        self.targets.clicked.connect(self.cmd_display_slot)
+        self.targets.clicked.connect(self.check_blk_num)
+        self.blocks_available.doubleClicked.connect(self.add_to_design)
+        self.blocks_available.doubleClicked.connect(self.blocks_to_add_slot)
+        self.blocks_available.doubleClicked.connect(self.check_blk_num)
+        self.blocks_available.doubleClicked.connect(self.cmd_display_slot)
+        self.blocks_in_design.doubleClicked.connect(self.remove_from_design)
+        self.blocks_in_design.doubleClicked.connect(self.blocks_to_add_slot)
+        self.blocks_in_design.doubleClicked.connect(self.cmd_display_slot)
+
+        ##################################################
+        # Set a default size based on screen geometry
+        ##################################################
+        screen_size = QtWidgets.QDesktopWidget().screenGeometry(-1)
+        self.resize(screen_size.width()/1.4, screen_size.height()/1.7)
         self.setWindowTitle("uhd_image_builder.py GUI")
+        self.setLayout(grid)
         self.show()
 
     ##################################################
     # Slots and functions/actions
     ##################################################
     @pyqtSlot()
-    def addToDesign(self):
-        index = self.blocksAvailable.currentIndex()
-        word = self.blocksAvailable.model().data(index)
-        element = QStandardItem(word)
-        self.modelInDesign.appendRow(element)
+    def blocks_to_add_slot(self):
+        """
+        Retrieves a list of the blocks in design to be displayed in TextEdit
+        """
+        availables = []
+        blocks = []
+        availables = self.iter_tree(self.model_blocks_available, availables)
+        blk_count = self.model_in_design.rowCount()
+        self.block_num.setText("{}/{}".format(blk_count,
+                                              self.max_allowed_blocks))
+        for i in range(blk_count):
+            blocks.append(self.blocks_in_design.model().data(
+                self.blocks_in_design.model().index(i, 0)))
+        self.cmd_prefix = self.cmd_name + blocks
 
     @pyqtSlot()
-    def removeFromDesign(self):
-        index = self.blocksInDesign.currentIndex()
-        self.modelInDesign.removeRow(index.row())
+    def check_blk_num(self):
+        """
+        Checks the amount of blocks in the design pannel
+        """
+        blk_count = self.model_in_design.rowCount()
+        if blk_count > self.max_allowed_blocks:
+            self.block_num.setStyleSheet(" QLabel {font-weight:bold; color: red}")
+            self.show_too_many_blocks_warning(blk_count)
 
     @pyqtSlot()
-    def showFile(self):
-        self.instFile = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
-                self.target, 'rfnoc_ce_auto_inst_' + self.device.lower() + '.v')
-        if (self.genCommand(False)):
-            os.system("xdg-open " + self.instFile)
+    def fill_slot(self):
+        """
+        Populates 'fill_fifos' value into the command dictionary
+        """
+        if self.fill_with_fifos.isChecked():
+            self.cmd_dict["fill_fifos"] = '--fill-with-fifos'
+        else:
+            self.cmd_dict["fill_fifos"] = ''
 
     @pyqtSlot()
-    def genBit(self):
-        self.genCommand(True)
+    def viv_gui_slot(self):
+        """
+        Populates 'viv_gui' value into the command dictionary
+        """
+        if self.viv_gui.isChecked():
+            self.cmd_dict["viv_gui"] = '-g'
+        else:
+            self.cmd_dict["viv_gui"] = ''
+
+    @pyqtSlot()
+    def cleanall_slot(self):
+        """
+        Populates 'cleanall' value into the command dictionary
+        """
+        if self.cleanall.isChecked():
+            self.cmd_dict["cleanall"] = '-c'
+        else:
+            self.cmd_dict["cleanall"] = ''
+
+    @pyqtSlot()
+    def cmd_display_slot(self):
+        """
+        Displays the command to be run in a QTextEdit in realtime
+        """
+        text = [" ".join(self.cmd_prefix),]
+        for value in self.cmd_dict.values():
+            if value is not '':
+                text.append(value)
+        self.cmd_display.setText(" ".join(text))
+
+    @pyqtSlot()
+    def add_to_design(self):
+        """
+        Adds blocks from the 'available' pannel to the list to be added
+        into the design
+        """
+        indexes = self.blocks_available.selectedIndexes()
+        for index in indexes:
+            word = self.blocks_available.model().data(index)
+            element = QtGui.QStandardItem(word)
+            if word is not None:
+                self.model_in_design.appendRow(element)
+
+    @pyqtSlot()
+    def remove_from_design(self):
+        """
+        Removes blocks from the list that is to be added into the design
+        """
+        indexes = self.blocks_in_design.selectedIndexes()
+        for index in indexes:
+            self.model_in_design.removeRow(index.row())
+        # Edit Informative Label formatting
+        blk_count = self.model_in_design.rowCount()
+        if blk_count <= self.max_allowed_blocks:
+            self.block_num.setStyleSheet(" QLabel {color: green}")
+
+    @pyqtSlot()
+    def show_file(self):
+        """
+        Show the rfnoc_ce_auto_inst file in the default text editor
+        """
+        self.cmd_dict['show_file'] = '-o {}'.format(self.instantiation_file)
+
+    @pyqtSlot()
+    def generate_bit(self):
+        """
+        Runs the FPGA .bit generation command
+        """
+        self.cmd_dict['show_file'] = ''
+
+    @pyqtSlot()
+    def run_command(self):
+        """
+        Executes the uhd_image_builder command based on user options
+        """
+        if self.check_no_blocks() and self.check_blk_not_in_sources():
+            process = threading.Thread(target=self.generate_bitstream)
+            process.start()
+            if self.cmd_dict['show_file'] is not '':
+                os.system("xdg-open " + self.instantiation_file)
+
+    @pyqtSlot()
+    def set_target_and_device(self):
+        """
+        Populates the 'target' and 'device' values of the command directory
+        and the device dependent max_allowed_blocks in display
+        """
+        self.cmd_dict['target'] = '-t {}'.format(self.build_target)
+        self.cmd_dict['device'] = '-d {}'.format(self.device)
+        blk_count = self.model_in_design.rowCount()
+        self.block_num.setText("{}/{}".format(blk_count,
+                                              self.max_allowed_blocks))
+        self.instantiation_file = os.path.join(uhd_image_builder.get_scriptpath(),
+                                               '..', '..', 'top', self.target,
+                                               'rfnoc_ce_auto_inst_' + self.device.lower() +
+                                               '.v')
 
     @pyqtSlot()
     def ootlist(self):
+        """
+        Lists the Out-of-tree module blocks
+        """
         index = self.targets.currentIndex()
-        self.buildTarget = str(self.targets.model().data(index))
-        self.device = self.buildTarget[:4]
+        self.build_target = str(self.targets.model().data(index))
+        self.device = self.build_target[:4]
         if self.device == 'X310' or self.device == 'X300':
             self.target = 'x300'
             self.max_allowed_blocks = 10
-        elif self.device =='E310':
+        elif self.device == 'E310':
             self.target = 'e300'
             self.max_allowed_blocks = 6
-        ootSources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
+        oot_sources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
             self.target, 'Makefile.srcs')
-        self.showList(self.OOT, self.target, ootSources)
+        self.show_list(self.oot, self.target, oot_sources)
 
     @pyqtSlot()
-    def fileDiag(self):
-        appendDir= []
-        filename = QFileDialog.getOpenFileName(self, 'Open File', '')
-        if len(filename) > 0:
-            appendDir.append(os.path.join(os.path.dirname(
-                os.path.join("", str(filename))), ''))
-            uhd_image_builder.append_item_into_file(self.device, appendDir)
-            ootSources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
-                self.target, 'Makefile.srcs')
-            self.populateList(self.OOT, ootSources)
+    def file_dialog(self):
+        """
+        Opens a dialog window to add manually the Out-of-tree module blocks
+        """
+        append_directory = []
+        filename = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '/home/')[0]
+        try:
+            if len(filename) > 0:
+                append_directory.append(os.path.join(os.path.dirname(
+                    os.path.join("", str(filename))), ''))
+                uhd_image_builder.append_item_into_file(self.device, append_directory)
+                oot_sources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
+                    self.target, 'Makefile.srcs')
+                self.populate_list(self.oot, oot_sources)
+        except BaseException:
+            pass
 
     @pyqtSlot()
-    def fileGRCDiag(self):
-        filename = QFileDialog.getOpenFileName(self, 'Open File', '/')
+    def file_grc_dialog(self):
+        """
+        Opens a dialog window to add manually the GRC description file, from where
+        the RFNoC blocks will be parsed and added directly into the "Design" pannel
+        """
+        filename = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '/home/')[0]
         if len(filename) > 0:
-            self.GRCpopulateList(self.modelInDesign,filename)
+            self.grc_populate_list(self.model_in_design, filename)
 
-    def showNoSrcsWarning(self, block_to_add):
+    def check_no_blocks(self):
+        """
+        Checks if there are no blocks in the design pannel. Needs to be a
+        different slot because triggers from clicking signals from pannels
+        would be superfluous
+        """
+        blk_count = self.model_in_design.rowCount()
+        if blk_count == 0:
+            self.show_no_blocks_warning()
+            return False
+        return True
+
+    def show_no_srcs_warning(self, block_to_add):
+        """
+        Shows a warning message window when no sources are found for the blocks that
+        are in the design pannel
+        """
         # Create Warning message window
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
         msg.setText("The following blocks are in your design but their sources"\
             " have not been added: \n\n {0}. \n\nPlease be sure of adding them"\
             "before continuing. Would you like to add them now?"\
             "".format(block_to_add))
         msg.setWindowTitle("No sources for design")
-        YesBtn = msg.addButton("Yes", QMessageBox.YesRole)
-        NoBtn = msg.addButton("No", QMessageBox.NoRole)
+        yes_btn = msg.addButton("Yes", QtWidgets.QMessageBox.YesRole)
+        no_btn = msg.addButton("No", QtWidgets.QMessageBox.NoRole)
         msg.exec_()
-        if msg.clickedButton() == YesBtn:
-            self.fileDiag()
+        if msg.clickedButton() == yes_btn:
+            self.file_dialog()
             return False
-        else:
+        elif msg.clickedButton() == no_btn:
             return True
 
-    def showNoBlocksWarning(self, NumberOfBlocks):
+    @staticmethod
+    def show_no_blocks_warning():
+        """
+        Shows a warning message window when no blocks are found in the 'design' pannel
+        """
         # Create Warning message window
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
         msg.setText("There are no Blocks in the current design")
         msg.exec_()
 
-    def showToManyBlocksWarning(self, NumberOfBlocks):
+    def show_too_many_blocks_warning(self, number_of_blocks):
+        """
+        Shows a warning message window when too many blocks are found in the 'design' pannel
+        """
         # Create Warning message window
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
         msg.setText("You added {} blocks while the maximum allowed blocks for"\
                 " a {} device is {}. Please remove some of the blocks to "\
-                "continue with the design".format(NumberOfBlocks,
-                    self.device, self.max_allowed_blocks))
+                "continue with the design".format(number_of_blocks,
+                                                  self.device, self.max_allowed_blocks))
         msg.exec_()
 
-    def iterTree(self, model, output, parent = QModelIndex()):
+    def iter_tree(self, model, output, parent=QModelIndex()):
+        """
+        Iterates over the Index tree
+        """
         for i in range(model.rowCount(parent)):
             index = model.index(i, 0, parent)
             item = model.data(index)
             output.append(str(item))
             if model.hasChildren(index):
-                self.iterTree(model, output, index)
+                self.iter_tree(model, output, index)
         return output
 
-    def showList(self, parent, target, files):
+    def show_list(self, parent, target, files):
+        """
+        Shows the Out-of-tree blocks that are available for a given device
+        """
         parent.setText('OOT Blocks for {} devices'.format(target.upper()))
-        self.populateList(parent, files)
+        self.populate_list(parent, files)
 
-    def populateList(self,parent,files):
-        #clean the list before populating it again
+    def populate_list(self, parent, files):
+        """
+        Populates the pannels with the blocks that are listed in the Makefile.srcs
+        of our library
+        """
+        # Clean the list before populating it again
         parent.removeRows(0, parent.rowCount())
         suffix = '.v \\\n'
-        with open(files) as f:
-            blocks = f.readlines()
+        with open(files) as fil:
+            blocks = fil.readlines()
         for element in blocks:
-            if element.endswith(suffix) and 'noc_block' in element :
+            if element.endswith(suffix) and 'noc_block' in element:
                 element = element[:-len(suffix)]
-                block = QStandardItem(element.partition('noc_block_')[2])
-                parent.appendRow(block)
+                if element not in self.blacklist:
+                    block = QtGui.QStandardItem(element.partition('noc_block_')[2])
+                    parent.appendRow(block)
 
-    def GRCpopulateList(self, parent, files):
-        tree = ET.parse(files)
-        root = tree.getroot()
-        for blocks in root.iter('block'):
-            for param in blocks.iter('param'):
-                for key in param.iter('key'):
-                    if 'fpga_module_name' in key.text:
-                        if param.findtext('value') == 'noc_block_radio_core': continue
-                        block = QStandardItem(param.findtext('value').partition('noc_block_')[2])
-                        parent.appendRow(block)
+    @staticmethod
+    def show_not_xml_warning():
+        """
+        Shows a warning message window when no blocks are found in the 'design' pannel
+        """
+        # Create Warning message window
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.setText("[ParseError]: The chosen file is not XML formatted")
+        msg.exec_()
 
-    def populateTargets(self, selectedTarget):
-        s =  '0_RFNOC'
-        buildTargets = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',
-                selectedTarget, 'Makefile')
-        with open(buildTargets, 'r') as f:
-            text = f.readlines()
+    def grc_populate_list(self, parent, files):
+        """
+        Populates the 'Design' list with the RFNoC blocks found in a GRC file
+        """
+        try:
+            tree = ET.parse(files)
+            root = tree.getroot()
+            for blocks in root.iter('block'):
+                for param in blocks.iter('param'):
+                    for key in param.iter('key'):
+                        if 'fpga_module_name' in key.text:
+                            if param.findtext('value') in self.blacklist:
+                                continue
+                            block = QtGui.QStandardItem(param.findtext('value').\
+                                    partition('noc_block_')[2])
+                            parent.appendRow(block)
+        except ET.ParseError:
+            self.show_not_xml_warning()
+            return
+
+    def populate_target(self, selected_target):
+        """
+        Parses the Makefile available and lists the build targets into the left pannel
+        """
+        suffix = '0_RFNOC'
+        build_targets = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',
+                                     selected_target, 'Makefile')
+        with open(build_targets, 'r') as fil:
+            text = fil.readlines()
             for lines in text:
                 lines = lines.partition(':')[0]
-                if s in lines:
-                    target = QStandardItem(lines)
-                    self.modelTargets.appendRow(target)
+                if suffix in lines:
+                    target = QtGui.QStandardItem(lines)
+                    self.model_targets.appendRow(target)
 
-    def genCommand(self, flag = False):
+    def check_blk_not_in_sources(self):
+        """
+        Checks if a block added from GRC flowgraph is not yet in the sources
+        list
+        """
         availables = []
-        toDesign = []
         notin = []
-        maxFlag = False
-        notInFlag = False
-        availables = self.iterTree(self.modelBlocksAvailable, availables)
-        self.max_allowed_blocks = 10 if self.target == 'x300' else 6
-        Ncurrent_blocks = self.modelInDesign.rowCount()
-        # Check if there are sources for the blocks in current design
-        if Ncurrent_blocks == 0:
-            self.showNoBlocksWarning(Ncurrent_blocks)
-            notInFlag = True
-        else:
-            for i in range(self.modelInDesign.rowCount()):
-                block_to_add = self.blocksInDesign.model().data(
-                        self.blocksInDesign.model().index(i,0))
-                if str(block_to_add) not in availables:
-                        notin.append(str(block_to_add))
-                else:
-                    toDesign.append(str(block_to_add))
-            # Check whether the number of blocks exceeds the stated maximum
-            if Ncurrent_blocks > self.max_allowed_blocks:
-                self.showToManyBlocksWarning(Ncurrent_blocks)
-                maxFlag = True
-            elif Ncurrent_blocks < self.max_allowed_blocks and self.fillWithFifos.isChecked():
-                for i in range(self.max_allowed_blocks - Ncurrent_blocks):
-                    toDesign.append('axi_fifo_loopback')
+        availables = self.iter_tree(self.model_blocks_available, availables)
+        for i in range(self.model_in_design.rowCount()):
+            block_to_add = self.blocks_in_design.model().data(
+                self.blocks_in_design.model().index(i, 0))
+            if str(block_to_add) not in availables:
+                notin.append(str(block_to_add))
         if len(notin) > 0:
-            self.showNoSrcsWarning(notin)
-            return
-        if not (notInFlag or maxFlag):
-            com = ' '.join(toDesign)
-            command = "./uhd_image_builder.py " + com + ' -d ' + self.device + ' -t ' + self.buildTarget
-            if flag == False:
-                command = command + ' -o ' + self.instFile
-            if self.vivGui.isChecked():
-                command = command + ' -g'
-            if self.cleanall.isChecked():
-                command = command + ' -c'
-            print(command)
-            os.system(command)
-            return True
-        else:
+            self.show_no_srcs_warning(notin)
             return False
+        return True
+
+    def generate_bitstream(self):
+        """
+        Runs the bitstream generation command in a separate thread
+        """
+        self.lock.acquire()
+        self.gen_bit_btn.setEnabled(False)
+        command = self.cmd_display.toPlainText()
+        self.generating_bitstream.setText(
+            "[Generating BitStream]: The FPGA is currently being generated" + \
+            " with the blocks of the current design. See the terminal window" + \
+            " for further compilation details")
+        os.system(command)
+        self.lock.release()
+        self.gen_bit_btn.setEnabled(True)
+        self.generating_bitstream.setText("")
 
 def main():
-    app = QApplication(sys.argv)
-    window = MainWindow()
+    """
+    Main GUI method
+    """
+    app = QtWidgets.QApplication(sys.argv)
+    _window = MainWindow()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

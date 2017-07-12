@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2010-2011,2014-2015 Ettus Research LLC
+Copyright 2016-2017 Ettus Research
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -70,6 +70,9 @@ generate
 endgenerate
 """
 
+# List of blocks that are part of our library but that do not take part
+# in the process this tool provides
+BLACKLIST = {'radio_core', 'axi_dma_fifo'}
 
 def setup_parser():
     """
@@ -106,7 +109,7 @@ def setup_parser():
         "-t", "--target",
         help="Build target - image type [X3X0_RFNOC_HG, X3X0_RFNOC_XG,\
                 E310_RFNOC_sg3...]",
-         default=None)
+        default=None)
     parser.add_argument(
         "-g", "--GUI",
         help="Open Vivado GUI during the FPGA building process",
@@ -139,6 +142,14 @@ def create_vfiles(args):
     if not args.fill_with_fifos:
         num_ce = len(blocks)
     vfile = HEADER_TMPL.format(num_ce=num_ce)
+    blocks_in_blacklist = [block for block in blocks if block in BLACKLIST]
+    if len(blocks_in_blacklist):
+        print("[RFNoC ERROR]: The following blocks require special treatment and"\
+                " can't be instantiated with this tool:  ")
+        for element in blocks_in_blacklist:
+            print(" * ", element)
+        print("Remove them from the command and run the uhd_image_builder.py again.")
+        exit(0)
     print("--Using the following blocks to generate image:")
     block_count = {k: 0 for k in set(blocks)}
     for i, block in enumerate(blocks):
@@ -197,11 +208,15 @@ def append_item_into_file(device, include_dir):
 
     target_dir = device_dict(device.lower())
     if include_dir is not None:
-        for dirs in include_dir:
+        for directory in include_dir:
+            dirs = os.path.join(directory, '')
             checkdir_v(dirs)
             oot_srcs_file = os.path.join(dirs, 'Makefile.srcs')
             dest_srcs_file = os.path.join(get_scriptpath(), '..', '..', 'top',\
                     target_dir, 'Makefile.srcs')
+            oot_srcs_list = readfile(oot_srcs_file)
+            oot_srcs_list = [w.replace('SOURCES_PATH', dirs) for w in oot_srcs_list]
+            dest_srcs_list = readfile(dest_srcs_file)
             prefixpattern = re.escape('$(addprefix ' + dirs + ', \\\n')
             linepattern = re.escape('RFNOC_OOT_SRCS = \\\n')
             oldfile = open(dest_srcs_file, 'r').read()
@@ -214,10 +229,12 @@ def append_item_into_file(device, include_dir):
                     return
                 else:
                     last_line = lines[-1]
-                    srcs = "".join(readfile(oot_srcs_file))
+                    srcs = "".join(oot_srcs_list)
             else:
                 last_line = prefixlines[-1]
-                srcs = "".join(compare(oot_srcs_file, dest_srcs_file))
+                notin = []
+                notin = [item for item in oot_srcs_list if item not in dest_srcs_list]
+                srcs = "".join(notin)
             newfile = oldfile.replace(last_line, last_line + srcs)
             open(dest_srcs_file, 'w').write(newfile)
 
@@ -262,11 +279,13 @@ def build(args):
                 format(build_dir))
         os.chdir(build_dir)
         make_cmd = "source ./setupenv.sh "
-        if(args.clean_all):
+        if args.clean_all:
             make_cmd = make_cmd + "&& make cleanall "
         make_cmd = make_cmd + "&& make " + dtarget(args)
-        if(args.GUI):
+        if args.GUI:
             make_cmd = make_cmd + " GUI=1"
+        # Wrap it into a bash call:
+        make_cmd = '/bin/bash -c "{0}"'.format(make_cmd)
         ret_val = os.system(make_cmd)
         os.chdir(cwd)
     return ret_val
@@ -294,7 +313,7 @@ def checkdir_v(include_dir):
     """
     Checks the existance of verilog files in the given include dir
     """
-    nfiles = glob.glob(include_dir+'*.v')
+    nfiles = glob.glob(os.path.join(include_dir,'')+'*.v')
     if len(nfiles) == 0:
         print('[ERROR] No verilog files found in the given directory')
         exit(0)
@@ -313,7 +332,7 @@ def main():
     args = setup_parser().parse_args()
     vfile = create_vfiles(args)
     file_generator(args, vfile)
-    append_item_into_file(args.device,args.include_dir)
+    append_item_into_file(args.device, args.include_dir)
     if args.outfile is  None:
         return build(args)
     else:
@@ -323,4 +342,3 @@ def main():
 
 if __name__ == "__main__":
     exit(main())
-

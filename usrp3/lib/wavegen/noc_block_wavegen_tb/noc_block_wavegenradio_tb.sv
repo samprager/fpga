@@ -18,7 +18,7 @@ module noc_block_wavegen_tb();
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
   //`RFNOC_ADD_BLOCK(noc_block_wavegen, 0);
 
-  `RFNOC_ADD_BLOCK_CUSTOM(noc_block_wavegen, 0 /* xbar port 0 */);
+  `RFNOC_ADD_BLOCK_CUSTOM(noc_block_wavegen, 0 /* xbar port 0 */)
 noc_block_wavegen noc_block_wavegen(
   .bus_clk(bus_clk),
   .bus_rst(bus_rst),
