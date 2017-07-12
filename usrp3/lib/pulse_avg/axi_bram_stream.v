@@ -104,7 +104,7 @@ reg s_axis_s2mm_cmd_tvalid_reg;
 
 reg write_ready_reg;
 reg read_ready_reg;
-reg write_cmd_stop, read_cmd_stop;
+reg wr_cmd_stop, rd_cmd_stop;
 reg [31:0] new_size;  // bytes to transfer
 reg [31:0] cur_size;  // bytes to transfer
 
@@ -199,7 +199,7 @@ always @(posedge clk)begin
     else if (gen_state == RW_CMD & (&wr_cmd_counter)) begin
         wr_cmd_stop <= 1;
     end
-    else if (gen_state != WR_CMD | gen_state != RW_CMD) begin
+    else if (gen_state != WR_CMD & gen_state != RW_CMD) begin
         wr_cmd_stop <= 0;
     end
 end
@@ -208,10 +208,10 @@ always @(posedge clk)begin
     if(reset) begin
         s_axis_s2mm_cmd_tvalid_reg <= 0;
     end
-    else if (gen_state == WR_CMD & !(s_axis_s2mm_cmd_tvalid_reg & s_axis_s2mm_cmd_tready) & (wr_cmd_counter == 0)) begin
+    else if (gen_state == WR_CMD & !(s_axis_s2mm_cmd_tvalid_reg & s_axis_s2mm_cmd_tready) & (wr_cmd_counter == 0)& !wr_cmd_stop) begin
         s_axis_s2mm_cmd_tvalid_reg <= 1;
     end
-    else if (gen_state == RW_CMD & !(s_axis_s2mm_cmd_tvalid_reg & s_axis_s2mm_cmd_tready) & (wr_cmd_counter == 0)) begin
+    else if (gen_state == RW_CMD & !(s_axis_s2mm_cmd_tvalid_reg & s_axis_s2mm_cmd_tready) & (wr_cmd_counter == 0)& !wr_cmd_stop) begin
         s_axis_s2mm_cmd_tvalid_reg <= 1;
     end
     else begin
@@ -263,7 +263,7 @@ always @(posedge clk)begin
     else if (gen_state == RW_CMD & (s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready)) begin
         rd_cmd_stop <= 1;
     end
-    else if (gen_state != RD_CMD | gen_state != RW_CMD) begin
+    else if (gen_state != RD_CMD & gen_state != RW_CMD) begin
         rd_cmd_stop <= 0;
     end
 end
@@ -272,10 +272,10 @@ always @(posedge clk)begin
     if(reset) begin
         s_axis_mm2s_cmd_tvalid_reg <= 0;
     end
-    else if ((gen_state == RD_CMD)&!(s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready)&(rd_cmd_counter == 0))begin
+    else if ((gen_state == RD_CMD)&!(s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready)&(rd_cmd_counter == 0)& !rd_cmd_stop)begin
         s_axis_mm2s_cmd_tvalid_reg <= 1;
     end
-    else if ((gen_state == RW_CMD)&!(s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready)&(rd_cmd_counter == 0))begin
+    else if ((gen_state == RW_CMD)&!(s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready)&(rd_cmd_counter == 0)& !rd_cmd_stop)begin
         s_axis_mm2s_cmd_tvalid_reg <= 1;
     end
     else begin
@@ -336,7 +336,7 @@ always @(posedge clk)begin
     else if(gen_state == RW_DATA & s_axis_s2mm_tready & s_axis_s2mm_tvalid) begin
         wr_counter <= wr_counter + 1'b1;
     end
-    else if(gen_state != WR_DATA & en_state != RW_DATA) begin
+    else if(gen_state != WR_DATA & gen_state != RW_DATA) begin
         wr_counter <= 1'b0;
     end
 end
@@ -437,9 +437,6 @@ begin
    end
 end
 
-assign write_cmd_stop = ((gen_state == WR_CMD | gen_state == RW_CMD) & (&wr_cmd_counter));
-assign read_cmd_stop = ((gen_state == RD_CMD | gen_state == RW_CMD) & (s_axis_mm2s_cmd_tvalid_reg & s_axis_mm2s_cmd_tready));
-
 assign read_ready = read_ready_reg & written;
 assign write_ready = write_ready_reg;
 assign out_size = cur_size;
@@ -500,7 +497,7 @@ assign s_axis_s2mm_cmd_tvalid = s_axis_s2mm_cmd_tvalid_reg;
          .s_axis_s2mm_tready(s_axis_s2mm_tready),
          .s_axis_s2mm_tvalid(s_axis_s2mm_tvalid),
          .aresetn(!reset),
-         .clk(clk),
+         .clk_in1(clk),
          .mm2s_err(mm2s_err),
          .s2mm_err(s2mm_err)
      );
