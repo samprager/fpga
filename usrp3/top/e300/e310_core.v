@@ -383,8 +383,8 @@ module e310_core
   assign rx_stb1_sel        = rx_channel_swap ? rx_stb0 : rx_stb1;
   assign rx_data0_sel       = rx_channel_swap ? rx_data1 : rx_data0;
   assign rx_data1_sel       = rx_channel_swap ? rx_data0 : rx_data1;
-  assign tx_stb0            = tx_channel_swap ? tx_stb1_sel : tx_stb0_sel;
-  assign tx_stb1            = tx_channel_swap ? tx_stb0_sel : tx_stb1_sel;
+  assign tx_stb0_sel        = tx_channel_swap ? tx_stb1 : tx_stb0;
+  assign tx_stb1_sel        = tx_channel_swap ? tx_stb0 : tx_stb1;
   assign tx_data0           = tx_channel_swap ? tx_data1_sel : tx_data0_sel;
   assign tx_data1           = tx_channel_swap ? tx_data0_sel : tx_data1_sel;
 
