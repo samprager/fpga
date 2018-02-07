@@ -623,7 +623,6 @@ noc_block_wavegen noc_block_wavegen(
     /********************************************************
     ** Test 11 -- Send Chirp pulse with forward timestamp and send rx command
     ********************************************************/
-    // Sending an impulse will readback the FIR filter coefficients
     `TEST_CASE_START("Automatic pulse with forward time and forward timed rx command");
     // Write a constant to Waveform Samples
     wfrm_id = wfrm_id + 1;
@@ -639,7 +638,6 @@ noc_block_wavegen noc_block_wavegen(
     tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {16'hFEED,temp[15:0]});
 
     $display("Changing policy to Manual, Fwd Time, and Fwd RX Command");
-    // Change CTRL Policy to dependent mode
     tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd7);
     tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
     $display("Read Policy: %16x", readback);
@@ -668,7 +666,6 @@ noc_block_wavegen noc_block_wavegen(
     `ASSERT_ERROR(readback == 64'h9ff, s);
 
     $display("Changing policy to Auto, Fwd Time, and Fwd RX Command");
-    // Change CTRL Policy to dependent mode
     tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd6);
 
     tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
@@ -776,6 +773,126 @@ noc_block_wavegen noc_block_wavegen(
           // Check tlast
           if (((i+1)%6 == 0)|(i == wfrm_len-1)) begin
             `ASSERT_ERROR(last, "Last not asserted on 6th or final word!");
+          end else begin
+            `ASSERT_ERROR(~last, "Last asserted early!");
+          end
+        end
+      end
+    join
+    `TEST_CASE_DONE(1);
+    
+    $display("Changing SPP to 64");
+    // Change CTRL Policy to dependent mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_MAXLEN, 32'd64);
+
+
+    /** Test 14 -- Send Chirp pulse with with 0 orf
+    ********************************************************/
+    `TEST_CASE_START("Automatic pulse with 0 prf and with forward time and forward timed rx command");
+    
+
+    $display("Testing PRF Count = 1 in auto mode with awg source");
+        tb_streamer.write_reg(sid_noc_block_wavegen, SR_AWG_CTRL_WORD_ADDR, CTRL_WORD_SEL_AWG);
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_CTRL, readback);
+    $display("Read Ctrl Word: %16x", readback);
+    // Change CTRL Policy to dependent mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_PRF_INT_ADDR, 32'b0);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_PRF_FRAC_ADDR, 32'h1);
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_PRF, readback);
+    $display("Read PRF Word: %16x", readback);
+    $sformat(s, "Incorrect PRF Read! Expected: %0d, Received: %0d", 64'h1, readback);
+    `ASSERT_ERROR(readback == 64'h1, s);
+
+    $display("Changing policy to Auto, Send immediately, and Don't Fwd RX Command");
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd0);
+
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
+    $display("Read Policy: %16x", readback);
+    $sformat(s, "Incorrect Policy Read! Expected: %0d, Received: %0d", 32'd0, readback);
+    `ASSERT_ERROR(readback == 32'd0, s);
+    
+
+    /* Send and check impulse */
+    fork
+      begin
+        logic [31:0] recv_val;
+        logic last;
+        logic [15:0] i_samp, q_samp;
+        /* Send Immediate Pulse command */
+        /* Send and check impulse */
+        $display("Receive Wavegen output");
+        for (int j =0; j<10;j++) begin
+        for (int i = 0; i < num_samps; i++) begin
+          tb_streamer.pull_word({i_samp, q_samp}, last);
+          // Check I / Q values, should be a ramp
+          $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+          `ASSERT_ERROR(i_samp == 16'hFEED, s);
+          $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+          `ASSERT_ERROR(q_samp == i, s);
+          // Check tlast
+          if (i == num_samps-1) begin
+            `ASSERT_ERROR(last, "Last not asserted on final word!");
+          end else begin
+            `ASSERT_ERROR(~last, "Last asserted early!");
+          end
+        end
+        end
+      end
+    join
+    `TEST_CASE_DONE(1);
+
+    /********************************************************
+    ** Test 15 -- Set back to delayed command
+    ********************************************************/
+    // Sending an impulse will readback the FIR filter coefficients
+    `TEST_CASE_START("Set to manual and Send Delayed Pulse Command");
+
+    $display("Changing policy to Manual, Fwd time, and Don't Fwd RX Command");
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd3);
+
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
+    $display("Read Policy: %16x", readback);
+    $sformat(s, "Incorrect Policy Read! Expected: %0d, Received: %0d", 32'd3, readback);
+    `ASSERT_ERROR(readback == 32'd3, s);
+
+    $display("Reading Vita Time");
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_VITA_TIME, readback);
+    $display("Read Vita time: %d",readback);
+
+    start_time = readback+64'ha00;
+    $display("Sending command for pulse to start at time %d", start_time);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_COMMAND,
+                   {1'b0 /* Start at time */, 31'b0});
+    // Set start time
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_HI, start_time[63:32]);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_LO, start_time[31:0]);
+    $display("Command Sent");
+    // $display("Now sending immediate commmand");
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_COMMAND,
+    //                {1'b1 /* Start immediately */, 31'b0});
+    // // Have to set time lower bytes to trigger the command being stored, although time is not used.
+    // tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_RADAR_CTRL_TIME_LO, 32'd0);
+
+    /* Send Immediate Pulse command */
+    /* Send and check impulse */
+    fork
+      begin
+        logic [31:0] recv_val;
+        logic last;
+        logic [15:0] i_samp, q_samp;
+        /* Send Immediate Pulse command */
+        /* Send and check impulse */
+        $display("Receive Wavegen output");
+        for (int i = 0; i < num_samps; i++) begin
+          tb_streamer.pull_word({i_samp, q_samp}, last);
+          // Check I / Q values, should be a ramp
+          $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+          `ASSERT_ERROR(i_samp == 16'hFEED, s);
+          $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+          `ASSERT_ERROR(q_samp == i, s);
+          // Check tlast
+          if (i == num_samps-1) begin
+            `ASSERT_ERROR(last, "Last not asserted on final word!");
           end else begin
             `ASSERT_ERROR(~last, "Last asserted early!");
           end
