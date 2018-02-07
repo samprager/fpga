@@ -325,6 +325,14 @@ module e310_core
   wire [31:0] db_gpio_out[0:NUM_CHANNELS-1];
   wire [7:0] sen[0:NUM_CHANNELS-1];
   wire sclk[0:NUM_CHANNELS-1], mosi[0:NUM_CHANNELS-1], miso[0:NUM_CHANNELS-1];
+
+  wire tx_channel_swap, rx_channel_swap;
+  wire rx_stb0_sel, rx_stb1_sel;
+  wire [31:0] rx_data0_sel;
+  wire [31:0] rx_data1_sel;
+  wire [31:0] tx_data0_sel;
+  wire [31:0] tx_data1_sel;
+
   noc_block_radio_core #(
     .NUM_CHANNELS(NUM_CHANNELS),
     .STR_SINK_FIFOSIZE({8'd13,8'd13}),
@@ -338,8 +346,12 @@ module e310_core
     // Output timed settings bus, one per radio
     .ext_set_stb(), .ext_set_addr(), .ext_set_data(),
     // Ports connected to radio front end
-    .rx({rx_data1,rx_data0}), .rx_stb({rx_stb1,rx_stb0}),
-    .tx({tx_data1,tx_data0}), .tx_stb({tx_stb1,tx_stb0}),
+    .rx({rx_data1_sel,rx_data0_sel}), .rx_stb({rx_stb1_sel,rx_stb0_sel}),
+    .tx({tx_data1_sel,tx_data0_sel}), .tx_stb({tx_stb1_sel,tx_stb0_sel}),
+
+    // setting to swap rx and tx channels coming from front end for calibration
+    .tx_channel_swap(tx_channel_swap), .rx_channel_swap(rx_channel_swap),
+
     // Interfaces to front panel and daughter board
     .pps(pps), .sync_out(),
     .misc_ins('d0), .misc_outs(),
@@ -349,6 +361,7 @@ module e310_core
     .spi_clk(bus_clk), .spi_rst(bus_rst),
     .sen({sen[1],sen[0]}), .sclk({sclk[1],sclk[0]}), .mosi({mosi[1],mosi[0]}), .miso({miso[1],miso[0]}),
     .debug());
+
 
   // Connect daughter board I/O
   assign fp_gpio_in[0]      = {26'd0,fp_gpio_in0};
@@ -360,9 +373,43 @@ module e310_core
   assign spi_mosi           = ~sen[0][0]                  ? mosi[0] : mosi[1];
   assign miso[0]            = spi_miso;
   assign miso[1]            = spi_miso;
-  assign db_gpio0           = db_gpio_out[0];
-  assign db_gpio1           = db_gpio_out[1];
   assign leds0              = leds[0][2:0];
   assign leds1              = leds[1][2:0];
+
+  // Swap channels for using calibration loopback procedure
+  assign db_gpio0           = (tx_channel_swap & rx_channel_swap) ? db_gpio_out[1] : db_gpio_out[0];
+  assign db_gpio1           = (tx_channel_swap & rx_channel_swap) ? db_gpio_out[0] : db_gpio_out[1];
+  assign rx_stb0_sel        = rx_channel_swap ? rx_stb1 : rx_stb0;
+  assign rx_stb1_sel        = rx_channel_swap ? rx_stb0 : rx_stb1;
+  assign rx_data0_sel       = rx_channel_swap ? rx_data1 : rx_data0;
+  assign rx_data1_sel       = rx_channel_swap ? rx_data0 : rx_data1;
+  assign tx_stb0_sel        = tx_channel_swap ? tx_stb1 : tx_stb0;
+  assign tx_stb1_sel        = tx_channel_swap ? tx_stb0 : tx_stb1;
+  assign tx_data0           = tx_channel_swap ? tx_data1_sel : tx_data0_sel;
+  assign tx_data1           = tx_channel_swap ? tx_data0_sel : tx_data1_sel;
+
+// Note: above we are actually swapping the two channels back as they are flipped in e310.v already
+
+// For reference: db_gpio in e310.v
+/*
+assign {LED_RX1_RX, LED_TXRX1_TX, LED_TXRX1_RX} = leds0;
+assign { VCRX1_V2, VCRX1_V1, VCTXRX1_V2, VCTXRX1_V1, // 4 - antenna selects
+         TX_ENABLE1B, TX_ENABLE1A, // 2
+         RX1C_BANDSEL, RX1B_BANDSEL, RX1_BANDSEL, // 7
+         TX1_BANDSEL // 3
+       } = db_gpio0[15:0];
+
+assign {LED_RX2_RX, LED_TXRX2_TX, LED_TXRX2_RX} = leds1;
+assign { VCRX2_V2, VCRX2_V1, VCTXRX2_V2, VCTXRX2_V1, //4  antenna selects
+         TX_ENABLE2B, TX_ENABLE2A, // 2
+         RX2C_BANDSEL, RX2B_BANDSEL, RX2_BANDSEL, // 7
+         TX2_BANDSEL // 3
+       } = db_gpio1[15:0];
+
+// It is okay to OR here as the both channels must be set to the same freq.
+// This is needed so software does not have to set properties of radio core 0
+// when only using radio core 1.
+assign TX_BANDSEL = TX1_BANDSEL | TX2_BANDSEL;
+*/
 
 endmodule // e310_core

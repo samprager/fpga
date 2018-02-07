@@ -52,9 +52,15 @@ cvita_hdr_decoder cvita_hdr_decoder (
      .vita_time(vita_time)
    );
 
+   pulse_mem pulse_mem(
+       .clk(clk), .reset(reset),
+       .rd_addr(rd_addr), .rd_data(rd_data), .rd_ena(rd_ena),
+       .wr_addr(wr_addr), .wr_data(wr_data), .wr_ena(wr_ena)
+   );ls
+
 always @(posedge clk) begin
     if(reset | clear)
         num_count_r <= 0;
-    else if ()    
+    else if ()
 end
 endmodule

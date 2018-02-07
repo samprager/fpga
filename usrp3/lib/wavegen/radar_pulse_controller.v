@@ -114,8 +114,13 @@ wire forward_timestamp = policy[1];
 
 reg send_imm_r;
 reg [63:0] rcvtime_r;
+reg chain_r;
+reg [27:0] numlines_r;
 
 reg [63:0] vita_time_next_chirp;
+
+reg chain_pulses;
+reg [27:0] num_pulses;
 
 wire now, early, late;
 wire command_valid;
@@ -259,10 +264,42 @@ always @(posedge clk)
 begin
   if(reset)
     command_ready <= 1'b0;
-  else if ((gen_state == IDLE & (manual_mode & command_valid & (send_imm | late | now | forward_timestamp)))|(~manual_mode))
+  else if ((gen_state == IDLE & (manual_mode & command_valid & ((num_pulses ==0)| stop) & (send_imm | late | now | forward_timestamp)))|(~manual_mode))
     command_ready <= 1'b1;
   else
     command_ready <= 1'b0;
+end
+
+// Add support for pulse chaining - must set chain=1, and numlines in command. Pulses will be repeated at the prf count stored in the waveform generator register. 
+always @(posedge clk)
+begin
+  if(reset) begin
+    num_pulses <= 'b0;
+    next_pulse_time <= 'b0;
+    chain_pulses <= 1'b0;
+  end else if (~manual_mode) begin
+    num_pulses <= 'b0;
+    next_pulse_time <= 'b0;
+    chain_pulses <= 1'b0;
+  end else if (gen_state == IDLE & (manual_mode & command_valid & ((num_pulses ==0)| stop) & (send_imm | now | forward_timestamp))) begin
+    if (send_imm)
+        next_pulse_time <= vita_time;
+    else
+        next_pulse_time <= rcvtime;
+
+    if (chain & ~stop) begin
+        num_pulses <= numlines;
+        chain_pulses <= 1'b1;
+    end else begin
+        num_pulses <= 1;
+        chain_pulses <= 1'b0;
+    end
+  end else if ((gen_state == CHIRP) & awg_done & (|num_pulses)) begin
+      num_pulses <= num_pulses -1;
+      next_pulse_time <= next_pulse_time + chirp_prf_count_max;
+  end else if (num_pulses == 0) begin
+        chain_pulses <= 1'b0;
+  end
 end
 
 always @(posedge clk)
@@ -270,14 +307,18 @@ begin
   if(reset) begin
     send_imm_r <= 1'b0;
     rcvtime_r <= 'b0;
+    numlines_r <= 'b0;
+    chain_r <= 1'b0;
   end
   else if (command_ready & command_valid) begin
         send_imm_r <= send_imm;
         rcvtime_r <= rcvtime;
+        chain_r <= chain;
+        numlines_r <= numlines;
   end
 end
 
-always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm or forward_timestamp or manual_mode or now_next or late_next)
+always @(gen_state or chirp_count or awg_done or awg_ready or overhead_count or adc_collect_count or process_count or policy or command_valid or now or send_imm or forward_timestamp or manual_mode or now_next or late_next or num_pulses)
 begin
    next_gen_state = gen_state;
    case (gen_state)
@@ -285,10 +326,12 @@ begin
          if (awg_ready) begin //& (&fmc150_status_vector[3:1]))
             if (~manual_mode)
                 next_gen_state = ACTIVE;
-            if (manual_mode & command_valid) begin
+            if (manual_mode & command_valid & (num_pulses ==0)) begin
                if (now | send_imm | forward_timestamp) begin
                     next_gen_state = CHIRP;
                end
+            end else if (manual_mode & (|num_pulses)) begin
+                next_gen_state = CHIRP;
             end
         end
 
@@ -296,7 +339,7 @@ begin
       ACTIVE : begin
          if (awg_ready & (chirp_count == 0)) //& (&fmc150_status_vector[3:1]))
             next_gen_state = CHIRP;
-         else if (manual_mode )
+         else if (manual_mode)
             next_gen_state = IDLE;
       end
       CHIRP : begin
@@ -394,7 +437,8 @@ assign adc_run = adc_run_int | awg_data_valid;
 assign adc_last = adc_last_int;
 assign prf_out = chirp_prf_count_max;
 assign has_time = (forward_timestamp & ((manual_mode & ~send_imm_r)|(~manual_mode))) ? 1'b1 : 1'b0;
-assign timestamp = (forward_timestamp & manual_mode & ~send_imm_r) ? rcvtime_r : (forward_timestamp & ~manual_mode) ? vita_time_next_chirp : vita_time;
+// assign timestamp = (forward_timestamp & manual_mode & ~send_imm_r) ? rcvtime_r : (forward_timestamp & ~manual_mode) ? vita_time_next_chirp : vita_time;
+assign timestamp = (chain_pulses & forward_timestamp & manual_mode & ~send_imm_r) ? next_pulse_time : (forward_timestamp & manual_mode & ~send_imm_r) ? rcvtime_r : (forward_timestamp & ~manual_mode) ? vita_time_next_chirp : vita_time;
 
 
 endmodule

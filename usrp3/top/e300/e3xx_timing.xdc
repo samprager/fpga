@@ -22,3 +22,4 @@ set_min_delay -from [get_ports PL_GPIO*] -to [all_registers -edge_triggered] 5.0
 ###############################################################################
 set_false_path -from [get_ports ONSWITCH_DB]
 
+

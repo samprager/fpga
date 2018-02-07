@@ -21,6 +21,9 @@ module noc_block_radio_core #(
   // Ports connected to radio front end
   input  [NUM_CHANNELS*32-1:0] rx, input [NUM_CHANNELS-1:0] rx_stb,
   output [NUM_CHANNELS*32-1:0] tx, input [NUM_CHANNELS-1:0] tx_stb,
+
+  //Custom switch to allow calibration loopback channel
+  output tx_channel_swap, rx_channel_swap,
   // Interfaces to front panel and daughter board
   input pps, input sync_in, output sync_out,
   input [NUM_CHANNELS*32-1:0] misc_ins, output [NUM_CHANNELS*32-1:0] misc_outs,
@@ -141,6 +144,15 @@ module noc_block_radio_core #(
     .set_stb(set_stb_mux), .set_addr(set_addr_mux), .set_data(set_data_mux),
     .vita_time(vita_time), .vita_time_lastpps(vita_time_lastpps),
     .sync_out(sync_out));
+
+// Set this register to loop TX data directly to RX data.
+setting_reg #(.my_addr(SR_MY_RX_CHANNEL_SWAP), .width(1)) sr_rx_channel_swap (
+  .clk(ce_clk), .rst(ce_rst), .strobe(set_stb_mux), .addr(set_addr_mux), .in(set_data_mux),
+  .out(rx_channel_swap), .changed());
+
+setting_reg #(.my_addr(SR_MY_TX_CHANNEL_SWAP), .width(1)) sr_tx_channel_swap (
+    .clk(ce_clk), .rst(ce_rst), .strobe(set_stb_mux), .addr(set_addr_mux), .in(set_data_mux),
+    .out(tx_channel_swap), .changed());
 
   // Expose settings bus externally
   assign ext_set_stb  = set_addr >= SR_EXTERNAL_BASE ? set_stb : 1'b0;
