@@ -296,8 +296,10 @@ begin
     end
   end else if ((gen_state == CHIRP) & awg_done & (|num_pulses)) begin
       num_pulses <= num_pulses -1;
-      next_pulse_time <= next_pulse_time + chirp_prf_count_max;
-  end else if (num_pulses == 0) begin
+      // next_pulse_time <= next_pulse_time + chirp_prf_count_max;
+  end else if (gen_state == OVERHEAD & overhead_count == 0 & (now_next | late_next)  & (|num_pulses)) begin
+  	  next_pulse_time <= next_pulse_time + chirp_prf_count_max;
+  end else if ((gen_state == IDLE) & (num_pulses == 0)) begin
         chain_pulses <= 1'b0;
   end
 end

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `define SIM_TIMEOUT_US 20000
 `define NS_PER_TICK 1
-`define NUM_TEST_CASES 13
+`define NUM_TEST_CASES 14
 
 
 `include "sim_exec_report.vh"
@@ -10,7 +10,7 @@
 
 
 module noc_block_wavegen_tb();
-  `TEST_BENCH_INIT("noc_block_wavegen",`NUM_TEST_CASES,`NS_PER_TICK);
+  `TEST_BENCH_INIT("noc_block_wavegen_tb",`NUM_TEST_CASES,`NS_PER_TICK);
   localparam BUS_CLK_PERIOD = $ceil(1e9/50e6);
   localparam CE_CLK_PERIOD  = $ceil(1e9/50e6);//$ceil(1e9/200e6);
   localparam NUM_CE         = 1;  // Number of Computation Engines / User RFNoC blocks to simulate
@@ -744,6 +744,7 @@ noc_block_wavegen noc_block_wavegen(
     // Sending an impulse will readback the FIR filter coefficients
     `TEST_CASE_START("Chain multiple Manual pulses with forward time and forward timed rx command");
     // Write a constant to Waveform Samples
+    $display("Chain multiple Manual pulses with forward time and forward timed rx command");
     wfrm_id = wfrm_id + 1;
     wfrm_ind = 0;
     wfrm_len = num_samps;
@@ -819,11 +820,11 @@ noc_block_wavegen noc_block_wavegen(
 	          $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
 	          `ASSERT_ERROR(q_samp == i, s);
 	          // Check tlast
-	          if (i == num_samps-1) begin
-	            `ASSERT_ERROR(last, "Last not asserted on final word!");
-	          end else begin
-	            `ASSERT_ERROR(~last, "Last asserted early!");
-	          end
+          		if (((i+1)%6 == 0)|(i==num_samps-1)) begin
+            		`ASSERT_ERROR(last, "Last not asserted on 6th or final word!");
+          		end else begin
+            		`ASSERT_ERROR(~last, "Last asserted early!");
+          		end
 	        end
 	        $display("Receive pulse: %d/%d",j+1,numpulses);
 	    end
