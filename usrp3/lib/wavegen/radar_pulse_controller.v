@@ -121,7 +121,7 @@ reg [63:0] vita_time_next_chirp;
 
 reg chain_pulses;
 reg [27:0] num_pulses;
-
+reg[63:0] next_pulse_time;
 wire now, early, late;
 wire command_valid;
 reg command_ready;

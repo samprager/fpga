@@ -98,6 +98,7 @@ noc_block_wavegen noc_block_wavegen(
     logic [15:0] wfrm_len = WFRM_SPP;
 
     logic [63:0] start_time;
+    logic [27:0] numpulses;
 
 
     /********************************************************
@@ -737,9 +738,102 @@ noc_block_wavegen noc_block_wavegen(
     join
     `TEST_CASE_DONE(1);
     
-    
     /********************************************************
-    ** Test 13 -- Change Mode to Chirp Pulse
+    ** Test 13 -- Send Chirp pulse with forward timestamp and chain command, to transmit 10 pulses and stop (manual mode). Also send command to rx
+    ********************************************************/
+    // Sending an impulse will readback the FIR filter coefficients
+    `TEST_CASE_START("Chain multiple Manual pulses with forward time and forward timed rx command");
+    // Write a constant to Waveform Samples
+    wfrm_id = wfrm_id + 1;
+    wfrm_ind = 0;
+    wfrm_len = num_samps;
+    numpulses = 4;
+
+    $display("Uploading %d Samples in 1 packet", wfrm_len);
+    send_waveform_sample_hdr(noc_block_wavegen.SR_AWG_RELOAD,{wfrm_cmd,wfrm_id,wfrm_ind,wfrm_len});
+    for (int i = 0; i < num_samps-1; i++) begin
+      tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD, {16'hFEED,i[15:0]});
+    end
+    temp = num_samps-1;
+    tb_streamer.write_reg(sid_noc_block_wavegen, noc_block_wavegen.SR_AWG_RELOAD_LAST, {16'hFEED,temp[15:0]});
+
+    $display("Changing policy to Manual, Fwd Time, and Fwd RX Command");
+    // Change CTRL Policy to dependent mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd7);
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
+    $display("Read Policy: %16x", readback);
+    $sformat(s, "Incorrect Policy Read! Expected: %0d, Received: %0d", 32'd7, readback);
+    `ASSERT_ERROR(readback == 32'd7, s);
+
+    // $display("Changing Ctrl Word to Chirp");
+    // // Change CTRL Policy to dependent mode
+    // tb_streamer.write_reg(sid_noc_block_wavegen, SR_AWG_CTRL_WORD_ADDR, CTRL_WORD_SEL_CHIRP);
+    // tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_CTRL, readback);
+    // $display("Read Ctrl Word: %16x", readback);
+    // $sformat(s, "Incorrect Ctrl Word Read! Expected: %0d, Received: %0d", CTRL_WORD_SEL_CHIRP, readback);
+    // `ASSERT_ERROR(readback == CTRL_WORD_SEL_CHIRP, s);
+    //
+    // $display("Changing Chirp Length");
+    // // Change CTRL Policy to dependent mode
+    // tb_streamer.write_reg(sid_noc_block_wavegen, SR_CH_COUNTER_ADDR, 32'd3);
+
+    $display("Changing PRF Count");
+    // Change CTRL Policy to dependent mode
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_PRF_INT_ADDR, 32'b0);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_PRF_FRAC_ADDR, 32'h9ff);
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_PRF, readback);
+    $display("Read PRF Word: %16x", readback);
+    $sformat(s, "Incorrect PRF Read! Expected: %0d, Received: %0d", 64'h9ff, readback);
+    `ASSERT_ERROR(readback == 64'h9ff, s);
+
+    $display("Reading Vita Time");
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_VITA_TIME, readback);
+    $display("Read Vita time: %d",readback);
+
+    start_time = readback+64'ha00;
+    $display("Sending command for %d pulse to start at time %d", numpulses,start_time);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_COMMAND,
+                   {1'b0 /* Start at time */,1'b1 /*chain*/,1'b0 /* dont reload*/,1'b0 /*dont stop*/, numpulses /*28 bit numlines*/});
+    // Set start time
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_HI, start_time[63:32]);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_LO, start_time[31:0]);
+    $display("Command Sent");
+
+    
+
+    /* Send and check impulse */
+    fork
+      begin
+        logic [31:0] recv_val;
+        logic last;
+        logic [15:0] i_samp, q_samp;
+        /* Send Immediate Pulse command */
+        /* Send and check impulse */
+        $display("Receive Wavegen output.");
+        for (int j = 0; j < numpulses; j++) begin
+	        for (int i = 0; i < num_samps; i++) begin
+	          tb_streamer.pull_word({i_samp, q_samp}, last);
+	          // Check I / Q values, should be a ramp
+	          $sformat(s, "Incorrect I value received! Expected: %0d, Received: %0d", i, i_samp);
+	          `ASSERT_ERROR(i_samp == 16'hFEED, s);
+	          $sformat(s, "Incorrect Q value received! Expected: %0d, Received: %0d", i, q_samp);
+	          `ASSERT_ERROR(q_samp == i, s);
+	          // Check tlast
+	          if (i == num_samps-1) begin
+	            `ASSERT_ERROR(last, "Last not asserted on final word!");
+	          end else begin
+	            `ASSERT_ERROR(~last, "Last asserted early!");
+	          end
+	        end
+	        $display("Receive pulse: %d/%d",j+1,numpulses);
+	    end
+      end
+    join
+    `TEST_CASE_DONE(1);
+
+
+    /********************************************************
+    ** Test 14 -- Change Mode to Chirp Pulse
     ********************************************************/
     // Sending an impulse will readback the FIR filter coefficients
     `TEST_CASE_START("Changing to Chirp Source");
