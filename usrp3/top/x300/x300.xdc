@@ -739,3 +739,4 @@ set_property PULLUP true [get_ports FPGA_PUDC_B]
 #NET   CPRI_CLK_n            IOSTANDARD = LVDS_25 | LOC  =  U7;
 
 
+

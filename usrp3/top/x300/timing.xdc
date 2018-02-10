@@ -290,6 +290,9 @@ set_property BEL B5FF [get_cells {cap_db1/adc_data_rclk_reg[27]}]
 
 # IODELAY constraints
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_2]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_3]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells {cap_db0/gen_lvds_pins[*].idelay_i}]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells {cap_db1/gen_lvds_pins[*].idelay_i}]
 
@@ -518,5 +521,6 @@ set_false_path -to [get_ports LED_*]
 set_false_path -to [get_ports {SFPP*_RS0 SFPP*_RS1 SFPP*_SCL SFPP*_SDA SFPP*_TxDisable}]
 set_false_path -from [get_ports {SFPP*_ModAbs SFPP*_RxLOS SFPP*_SCL SFPP*_SDA SFPP*_TxFault}]
 set_false_path -to [get_ports GPSDO_PWR_ENA]
+
 
 
