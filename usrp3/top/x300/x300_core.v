@@ -222,7 +222,15 @@ module x300_core (
 `ifdef RFNOC
  `ifdef X300
     `ifdef AWG
+      `ifdef CIRAVG
+        `include "rfnoc_ce_ciravg_inst_x300.v"
+        // SARINA KAPAI EDIT
+      `endif
+       `ifdef PULSECIRAVG
+        `include "rfnoc_ce_pulseciravg_inst_x300.v"
+      `else
         `include "rfnoc_ce_awg_inst_x300.v"
+      `endif
     `else
         `include "rfnoc_ce_auto_inst_x300.v"
     `endif

@@ -39,7 +39,8 @@ include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(BASE_DIR)/x300/Makefile.srcs
 include $(LIB_DIR)/wavegen/Makefile.srcs
-
+include $(LIB_DIR)/cir_avg/Makefile.srcs
+include $(LIB_DIR)/pulse_cir_avg/Makefile.srcs
 ##################################################
 # Sources
 ##################################################
@@ -61,6 +62,26 @@ ifdef BUILD_AWG
 else
 	AWG_SRCS =
 endif
+
+ifdef BUILD_CIRAVG
+	CIRAVG_SRCS = $(CIR_AVG_SRCS)
+else
+	CIRAVG_SRCS =
+endif
+
+## SARINA KAPAI EDIT
+ifdef BUILD_PULSECIRAVG
+	PULSECIRAVG_SRCS = $(PULSE_CIR_AVG_SRCS)
+else
+	PULSECIRAVG_SRCS =
+endif
+
+
+# ifdef BUILD_PULSEAVG
+#	PULSEAVG_SRCS = $(PULSE_AVG_SRCS)
+# else
+#	PULSEAVG_SRCS =
+# endif
 
 ifdef BUILD_10G
 SFP_SERDES_SRCS += $(XGE_SRCS) $(XGE_INTERFACE_SRCS) $(abspath x300_10ge.xdc) $(TEN_GIGE_PHY_SRCS) $(IP_TEN_GIGE_PHY_XCI_SRCS)
@@ -103,7 +124,7 @@ $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) $(BD_SRCS) \
 $(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
-$(AWG_SRCS)
+$(AWG_SRCS) $(CIRAVG_SRCS) $(PULSECIRAVG_SRCS)
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
 
