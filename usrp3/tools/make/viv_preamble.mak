@@ -6,8 +6,8 @@
 # Environment Setup
 # -------------------------------------------------------------------
 ifeq ($(VIV_PLATFORM),Cygwin)
-RESOLVE_PATH = $(subst \,\\,$(shell cygpath -aw $(1)))
-RESOLVE_PATHS = "$(foreach path,$(1),$(subst \,\\\\,$(shell cygpath -aw $(abspath $(path)))))"
+RESOLVE_PATH = $(subst \,/,$(shell cygpath -aw $(1)))
+RESOLVE_PATHS = "$(foreach path,$(1),$(subst \,/,$(shell cygpath -aw $(abspath $(path)))))"
 else
 RESOLVE_PATH = $(1)
 RESOLVE_PATHS = "$(1)"
@@ -30,6 +30,12 @@ else
 BUILD_DIR = $(abspath ./build)
 endif
 IP_BUILD_DIR = $(abspath ./build-ip/$(subst /,,$(PART_ID)))
+
+# -------------------------------------------------------------------
+# Git Hash Retrieval
+# -------------------------------------------------------------------
+GIT_HASH=$(shell $(TOOLS_DIR)/scripts/git-hash.sh --hashfile=$(TOOLS_DIR)/../../project.githash)
+GIT_HASH_VERILOG_DEF=$(addprefix GIT_HASH=32'h,$(GIT_HASH))
 
 # -------------------------------------------------------------------
 # GUI Mode switch. Calling with GUI:=1 will launch Vivado GUI for build

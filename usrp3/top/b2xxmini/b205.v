@@ -1,5 +1,7 @@
 //
-// Copyright 2015 Ettus Research LLC
+// Copyright 2015 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 
 /***********************************************************
@@ -167,7 +169,7 @@ module b205 (
 
    b205_io b205_io_i0
      (
-      .reset(reset),
+      .reset(reset_global),
       // Baseband sample interface
       .radio_clk(radio_clk),
       .rx_i0(rx_data[31:20]),

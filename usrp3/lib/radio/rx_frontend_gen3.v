@@ -1,5 +1,8 @@
 //
 // Copyright 2015 Ettus Research LLC
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 
 module rx_frontend_gen3 #(
@@ -160,6 +163,14 @@ module rx_frontend_gen3 #(
   generate
     if (BYPASS_REALMODE_DSP == 0) begin
 
+      wire [24:0] adc_i_dsp_cin, adc_q_dsp_cin;
+      wire [24:0] adc_i_dsp_cout, adc_q_dsp_cout;
+      wire [23:0] adc_i_cclip, adc_q_cclip;
+      wire [46:0] adc_i_hb, adc_q_hb;
+      wire        adc_dsp_cin_stb, adc_dsp_cout_stb;
+      wire        adc_cclip_stb;
+      wire        adc_hb_stb;
+
       // NCO for CORDIC
       reg [31:0] phase;
       always @(posedge clk) begin
@@ -168,14 +179,6 @@ module rx_frontend_gen3 #(
         else if (adc_dsp_cin_stb)
           phase <= phase + phase_incr;
       end
-
-      wire [24:0] adc_i_dsp_cin, adc_q_dsp_cin;
-      wire [24:0] adc_i_dsp_cout, adc_q_dsp_cout;
-      wire [23:0] adc_i_cclip, adc_q_cclip;
-      wire [46:0] adc_i_hb, adc_q_hb;
-      wire        adc_dsp_cin_stb, adc_dsp_cout_stb;
-      wire        adc_cclip_stb;
-      wire        adc_hb_stb;
 
       sign_extend #(.bits_in(24), .bits_out(25)) sign_extend_cordic_i (
         .in(adc_i_comp), .out(adc_i_dsp_cin));

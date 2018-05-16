@@ -1,5 +1,8 @@
-
-
+//
+// Copyright 2015 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+//
 
 module eth_jesd_gtp_phy #(
    parameter ETH_CLK_MASTER_PORT = 0,
@@ -154,7 +157,8 @@ module eth_jesd_gtp_phy #(
       .mdio_i(eth0mdio_i),
       .mdio_o(eth0mdio_o),
       .mdio_t(),
-      .configuration_vector(4'b0),
+      .phyaddr(5'h0),
+      .configuration_vector(5'b0),
       .configuration_valid(1'b1),
       .status_vector(eth0status_vector),  // Core status.
       .reset(areset),                     // Asynchronous reset for entire core.
@@ -203,7 +207,8 @@ module eth_jesd_gtp_phy #(
       .mdio_i(eth1mdio_i),
       .mdio_o(eth1mdio_o),
       .mdio_t(),
-      .configuration_vector(4'b0),
+      .phyaddr(5'h0),
+      .configuration_vector(5'b0),
       .configuration_valid(1'b1),
       .status_vector(eth1status_vector),  // Core status.
       .reset(areset),                     // Asynchronous reset for entire core.

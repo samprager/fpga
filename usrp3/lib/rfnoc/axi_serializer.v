@@ -1,5 +1,8 @@
 //
 // Copyright 2015 Ettus Research LLC
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 
 module axi_serializer #(
@@ -52,7 +55,9 @@ module axi_serializer #(
         end
       end else if (~serializing) begin
         i_tready <= 1'b1;
-        o_tvalid <= 1'b0;
+        if (o_tvalid && o_tready) begin
+          o_tvalid <= 1'b0;
+        end
         // Serial shift register (serial_data_reg) is empty, load it 
         if (i_tvalid) begin
           i_tready        <= 1'b0;

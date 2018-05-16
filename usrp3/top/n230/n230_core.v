@@ -1,23 +1,10 @@
 //
 // Copyright 2013 Ettus Research LLC
+// Copyright 2015 Ettus Research, a National Instruments Company
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 
-/***********************************************************
- * N230 Core Guts
- **********************************************************/
 module n230_core (
    //------------------------------------------------------------------
    // bus interfaces
@@ -505,18 +492,20 @@ module n230_core (
       .debug()
    );
 
-   gpio_atr #(.BASE(SR_CORE_MS0_GPIO), .WIDTH(32), .DEFAULT_DDR(32'h0)) ms0_gpio_atr (
+   gpio_atr #(.BASE(SR_CORE_MS0_GPIO), .WIDTH(32), .FAB_CTRL_EN(0), .DEFAULT_DDR(32'h0)) ms0_gpio_atr (
       .clk(bus_clk),.reset(bus_rst),
       .set_stb(set_gc_stb), .set_addr(set_gc_addr), .set_data(set_gc_data),
       .rx(1'b0), .tx(1'b0),
-      .gpio_in(ms0_gpio_in), .gpio_out(ms0_gpio_out), .gpio_ddr(ms0_gpio_ddr), .gpio_sw_rb(ms0_gpio_rb)
+      .gpio_in(ms0_gpio_in), .gpio_out(ms0_gpio_out), .gpio_ddr(ms0_gpio_ddr),
+      .gpio_out_fab(32'h00000000 /* no fabric control */), .gpio_sw_rb(ms0_gpio_rb)
    );
 
-   gpio_atr #(.BASE(SR_CORE_MS1_GPIO), .WIDTH(32), .DEFAULT_DDR(32'h0)) ms1_gpio_atr (
+   gpio_atr #(.BASE(SR_CORE_MS1_GPIO), .WIDTH(32), .FAB_CTRL_EN(0), .DEFAULT_DDR(32'h0)) ms1_gpio_atr (
       .clk(bus_clk),.reset(bus_rst),
       .set_stb(set_gc_stb), .set_addr(set_gc_addr), .set_data(set_gc_data),
       .rx(1'b0), .tx(1'b0),
-      .gpio_in(ms1_gpio_in), .gpio_out(ms1_gpio_out), .gpio_ddr(ms1_gpio_ddr), .gpio_sw_rb(ms1_gpio_rb)
+      .gpio_in(ms1_gpio_in), .gpio_out(ms1_gpio_out), .gpio_ddr(ms1_gpio_ddr),
+      .gpio_out_fab(32'h00000000 /* no fabric control */), .gpio_sw_rb(ms1_gpio_rb)
    );
 
    // Readback Mux
@@ -533,7 +522,7 @@ module n230_core (
          // GIT HASH of RTL Source
          // [31:28] = 0xf - Unclean build
          // [27:0] - Abrieviated git hash for RTL.
-         RB_CORE_GIT_HASH : rb_data <= {32'h0,32'h`GIT_HASH};
+         RB_CORE_GIT_HASH : rb_data <= {32'h0, `GIT_HASH};
          
          RB_CORE_MS0_GPIO : rb_data <= ms0_gpio_rb;
          RB_CORE_MS1_GPIO : rb_data <= ms1_gpio_rb;

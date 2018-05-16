@@ -1,5 +1,8 @@
 
 // Copyright 2012 Ettus Research LLC
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 // axi_demux -- takes one AXI stream, sends to one of 4 output channels
 //   Choice of output channel is by external logic based on first line of packet ("header" port)
 //   If compressed vita data, this line contains vita header and streamid.
@@ -28,7 +31,7 @@ module axi_demux4
 	   assign i_tready = i_tready_int;
 	end
       else
-	axi_fifo_short #(.WIDTH(WIDTH+1)) axi_fifo_short
+	axi_fifo_flop2 #(.WIDTH(WIDTH+1)) axi_fifo_flop2
 	  (.clk(clk), .reset(reset), .clear(clear),
 	   .i_tdata({i_tlast,i_tdata}), .i_tvalid(i_tvalid), .i_tready(i_tready),
 	   .o_tdata({i_tlast_int,i_tdata_int}), .o_tvalid(i_tvalid_int), .o_tready(i_tready_int),

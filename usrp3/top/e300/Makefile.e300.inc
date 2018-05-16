@@ -5,7 +5,7 @@
 ##################################################
 # Project Setup
 ##################################################
-TOP_MODULE = e300
+# TOP_MODULE = <Input arg>
 # NAME = <Input arg>
 # PART_ID = <Input arg>
 
@@ -19,6 +19,7 @@ include $(BASE_DIR)/../tools/make/viv_design_builder.mak
 
 include $(IP_DIR)/Makefile.inc
 include coregen_dsp/Makefile.srcs
+include $(LIB_DIR)/axi/Makefile.srcs
 include $(LIB_DIR)/ip/Makefile.inc
 include $(LIB_DIR)/axi/Makefile.srcs
 include $(LIB_DIR)/hls/Makefile.inc
@@ -32,9 +33,9 @@ include $(LIB_DIR)/vita/Makefile.srcs
 include $(LIB_DIR)/dsp/Makefile.srcs
 include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
-include $(BASE_DIR)/e300/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/wavegen/Makefile.srcs
+include $(BASE_DIR)/e300/Makefile.OOT.inc
 
 ##################################################
 # Sources
@@ -42,8 +43,7 @@ include $(LIB_DIR)/wavegen/Makefile.srcs
 TOP_SRCS = e3xx_ps.v \
            ppsloop.v \
            spi_slave.v \
-           axi_pmu.v \
-           axi_dummy.v
+           axi_pmu.v
 
 ifdef BUILD_AWG
 	AWG_SRCS = $(WAVEGEN_SRCS)
@@ -63,9 +63,9 @@ TOP_SRCS += e3xx_idle.xdc
 endif
 
 ifdef HLS
-HLS_IP_GEN_SRCS = $(HLS_IP_OUTPUT_SRCS)
+HLS_IP_TARGETS = $(HLS_IP_OUTPUT_SRCS) hls_ip
 else
-HLS_IP_GEN_SRCS =
+HLS_IP_TARGETS =
 endif
 
 # Vivado seems somewhat unhappy when adding above
@@ -79,6 +79,7 @@ PS7_SRCS = $(IP_PS7_3_SRCS)
 endif
 
 DESIGN_SRCS = $(abspath $(TOP_SRCS)) \
+          $(AXI_SRCS) \
           $(ZYNQ_FIFO_SRCS) \
           $(FIFO_SRCS) \
           $(VITA_SRCS) \
@@ -95,25 +96,21 @@ DESIGN_SRCS = $(abspath $(TOP_SRCS)) \
           $(RFNOC_SRCS) \
           $(RFNOC_OOT_SRCS) \
           $(LIB_IP_XCI_SRCS) \
-          $(HLS_IP_GEN_SRCS) \
+          $(HLS_IP_TARGETS) \
           $(AWG_SRCS)
-
-##################################################
-# Git Hash
-##################################################
-SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
 
 ##################################################
 # Dependency Targets
 ##################################################
 .SECONDEXPANSION:
 
-VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(SHORT_HASH)
+VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(GIT_HASH_VERILOG_DEF)
 
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
 	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_e300.tcl),$(TOP_MODULE),$(PART_ID))
 
-hls: .prereqs hls_ip bin
+rtl: .prereqs $$(DESIGN_SRCS) ip
+	$(call CHECK_VIVADO_DESIGN,$(TOOLS_DIR)/scripts/viv_check_syntax.tcl,$(TOP_MODULE),$(PART_ID))
 
-.PHONY: bin hls
+.PHONY: bin rtl

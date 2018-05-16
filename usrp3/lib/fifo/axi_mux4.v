@@ -1,5 +1,8 @@
 
 // Copyright 2012 Ettus Research LLC
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 // axi_mux -- takes 4 64-bit AXI stream, merges them to 1 output channel
 // Round-robin if PRIO=0, priority if PRIO=1 (lower number ports get priority)
 // Bubble cycles are inserted after each packet in PRIO mode, or on wraparound in Round Robin mode
@@ -102,7 +105,7 @@ module axi_mux4
 	   assign o_tready_int = o_tready;
 	end
       else
-	axi_fifo_short #(.WIDTH(WIDTH+1)) axi_fifo_short
+	axi_fifo_flop2 #(.WIDTH(WIDTH+1)) axi_fifo_flop2
 	  (.clk(clk), .reset(reset), .clear(clear),
 	   .i_tdata({o_tlast_int,o_tdata_int}), .i_tvalid(o_tvalid_int), .i_tready(o_tready_int),
 	   .o_tdata({o_tlast,o_tdata}), .o_tvalid(o_tvalid), .o_tready(o_tready),

@@ -5,7 +5,7 @@
 ##################################################
 # Project Setup
 ##################################################
-TOP_MODULE = x300
+# TOP_MODULE = <Input arg>
 # NAME = <Input arg>
 # PART_ID = <Input arg>
 
@@ -37,10 +37,15 @@ include $(LIB_DIR)/axi/Makefile.srcs
 include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
+<<<<<<< HEAD
 include $(BASE_DIR)/x300/Makefile.srcs
 include $(LIB_DIR)/wavegen/Makefile.srcs
 include $(LIB_DIR)/cir_avg/Makefile.srcs
 include $(LIB_DIR)/pulse_cir_avg/Makefile.srcs
+=======
+include $(BASE_DIR)/x300/Makefile.OOT.inc
+
+>>>>>>> upstream/rfnoc-devel
 ##################################################
 # Sources
 ##################################################
@@ -50,6 +55,7 @@ x300_pcie_int.v \
 x300_core.v \
 x300_sfpp_io_core.v \
 x300_zpu_config.vhd \
+x300_db_fe_core.v \
 soft_ctrl.v \
 capture_ddrlvds.v \
 gen_ddrlvds.v \
@@ -110,9 +116,9 @@ DRAM_SRCS =
 endif
 
 ifdef HLS
-HLS_IP_GEN_SRCS = $(HLS_IP_OUTPUT_SRCS)
+HLS_IP_TARGETS = $(HLS_IP_OUTPUT_SRCS) hls_ip
 else
-HLS_IP_GEN_SRCS =
+HLS_IP_TARGETS =
 endif
 
 DESIGN_SRCS = $(abspath $(TOP_SRCS)) $(FIFO_SRCS) \
@@ -123,22 +129,27 @@ $(ZPU_CORE_SRCS) $(WISHBONE_SRCS) \
 $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) $(BD_SRCS) \
+<<<<<<< HEAD
 $(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
 $(AWG_SRCS) $(CIRAVG_SRCS) $(PULSECIRAVG_SRCS)
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
+=======
+$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_TARGETS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS)
+>>>>>>> upstream/rfnoc-devel
 
 ##################################################
 # Dependency Targets
 ##################################################
 .SECONDEXPANSION:
 
-VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(SHORT_HASH)
+VERILOG_DEFS=$(EXTRA_DEFS) $(CUSTOM_DEFS) $(GIT_HASH_VERILOG_DEF)
 
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
 	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_x300.tcl),$(TOP_MODULE),$(PART_ID))
 
-hls: .prereqs hls_ip bin
+rtl: .prereqs $$(DESIGN_SRCS) ip
+	$(call CHECK_VIVADO_DESIGN,$(TOOLS_DIR)/scripts/viv_check_syntax.tcl,$(TOP_MODULE),$(PART_ID))
 
-.PHONY: bin hls
+.PHONY: bin rtl

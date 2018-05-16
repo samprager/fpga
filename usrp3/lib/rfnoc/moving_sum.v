@@ -1,5 +1,8 @@
 //
 // Copyright 2016 Ettus Research
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 
 module moving_sum #(
@@ -65,7 +68,7 @@ module moving_sum #(
   end
 
   // Output register
-  axi_fifo_flop2 #(.WIDTH(WIDTH+$clog2(MAX_LEN+1)+1)) axi_fifo_flop2 (
+  axi_fifo_flop #(.WIDTH(WIDTH+$clog2(MAX_LEN+1)+1)) axi_fifo_flop (
     .clk(clk), .reset(reset), .clear(clear),
     .i_tdata({i_tlast,sum}), .i_tvalid(i_tvalid_int), .i_tready(i_tready_int),
     .o_tdata({o_tlast,o_tdata}), .o_tvalid(o_tvalid), .o_tready(o_tready),

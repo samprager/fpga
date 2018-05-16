@@ -5,7 +5,7 @@
 ##################################################
 # Project Setup
 ##################################################
-TOP_MODULE = n230
+# TOP_MODULE = <Input arg>
 # NAME = <Input arg> 
 # PART_ID = <Input arg> 
 
@@ -80,19 +80,19 @@ ifeq (1,$(SAFE_MODE))
 EXTRA_DEFS += SAFE_IMAGE
 endif
 
-# Git Hash
-SHORT_HASH=$(addprefix GIT_HASH=,$(shell $(BASE_DIR)/../tools/scripts/git-hash.sh))
-
 ##################################################
 # Dependency Targets
 ##################################################
 .SECONDEXPANSION:
 
-VERILOG_DEFS=$(EXTRA_DEFS) $(SHORT_HASH)
+VERILOG_DEFS=$(EXTRA_DEFS) $(GIT_HASH_VERILOG_DEF)
 export SAFE_MODE=$(SAFE_MODE)
 
 # DESIGN_SRCS and VERILOG_DEFS must be defined
 bin: .prereqs $$(DESIGN_SRCS) ip
 	$(call BUILD_VIVADO_DESIGN,$(abspath ./build_n230.tcl),$(TOP_MODULE),$(PART_ID))
+
+rtl: .prereqs $$(DESIGN_SRCS) ip
+	$(call CHECK_VIVADO_DESIGN,$(TOOLS_DIR)/scripts/viv_check_syntax.tcl,$(TOP_MODULE),$(PART_ID))
 
 .PHONY: bin

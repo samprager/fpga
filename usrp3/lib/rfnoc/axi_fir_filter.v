@@ -1,5 +1,8 @@
 //
 // Copyright 2017 Ettus Research
+// Copyright 2018 Ettus Research, a National Instruments Company
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
 //
 // Parameterized FIR filter with AXI stream interface.
 // Has several optimizations to resource utilization such as
@@ -272,7 +275,7 @@ module axi_fir_filter #(
           .sample_in_b(((SYMMETRIC_COEFFS == 0) || ((ODD_LEN == 1) && (i == NUM_SLICES-1))) ? 0 : sample_shift_reg[NUM_COEFFS-1]),
           .sample_forward(sample_in[i+1]),
           // For proper coeffient loading, coeff_forward must be shifted in backwards. coeffs[] is already backwards.
-          .coeff_in((USE_EMBEDDED_REGS_COEFFS == 1) ? coeff_forward[i+1] : coeffs[i]),
+          .coeff_in(((USE_EMBEDDED_REGS_COEFFS == 1) && (RELOADABLE_COEFFS == 1)) ? coeff_forward[i+1] : coeffs[i]),
           .coeff_forward(coeff_forward[i]),
           .coeff_load_stb(coeff_load_stb),
           .sample_accum(sample_accum[i]),

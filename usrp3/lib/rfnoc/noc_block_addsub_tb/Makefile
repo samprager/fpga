@@ -1,5 +1,7 @@
 #
-# Copyright 2016 Ettus Research
+# Copyright 2016 Ettus Research, a National Instruments Company
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
 #
 
 #-------------------------------------------------
@@ -13,6 +15,12 @@ include $(BASE_DIR)/../tools/make/viv_sim_preamble.mak
 #-------------------------------------------------
 # Testbench Specific
 #-------------------------------------------------
+include $(LIB_DIR)/hls/Makefile.inc
+
+RFNOC_SRCS += $(abspath \
+$(HLS_IP_OUTPUT_SRCS) \
+)
+
 # Define only one toplevel module
 SIM_TOP = noc_block_addsub_tb
 
