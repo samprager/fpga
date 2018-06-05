@@ -37,15 +37,12 @@ include $(LIB_DIR)/axi/Makefile.srcs
 include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
-<<<<<<< HEAD
+include $(BASE_DIR)/x300/Makefile.OOT.inc
 include $(BASE_DIR)/x300/Makefile.srcs
 include $(LIB_DIR)/wavegen/Makefile.srcs
 include $(LIB_DIR)/cir_avg/Makefile.srcs
 include $(LIB_DIR)/pulse_cir_avg/Makefile.srcs
-=======
-include $(BASE_DIR)/x300/Makefile.OOT.inc
 
->>>>>>> upstream/rfnoc-devel
 ##################################################
 # Sources
 ##################################################
@@ -129,14 +126,8 @@ $(ZPU_CORE_SRCS) $(WISHBONE_SRCS) \
 $(SFP_SERDES_SRCS) $(IOPORT2_SRCS) $(COREGEN_CHIPSCOPE_SRCS) \
 $(PACKET_PROC_SRCS) $(VITA_SRCS) $(DSP_SRCS) $(DRAM_SRCS) \
 $(AXI_SRCS) $(RADIO_SRCS) $(CAP_GEN_GENERIC_SRCS) $(IP_XCI_SRCS) $(BD_SRCS) \
-<<<<<<< HEAD
-$(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS) \
-$(AWG_SRCS) $(CIRAVG_SRCS) $(PULSECIRAVG_SRCS)
-
-SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
-=======
 $(RFNOC_SRCS) $(RFNOC_OOT_SRCS) $(HLS_IP_TARGETS) $(LIB_IP_XCI_SRCS) $(LIBCOREGEN_SRCS)
->>>>>>> upstream/rfnoc-devel
+$(AWG_SRCS) $(CIRAVG_SRCS) $(PULSECIRAVG_SRCS)
 
 ##################################################
 # Dependency Targets
