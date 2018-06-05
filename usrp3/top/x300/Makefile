@@ -124,16 +124,16 @@ X300_RFNOC_XG: ##USRP X300. 10GigE on both SFP+ ports. RFNoC CEs enabled. (Use H
 	$(call post_build,X300,RFNOC_XG)
 
 X300_RFNOC_AWG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
-	$(call vivado_build,bin,X300,$(AWG_DEFS) RFNOC=1 X300=1 AWG=1)
+	$(call vivado_build,X300,$(AWG_DEFS) RFNOC=1 X300=1 AWG=1)
 	$(call post_build,X300,RFNOC_AWG)
 
 X300_RFNOC_CIRAVG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
-	$(call vivado_build,bin,X300,$(CIRAVG_DEFS) RFNOC=1 X300=1 AWG=1 CIRAVG=1)
+	$(call vivado_build,X300,$(CIRAVG_DEFS) RFNOC=1 X300=1 AWG=1 CIRAVG=1)
 	$(call post_build,X300,RFNOC_CIRAVG)
 
 ## SARINA KAPAI EDIT
 X300_RFNOC_PULSECIRAVG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
-		$(call vivado_build,bin,X300,$(PULSECIRAVG_DEFS) RFNOC=1 X300=1 AWG=1 PULSECIRAVG=1)
+		$(call vivado_build,X300,$(PULSECIRAVG_DEFS) RFNOC=1 X300=1 AWG=1 PULSECIRAVG=1)
 		$(call post_build,X300,RFNOC_PULSECIRAVG)
 
 clean:    ##Clean up all target build outputs.
