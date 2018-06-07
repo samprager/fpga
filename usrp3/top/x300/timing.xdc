@@ -296,6 +296,9 @@ set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_R
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_2]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_3]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_2]
+set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells adc_cap_idelayctrl_i_REPLICATED_0_3]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells {cap_db0/gen_lvds_pins[*].idelay_i}]
 set_property IODELAY_GROUP ADC_CAP_IODELAY_GRP [get_cells {cap_db1/gen_lvds_pins[*].idelay_i}]
 
@@ -486,10 +489,10 @@ set_min_delay -to [get_pins -hier -filter {NAME =~ */pps_sync_tbclk_inst/synchro
 # We force the registers closest to the PADs into the IOB to achieve lowest skew between individual bits
 # in the parallel bus. However, as a sanity check we add the following constraints that will fail if the
 # registers don't get placed in the IOB for whatever reason.
-set_max_delay -to [get_ports {*} -filter {(DIRECTION == OUT || DIRECTION == INOUT) && NAME =~ "DB*_*X_IO*"}] 6.000
-set_max_delay -from [get_ports {*} -filter {(DIRECTION == IN  || DIRECTION == INOUT) && NAME =~ "DB*_*X_IO*"}] 3.000
-set_max_delay -to [get_ports {*} -filter {(DIRECTION == OUT || DIRECTION == INOUT) && NAME =~ "FrontPanelGpio[*]"}] 6.000
-set_max_delay -from [get_ports {*} -filter {(DIRECTION == IN  || DIRECTION == INOUT) && NAME =~ "FrontPanelGpio[*]"}] 3.000
+set_max_delay -to [get_ports * -filter {(DIRECTION == OUT || DIRECTION == INOUT) && NAME =~ "DB*_*X_IO*"}] 6.000
+set_max_delay -from [get_ports * -filter {(DIRECTION == IN  || DIRECTION == INOUT) && NAME =~ "DB*_*X_IO*"}] 3.000
+set_max_delay -to [get_ports * -filter {(DIRECTION == OUT || DIRECTION == INOUT) && NAME =~ "FrontPanelGpio[*]"}] 6.000
+set_max_delay -from [get_ports * -filter {(DIRECTION == IN  || DIRECTION == INOUT) && NAME =~ "FrontPanelGpio[*]"}] 3.000
 
 # SPI Lines
 set_max_delay -datapath_only -from [get_ports DB*_*X*MISO*] 10.000
@@ -524,6 +527,7 @@ set_false_path -to [get_ports LED_*]
 set_false_path -to [get_ports {SFPP*_RS0 SFPP*_RS1 SFPP*_SCL SFPP*_SDA SFPP*_TxDisable}]
 set_false_path -from [get_ports {SFPP*_ModAbs SFPP*_RxLOS SFPP*_SCL SFPP*_SDA SFPP*_TxFault}]
 set_false_path -to [get_ports GPSDO_PWR_ENA]
+
 
 
 

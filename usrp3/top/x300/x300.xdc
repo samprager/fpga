@@ -26,20 +26,20 @@ set_property PACKAGE_PIN Y2 [get_ports SFP0_TX_p]
 #*******************************************************************************
 ## ADC 0
 
-set_property PACKAGE_PIN L26 [get_ports DB0_ADC_DA0_P]
 set_property PACKAGE_PIN L27 [get_ports DB0_ADC_DA0_N]
-set_property PACKAGE_PIN K28 [get_ports DB0_ADC_DA1_P]
+set_property PACKAGE_PIN L26 [get_ports DB0_ADC_DA0_P]
 set_property PACKAGE_PIN K29 [get_ports DB0_ADC_DA1_N]
-set_property PACKAGE_PIN M28 [get_ports DB0_ADC_DA2_P]
+set_property PACKAGE_PIN K28 [get_ports DB0_ADC_DA1_P]
 set_property PACKAGE_PIN L28 [get_ports DB0_ADC_DA2_N]
-set_property PACKAGE_PIN D29 [get_ports DB0_ADC_DA3_P]
+set_property PACKAGE_PIN M28 [get_ports DB0_ADC_DA2_P]
 set_property PACKAGE_PIN C30 [get_ports DB0_ADC_DA3_N]
-set_property PACKAGE_PIN J23 [get_ports DB0_ADC_DA4_P]
+set_property PACKAGE_PIN D29 [get_ports DB0_ADC_DA3_P]
 set_property PACKAGE_PIN J24 [get_ports DB0_ADC_DA4_N]
-set_property PACKAGE_PIN L22 [get_ports DB0_ADC_DA5_P]
+set_property PACKAGE_PIN J23 [get_ports DB0_ADC_DA4_P]
 set_property PACKAGE_PIN L23 [get_ports DB0_ADC_DA5_N]
-set_property PACKAGE_PIN K23 [get_ports DB0_ADC_DA6_P]
+set_property PACKAGE_PIN L22 [get_ports DB0_ADC_DA5_P]
 set_property PACKAGE_PIN K24 [get_ports DB0_ADC_DA6_N]
+set_property PACKAGE_PIN K23 [get_ports DB0_ADC_DA6_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_ADC_DA*]
 
 set_property DIFF_TERM TRUE [get_ports DB0_ADC_DA0_N]
@@ -57,45 +57,45 @@ set_property DIFF_TERM TRUE [get_ports DB0_ADC_DA6_P]
 # Bit 3 is in the 3.3V bank and does no support diff termination
 set_property DIFF_TERM false [get_ports DB0_ADC_DA3_*]
 
-set_property PACKAGE_PIN L21 [get_ports DB0_ADC_DB0_P]
 set_property PACKAGE_PIN K21 [get_ports DB0_ADC_DB0_N]
-set_property PACKAGE_PIN J21 [get_ports DB0_ADC_DB1_P]
+set_property PACKAGE_PIN L21 [get_ports DB0_ADC_DB0_P]
 set_property PACKAGE_PIN J22 [get_ports DB0_ADC_DB1_N]
-set_property PACKAGE_PIN M20 [get_ports DB0_ADC_DB2_P]
+set_property PACKAGE_PIN J21 [get_ports DB0_ADC_DB1_P]
 set_property PACKAGE_PIN L20 [get_ports DB0_ADC_DB2_N]
-set_property PACKAGE_PIN J29 [get_ports DB0_ADC_DB3_P]
+set_property PACKAGE_PIN M20 [get_ports DB0_ADC_DB2_P]
 set_property PACKAGE_PIN H29 [get_ports DB0_ADC_DB3_N]
-set_property PACKAGE_PIN J27 [get_ports DB0_ADC_DB4_P]
+set_property PACKAGE_PIN J29 [get_ports DB0_ADC_DB3_P]
 set_property PACKAGE_PIN J28 [get_ports DB0_ADC_DB4_N]
-set_property PACKAGE_PIN L30 [get_ports DB0_ADC_DB5_P]
+set_property PACKAGE_PIN J27 [get_ports DB0_ADC_DB4_P]
 set_property PACKAGE_PIN K30 [get_ports DB0_ADC_DB5_N]
-set_property PACKAGE_PIN K26 [get_ports DB0_ADC_DB6_P]
+set_property PACKAGE_PIN L30 [get_ports DB0_ADC_DB5_P]
 set_property PACKAGE_PIN J26 [get_ports DB0_ADC_DB6_N]
+set_property PACKAGE_PIN K26 [get_ports DB0_ADC_DB6_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_ADC_DB*]
 
 set_property DIFF_TERM true [get_ports DB0_ADC_DB*]
 
-set_property PACKAGE_PIN L25 [get_ports DB0_ADC_DCLK_P]
 set_property PACKAGE_PIN K25 [get_ports DB0_ADC_DCLK_N]
+set_property PACKAGE_PIN L25 [get_ports DB0_ADC_DCLK_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_ADC_DCLK_*]
 
 #*******************************************************************************
 ## ADC 1
 
-set_property PACKAGE_PIN D17 [get_ports DB1_ADC_DA0_P]
 set_property PACKAGE_PIN D18 [get_ports DB1_ADC_DA0_N]
-set_property PACKAGE_PIN E19 [get_ports DB1_ADC_DA1_P]
+set_property PACKAGE_PIN D17 [get_ports DB1_ADC_DA0_P]
 set_property PACKAGE_PIN D19 [get_ports DB1_ADC_DA1_N]
-set_property PACKAGE_PIN L17 [get_ports DB1_ADC_DA2_P]
+set_property PACKAGE_PIN E19 [get_ports DB1_ADC_DA1_P]
 set_property PACKAGE_PIN L18 [get_ports DB1_ADC_DA2_N]
-set_property PACKAGE_PIN K13 [get_ports DB1_ADC_DA3_P]
+set_property PACKAGE_PIN L17 [get_ports DB1_ADC_DA2_P]
 set_property PACKAGE_PIN J13 [get_ports DB1_ADC_DA3_N]
-set_property PACKAGE_PIN J17 [get_ports DB1_ADC_DA4_P]
+set_property PACKAGE_PIN K13 [get_ports DB1_ADC_DA3_P]
 set_property PACKAGE_PIN H17 [get_ports DB1_ADC_DA4_N]
-set_property PACKAGE_PIN G18 [get_ports DB1_ADC_DA5_P]
+set_property PACKAGE_PIN J17 [get_ports DB1_ADC_DA4_P]
 set_property PACKAGE_PIN F18 [get_ports DB1_ADC_DA5_N]
-set_property PACKAGE_PIN J19 [get_ports DB1_ADC_DA6_P]
+set_property PACKAGE_PIN G18 [get_ports DB1_ADC_DA5_P]
 set_property PACKAGE_PIN H19 [get_ports DB1_ADC_DA6_N]
+set_property PACKAGE_PIN J19 [get_ports DB1_ADC_DA6_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_ADC_DA*]
 
 set_property DIFF_TERM TRUE [get_ports DB1_ADC_DA0_N]
@@ -113,26 +113,26 @@ set_property DIFF_TERM TRUE [get_ports DB1_ADC_DA6_P]
 # Bit 3 is in the 3.3V bank and does no support diff termination
 set_property DIFF_TERM false [get_ports DB1_ADC_DA3_*]
 
-set_property PACKAGE_PIN K18 [get_ports DB1_ADC_DB0_P]
 set_property PACKAGE_PIN J18 [get_ports DB1_ADC_DB0_N]
-set_property PACKAGE_PIN D21 [get_ports DB1_ADC_DB1_P]
+set_property PACKAGE_PIN K18 [get_ports DB1_ADC_DB0_P]
 set_property PACKAGE_PIN C21 [get_ports DB1_ADC_DB1_N]
-set_property PACKAGE_PIN K19 [get_ports DB1_ADC_DB2_P]
+set_property PACKAGE_PIN D21 [get_ports DB1_ADC_DB1_P]
 set_property PACKAGE_PIN K20 [get_ports DB1_ADC_DB2_N]
-set_property PACKAGE_PIN G22 [get_ports DB1_ADC_DB3_P]
+set_property PACKAGE_PIN K19 [get_ports DB1_ADC_DB2_P]
 set_property PACKAGE_PIN F22 [get_ports DB1_ADC_DB3_N]
-set_property PACKAGE_PIN H20 [get_ports DB1_ADC_DB4_P]
+set_property PACKAGE_PIN G22 [get_ports DB1_ADC_DB3_P]
 set_property PACKAGE_PIN G20 [get_ports DB1_ADC_DB4_N]
-set_property PACKAGE_PIN D22 [get_ports DB1_ADC_DB5_P]
+set_property PACKAGE_PIN H20 [get_ports DB1_ADC_DB4_P]
 set_property PACKAGE_PIN C22 [get_ports DB1_ADC_DB5_N]
-set_property PACKAGE_PIN H21 [get_ports DB1_ADC_DB6_P]
+set_property PACKAGE_PIN D22 [get_ports DB1_ADC_DB5_P]
 set_property PACKAGE_PIN H22 [get_ports DB1_ADC_DB6_N]
+set_property PACKAGE_PIN H21 [get_ports DB1_ADC_DB6_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_ADC_DB*]
 
 set_property DIFF_TERM true [get_ports DB1_ADC_DB*]
 
-set_property PACKAGE_PIN F20 [get_ports DB1_ADC_DCLK_P]
 set_property PACKAGE_PIN E20 [get_ports DB1_ADC_DCLK_N]
+set_property PACKAGE_PIN F20 [get_ports DB1_ADC_DCLK_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_ADC_DCLK_*]
 
 #*******************************************************************************
@@ -150,18 +150,18 @@ set_property PACKAGE_PIN N20 [get_ports DB0_DAC_D4_N]
 set_property PACKAGE_PIN N19 [get_ports DB0_DAC_D4_P]
 set_property PACKAGE_PIN N22 [get_ports DB0_DAC_D5_N]
 set_property PACKAGE_PIN N21 [get_ports DB0_DAC_D5_P]
-set_property PACKAGE_PIN P23 [get_ports DB0_DAC_D6_P]
 set_property PACKAGE_PIN N24 [get_ports DB0_DAC_D6_N]
-set_property PACKAGE_PIN P21 [get_ports DB0_DAC_D7_P]
+set_property PACKAGE_PIN P23 [get_ports DB0_DAC_D6_P]
 set_property PACKAGE_PIN P22 [get_ports DB0_DAC_D7_N]
+set_property PACKAGE_PIN P21 [get_ports DB0_DAC_D7_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_DAC_D*]
 
-set_property PACKAGE_PIN M22 [get_ports DB0_DAC_DCI_P]
 set_property PACKAGE_PIN M23 [get_ports DB0_DAC_DCI_N]
+set_property PACKAGE_PIN M22 [get_ports DB0_DAC_DCI_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_DAC_DCI_*]
 
-set_property PACKAGE_PIN M24 [get_ports DB0_DAC_FRAME_P]
 set_property PACKAGE_PIN M25 [get_ports DB0_DAC_FRAME_N]
+set_property PACKAGE_PIN M24 [get_ports DB0_DAC_FRAME_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB0_DAC_FRAME_*]
 
 #*******************************************************************************
@@ -179,18 +179,18 @@ set_property PACKAGE_PIN A21 [get_ports DB1_DAC_D4_N]
 set_property PACKAGE_PIN A20 [get_ports DB1_DAC_D4_P]
 set_property PACKAGE_PIN B20 [get_ports DB1_DAC_D5_N]
 set_property PACKAGE_PIN C20 [get_ports DB1_DAC_D5_P]
-set_property PACKAGE_PIN B22 [get_ports DB1_DAC_D6_P]
 set_property PACKAGE_PIN A22 [get_ports DB1_DAC_D6_N]
-set_property PACKAGE_PIN C19 [get_ports DB1_DAC_D7_P]
+set_property PACKAGE_PIN B22 [get_ports DB1_DAC_D6_P]
 set_property PACKAGE_PIN B19 [get_ports DB1_DAC_D7_N]
+set_property PACKAGE_PIN C19 [get_ports DB1_DAC_D7_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_DAC_D*]
 
-set_property PACKAGE_PIN F21 [get_ports DB1_DAC_DCI_P]
 set_property PACKAGE_PIN E21 [get_ports DB1_DAC_DCI_N]
+set_property PACKAGE_PIN F21 [get_ports DB1_DAC_DCI_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_DAC_DCI_*]
 
-set_property PACKAGE_PIN D16 [get_ports DB1_DAC_FRAME_P]
 set_property PACKAGE_PIN C16 [get_ports DB1_DAC_FRAME_N]
+set_property PACKAGE_PIN D16 [get_ports DB1_DAC_FRAME_P]
 set_property IOSTANDARD LVDS_25 [get_ports DB1_DAC_FRAME_*]
 
 #*******************************************************************************
@@ -591,8 +591,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports FPGA_125MHz_CLK]
 set_property IOSTANDARD LVDS_25 [get_ports FPGA_CLK_n]
 set_property DIFF_TERM TRUE [get_ports FPGA_CLK_n]
 
-set_property PACKAGE_PIN AF22 [get_ports FPGA_CLK_p]
 set_property PACKAGE_PIN AG23 [get_ports FPGA_CLK_n]
+set_property PACKAGE_PIN AF22 [get_ports FPGA_CLK_p]
 set_property IOSTANDARD LVDS_25 [get_ports FPGA_CLK_p]
 set_property DIFF_TERM TRUE [get_ports FPGA_CLK_p]
 
@@ -604,14 +604,14 @@ set_property IOSTANDARD LVCMOS33 [get_ports TCXO_ENA]
 
 set_property IOSTANDARD LVDS_25 [get_ports FPGA_REFCLK_10MHz_p]
 
-set_property PACKAGE_PIN AG24 [get_ports FPGA_REFCLK_10MHz_p]
 set_property PACKAGE_PIN AH24 [get_ports FPGA_REFCLK_10MHz_n]
+set_property PACKAGE_PIN AG24 [get_ports FPGA_REFCLK_10MHz_p]
 set_property IOSTANDARD LVDS_25 [get_ports FPGA_REFCLK_10MHz_n]
 
 set_property IOSTANDARD LVDS [get_ports CPRI_CLK_OUT_P]
 
-set_property PACKAGE_PIN AA17 [get_ports CPRI_CLK_OUT_P]
 set_property PACKAGE_PIN AA16 [get_ports CPRI_CLK_OUT_N]
+set_property PACKAGE_PIN AA17 [get_ports CPRI_CLK_OUT_P]
 set_property IOSTANDARD LVDS [get_ports CPRI_CLK_OUT_N]
 
 #*******************************************************************************
@@ -737,6 +737,7 @@ set_property PULLUP true [get_ports FPGA_PUDC_B]
 
 #NET   CPRI_CLK_p            IOSTANDARD = LVDS_25 | LOC  =  U8;
 #NET   CPRI_CLK_n            IOSTANDARD = LVDS_25 | LOC  =  U7;
+
 
 
 
