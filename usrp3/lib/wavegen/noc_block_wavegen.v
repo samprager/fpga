@@ -121,6 +121,7 @@ module noc_block_wavegen #(
   axi_wrapper #(
     .SIMPLE_MODE(0), .RESIZE_OUTPUT_PACKET(0))
   inst_axi_wrapper (
+     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .clk(ce_clk), .reset(ce_rst),
     .clear_tx_seqnum(clear_tx_seqnum),
     .next_dst(next_dst_sid),

@@ -85,21 +85,21 @@ module noc_block_cir_avg #(
   //
   ////////////////////////////////////////////////////////////
   localparam NUM_AXI_CONFIG_BUS = 1;
-  
+
   wire [31:0] m_axis_data_tdata;
   wire        m_axis_data_tlast;
   wire        m_axis_data_tvalid;
   wire        m_axis_data_tready;
-  
+
   wire [31:0] s_axis_data_tdata;
   wire        s_axis_data_tlast;
   wire        s_axis_data_tvalid;
   wire        s_axis_data_tready;
-  
+
   wire [31:0] m_axis_config_tdata;
   wire        m_axis_config_tvalid;
   wire        m_axis_config_tready;
-  
+
   localparam AXI_WRAPPER_BASE    = 128;
   localparam SR_AXI_CONFIG_BASE  = AXI_WRAPPER_BASE + 1;
 
@@ -108,6 +108,7 @@ module noc_block_cir_avg #(
     .SR_AXI_CONFIG_BASE(SR_AXI_CONFIG_BASE),
     .NUM_AXI_CONFIG_BUS(NUM_AXI_CONFIG_BUS))
   inst_axi_wrapper (
+    .bus_clk(bus_clk), .bus_rst(bus_rst),
     .clk(ce_clk), .reset(ce_rst),
     .clear_tx_seqnum(clear_tx_seqnum),
     .next_dst(next_dst_sid),
@@ -131,13 +132,13 @@ module noc_block_cir_avg #(
     .m_axis_pkt_len_tdata(),
     .m_axis_pkt_len_tvalid(),
     .m_axis_pkt_len_tready());
-  
+
   ////////////////////////////////////////////////////////////
   //
   // User code
   //
   ////////////////////////////////////////////////////////////
-  
+
   // Control Source Unused
   assign cmdout_tdata  = 64'd0;
   assign cmdout_tlast  = 1'b0;
@@ -173,7 +174,7 @@ module noc_block_cir_avg #(
   wire[9:0] seq_len = avg_size_seq_len[9:0];
 
   averaging inst_cir_avg(
-    .ap_clk(ce_clk), .ap_rst_n(~(ce_rst | block_reset)), 
+    .ap_clk(ce_clk), .ap_rst_n(~(ce_rst | block_reset)),
     .i_data_TDATA(m_axis_data_tdata), // 32 bit integer
     .i_data_TVALID(m_axis_data_tvalid),
     .i_data_TREADY(m_axis_data_tready),
