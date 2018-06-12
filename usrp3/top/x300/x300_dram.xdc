@@ -18,3 +18,4 @@ set_clock_groups -asynchronous -group [get_clocks bus_clk] -group [get_clocks dd
 set_property BITSTREAM.STARTUP.MATCH_CYCLE NoWait [current_design]
 set_property BITSTREAM.GENERAL.COMPRESS False [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 6 [current_design]
+
