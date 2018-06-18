@@ -25,12 +25,12 @@ LIB_IP_DIR = $(BASE_DIR)/../lib/ip
 # Testbench Specific
 #-------------------------------------------------
 # Define only one toplevel module
-SIM_TOP = noc_block_cir_avg_tb
+SIM_TOP = noc_block_pulse_cir_avg_tb
 
 # Add test bench, user design under test, and
 # additional user created files
 SIM_SRCS = \
-$(abspath noc_block_cir_avg_tb.sv)
+$(abspath noc_block_pulse_cir_avg_tb.sv)
 
 MODELSIM_USER_DO = $(abspath wave.do)
 
