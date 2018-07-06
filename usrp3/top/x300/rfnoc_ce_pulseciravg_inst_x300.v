@@ -34,7 +34,7 @@
   noc_block_pulse_cir_avg inst_noc_block_pulse_cir_avg (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     // .ce_clk(ce_clk), .ce_rst(ce_rst),
-    .ce_clk(radio_clk), .ce_rst(radio_rst), //lets go back to using the same clock as the radio
+    .ce_clk(ce_clk), .ce_rst(ce_rst), //lets go back to using the same clock as the radio
     .i_tdata(ce_o_tdata[3]), .i_tlast(ce_o_tlast[3]), .i_tvalid(ce_o_tvalid[3]), .i_tready(ce_o_tready[3]),
     .o_tdata(ce_i_tdata[3]), .o_tlast(ce_i_tlast[3]), .o_tvalid(ce_i_tvalid[3]), .o_tready(ce_i_tready[3]),
     .debug(ce_debug[3]));

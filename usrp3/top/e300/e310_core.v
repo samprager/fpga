@@ -361,8 +361,6 @@ module e310_core
     //AXIS data to/from crossbar
     .i_tdata(ro_tdata), .i_tlast(ro_tlast), .i_tvalid(ro_tvalid), .i_tready(ro_tready),
     .o_tdata(ri_tdata), .o_tlast(ri_tlast), .o_tvalid(ri_tvalid), .o_tready(ri_tready),
-    // Output timed settings bus, one per radio
-    .ext_set_stb(), .ext_set_addr(), .ext_set_data(),
     // Data ports connected to radio front end
     .rx({rx_data1_sel,rx_data0_sel}), .rx_stb({rx_stb1_sel,rx_stb0_sel}),
     .tx({tx_data1_sel,tx_data0_sel}), .tx_stb({tx_stb1_sel,tx_stb0_sel}),

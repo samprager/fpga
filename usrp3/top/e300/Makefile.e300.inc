@@ -35,6 +35,7 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(LIB_DIR)/wavegen/Makefile.srcs
+include $(LIB_DIR)/pulse_cir_avg/Makefile.srcs
 include $(BASE_DIR)/e300/Makefile.OOT.inc
 
 ##################################################
@@ -49,6 +50,12 @@ ifdef BUILD_AWG
 	AWG_SRCS = $(WAVEGEN_SRCS)
 else
 	AWG_SRCS =
+endif
+
+ifdef BUILD_PULSECIRAVG
+	PULSECIRAVG_SRCS = $(PULSE_CIR_AVG_SRCS)
+else
+	PULSECIRAVG_SRCS =
 endif
 
 ifeq (E310,$(findstring E310, $(EXTRA_DEFS)))
@@ -97,7 +104,8 @@ DESIGN_SRCS = $(abspath $(TOP_SRCS)) \
           $(RFNOC_OOT_SRCS) \
           $(LIB_IP_XCI_SRCS) \
           $(HLS_IP_TARGETS) \
-          $(AWG_SRCS)
+          $(AWG_SRCS) \
+          $(PULSECIRAVG_SRCS)
 
 ##################################################
 # Dependency Targets
