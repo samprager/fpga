@@ -8,7 +8,7 @@
 //       that the DUC has the correct output
 
 `timescale 1ns/1ps
-`define SIM_RUNTIME_US 100000000
+`define SIM_RUNTIME_US 10000
 `define NS_PER_TICK 1
 `define NUM_TEST_CASES 4
 
@@ -17,8 +17,8 @@
 
 module noc_block_duc_tb();
   `TEST_BENCH_INIT("noc_block_duc_tb",`NUM_TEST_CASES,`NS_PER_TICK);
-  localparam BUS_CLK_PERIOD = $ceil(1e9/166.67e6);
-  localparam CE_CLK_PERIOD  = $ceil(1e9/200e6);
+  localparam BUS_CLK_PERIOD = $ceil(1e9/200e6);
+  localparam CE_CLK_PERIOD  = $ceil(1e9/215e6);
   localparam NUM_CE         = 2;
   localparam NUM_STREAMS    = 1;
   `RFNOC_SIM_INIT(NUM_CE, NUM_STREAMS, BUS_CLK_PERIOD, CE_CLK_PERIOD);
@@ -30,8 +30,7 @@ module noc_block_duc_tb();
   wire [7:0] fft_size_log2   = $clog2(FFT_SIZE);        // Set FFT size
   wire fft_direction         = 0;                       // Set FFT direction to forward (i.e. DFT[x(n)] => X(k))
   wire [11:0] fft_scale      = 12'b101010101010;        // Conservative scaling of 1/N
-  // Padding of the control word depends on the FFT options enabled
-  wire [20:0] fft_ctrl_word  = {fft_scale, fft_direction, fft_size_log2};
+  wire [1:0] fft_shift       = 2'b00;                   // FFT shift + don't reverse
   int num_hb; //default 2
   int cic_max_interp; //default 128
 
@@ -69,7 +68,7 @@ module noc_block_duc_tb();
       cic_rate = (_interp_rate[7:0] == 8'd0) ? 8'd1 : _interp_rate[7:0];
       `ASSERT_ERROR(hb_enables <= num_hb, "Enabled halfbands may not exceed total number of half bands.");
       `ASSERT_ERROR(cic_rate > 0 && cic_rate <= cic_max_interp,
-       "CIC Decimation rate must be positive, not exceed the max cic interpolation rate, and cannot equal 0!");
+       "CIC Interpolation rate must be positive, not exceed the max cic interpolation rate, and cannot equal 0!");
 
       // Setup DUC
       $display("Set interpolation to %0d", interp_rate);
@@ -153,6 +152,13 @@ module noc_block_duc_tb();
     tb_streamer.read_reg(sid_noc_block_duc, RB_NOC_ID, resp);
     $display("Read DUC NOC ID: %16x", resp);
     `ASSERT_FATAL(resp == noc_block_duc.NOC_ID, "Incorrect NOC ID");
+     //readback regs
+    tb_streamer.read_user_reg(sid_noc_block_duc, RB_NUM_HB, num_hb);
+    $display("NUM_HB = %d", num_hb);
+    `ASSERT_FATAL(num_hb > 0, "Not enough halfbands");
+    tb_streamer.read_user_reg(sid_noc_block_duc, RB_CIC_MAX_INTERP, cic_max_interp);
+    $display("CIC_MAX_INTERP = %d", cic_max_interp);
+    `ASSERT_FATAL(cic_max_interp > 0, "Not enough CIC interp");
     `TEST_CASE_DONE(1);
 
     /********************************************************
@@ -162,11 +168,6 @@ module noc_block_duc_tb();
     $display("Note: This test will take a long time!");
     `RFNOC_CONNECT(noc_block_tb, noc_block_duc, SC16, SPP);
     `RFNOC_CONNECT(noc_block_duc, noc_block_tb, SC16, SPP);
-     //readback regs
-    tb_streamer.read_user_reg(sid_noc_block_duc, RB_NUM_HB, num_hb);
-    $display("NUM_HB = %d", num_hb);
-    tb_streamer.read_user_reg(sid_noc_block_duc, RB_CIC_MAX_INTERP, cic_max_interp);
-    $display("CIC_MAX_INTERP = %d", cic_max_interp);
 
     send_ones(1);    // HBs enabled: 0, CIC rate: 1
     send_ones(2);    // HBs enabled: 1, CIC rate: 1
@@ -187,15 +188,19 @@ module noc_block_duc_tb();
     `RFNOC_CONNECT(noc_block_tb, noc_block_duc, SC16, SPP);
     `RFNOC_CONNECT(noc_block_duc, noc_block_fft, SC16, SPP);
     `RFNOC_CONNECT(noc_block_fft, noc_block_tb, SC16, SPP);
+
     // Configure DUC
     set_interp_rate(1);
     tb_streamer.write_reg(sid_noc_block_duc, SR_CONFIG_ADDR, 32'd1);   // Enable clear EOB'
     tb_streamer.write_reg(sid_noc_block_duc, SR_FREQ_ADDR, 32'd0);     // Reset phase increment
     tb_streamer.write_reg(sid_noc_block_duc, SR_SCALE_IQ_ADDR, 16384); // Scaling, set to 1
-    // Configure FFT
-    tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_AXI_CONFIG_BASE, {11'd0, fft_ctrl_word});  // Configure FFT core
+
+    tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_FFT_DIRECTION, fft_direction);             // Configure FFT direction (fwd/rev)
+    tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_FFT_SCALING, fft_scale);                   // Configure FFT scaling
     tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_FFT_SIZE_LOG2, fft_size_log2);             // Set FFT size register
     tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_MAGNITUDE_OUT, noc_block_fft.COMPLEX_OUT); // Enable complex out
+    tb_streamer.write_reg(sid_noc_block_fft, noc_block_fft.SR_FFT_SHIFT_CONFIG, fft_shift);              // Configure fft shift settings
+
     // Test description:
     // - Send three packets to DUC, each set to a constant value
     // - Setup a timed tune for the last two packets
@@ -238,11 +243,11 @@ module noc_block_duc_tb();
             $sformat(s, "Invalid CORDIC shift! Did not detect DC component! Expected: {20000,0}, Received: {%d,%d}",
               $signed(recv_word[31:16]), $signed(recv_word[15:0]));
             `ASSERT_ERROR(recv_word == {16'd20000,16'd0}, s);
-          end else if (i == SPP+FFT_SIZE/2+FFT_SIZE/8) begin
+          end else if (i == SPP+FFT_SIZE/2-FFT_SIZE/8) begin
             $sformat(s, "Invalid CORDIC shift! Did not detect tone at Fs/8! Expected: {10000,0}, Received: {%d,%d}",
               $signed(recv_word[31:16]), $signed(recv_word[15:0]));
             `ASSERT_ERROR(recv_word == {16'd10000,16'd0}, s);
-          end else if (i == 2*SPP+FFT_SIZE/2+FFT_SIZE/4) begin
+          end else if (i == 2*SPP+FFT_SIZE/2-FFT_SIZE/4) begin
             $sformat(s, "Invalid CORDIC shift! Did not detect tone at Fs/4! Expected: {5000,0}, Received: {%d,%d}",
               $signed(recv_word[31:16]), $signed(recv_word[15:0]));
             `ASSERT_ERROR(recv_word == {16'd5000,16'd0}, s);
