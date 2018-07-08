@@ -331,7 +331,7 @@ module e310_core
   wire [31:0] db_fe_set_data[0:NUM_CHANNELS-1];
   wire        db_fe_rb_stb[0:NUM_CHANNELS-1];
   wire [7:0]  db_fe_rb_addr[0:NUM_CHANNELS-1];
-  wire [64:0] db_fe_rb_data[0:NUM_CHANNELS-1];
+  wire [63:0] db_fe_rb_data[0:NUM_CHANNELS-1];
   assign {rx_stb[0], rx_stb[1]} = {rx_stb0, rx_stb1};
   assign {rx_data[0], rx_data[1]} = {rx_data0, rx_data1};
   assign {tx_stb[0], tx_stb[1]} = {tx_stb0, tx_stb1};

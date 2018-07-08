@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import print_function
 import os
+import re
 import sys
 import signal
 import threading
@@ -114,13 +115,26 @@ class MainWindow(QtWidgets.QWidget):
         ##################################################
         label_cmd_display = QtWidgets.QLabel(self)
         label_cmd_display.setText("uhd_image_builder command:")
-        label_cmd_display.setAlignment(QtCore.Qt.AlignRight)
+        label_cmd_display.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        label_cmd_display.setStyleSheet(" QLabel {font-weight: bold; color: black}")
         grid.addWidget(label_cmd_display, 10, 0)
         self.cmd_display = QtWidgets.QTextEdit(self)
         self.cmd_display.setMaximumHeight(label_cmd_display.sizeHint().height() * 3)
         self.cmd_display.setReadOnly(True)
         self.cmd_display.setText("".join(self.cmd_name))
         grid.addWidget(self.cmd_display, 10, 1, 1, 3)
+
+        ##################################################
+        # uhd_image_builder target help display
+        ##################################################
+        self.help_display = QtWidgets.QLabel(self)
+        grid.addWidget(self.help_display, 11, 1, 1, 3)
+        self.help_display.setWordWrap(True)
+        help_description = QtWidgets.QLabel(self)
+        grid.addWidget(help_description, 11, 0)
+        help_description.setText("Target description: ")
+        help_description.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        help_description.setStyleSheet(" QLabel {font-weight: bold; color: black}")
 
         ##################################################
         # Panels - QTreeModels
@@ -133,6 +147,7 @@ class MainWindow(QtWidgets.QWidget):
         self.targets.setModel(self.model_targets)
         self.populate_target('x300')
         self.populate_target('e300')
+        self.populate_target('n3xx')
         grid.addWidget(self.targets, 0, 0, 8, 1)
 
         ### Central Panel: Available blocks
@@ -385,9 +400,20 @@ class MainWindow(QtWidgets.QWidget):
         elif self.device == 'E310':
             self.target = 'e300'
             self.max_allowed_blocks = 6
+        if self.device == 'N310' or self.device == 'N300':
+            self.target = 'n3xx'
+            self.max_allowed_blocks = 10
         oot_sources = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',\
             self.target, 'Makefile.srcs')
         self.show_list(self.oot, self.target, oot_sources)
+
+        # Show the help string for a selected target
+        selected_makefile = os.path.join(uhd_image_builder.get_scriptpath(),
+                                         '..', '..', 'top', self.target, 'Makefile')
+        pattern = "^\#\S*{}.*".format(self.build_target)
+        with open(selected_makefile) as fil:
+            help_string = re.findall(pattern, fil.read(), re.MULTILINE)[0].replace("##","")
+            self.help_display.setText(help_string)
 
     @pyqtSlot()
     def file_dialog(self):
@@ -566,16 +592,13 @@ class MainWindow(QtWidgets.QWidget):
         """
         Parses the Makefile available and lists the build targets into the left pannel
         """
-        suffix = '0_RFNOC'
+        pattern = "^(?!\#)^\S*_RFNOC[^:]*"
         build_targets = os.path.join(uhd_image_builder.get_scriptpath(), '..', '..', 'top',
                                      selected_target, 'Makefile')
-        with open(build_targets, 'r') as fil:
-            text = fil.readlines()
-            for lines in text:
-                lines = lines.partition(':')[0]
-                if suffix in lines:
-                    target = QtGui.QStandardItem(lines)
-                    self.model_targets.appendRow(target)
+        with open(build_targets) as fil:
+            targets = re.findall(pattern, fil.read(), re.MULTILINE)
+            for target in targets:
+                self.model_targets.appendRow(QtGui.QStandardItem(target))
 
     def check_blk_not_in_sources(self):
         """
