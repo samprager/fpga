@@ -96,11 +96,24 @@ module noc_block_wavegen #(
   wire        m_axis_data_tvalid;
   wire        m_axis_data_tready;
 
+  wire [31:0] buf_m_axis_data_tdata;
+  wire [127:0] buf_m_axis_data_tuser;
+  wire        buf_m_axis_data_tlast;
+  wire        buf_m_axis_data_tvalid;
+  wire        buf_m_axis_data_tready;
+
+
   wire [31:0] s_axis_data_tdata;
   wire [127:0] s_axis_data_tuser;
   wire        s_axis_data_tlast;
   wire        s_axis_data_tvalid;
   wire        s_axis_data_tready;
+
+  wire [31:0] s_axis_awg_data_tdata;
+  wire [127:0] s_axis_awg_data_tuser;
+  wire        s_axis_awg_data_tlast;
+  wire        s_axis_awg_data_tvalid;
+  wire        s_axis_awg_data_tready;
 
 
 
@@ -145,7 +158,7 @@ module noc_block_wavegen #(
     .m_axis_config_tvalid(),
     .m_axis_config_tready());
 
-assign m_axis_data_tready = 1'b1;
+// assign m_axis_data_tready = 1'b1;
 
   ////////////////////////////////////////////////////////////
   //
@@ -199,6 +212,9 @@ assign m_axis_data_tready = 1'b1;
    wire [63:0] rx_cmdout_tdata, resp_tdata;
    wire        rx_cmdout_tlast, rx_cmdout_tvalid, rx_cmdout_tready, resp_tlast, resp_tvalid, resp_tready;
 
+   reg in_sample_passthrough_r,in_sample_load_r;
+   wire in_sample_passthrough,in_sample_load;
+
   // Readback registers
 
   always @(*) begin
@@ -217,7 +233,35 @@ assign m_axis_data_tready = 1'b1;
     endcase
   end
 
-  // FIR filter coefficient reload bus
+  // Switches to either pass incoming samples on m_axis_data_tready through to radio or load them into the awg (requires valid header pre-appended)
+
+
+
+  always @(posedge ce_clk) begin
+   if (ce_rst) begin
+       in_sample_passthrough_r <= 1'b0;
+       in_sample_load_r <= 1'b0;
+   end else begin
+       in_sample_passthrough_r <= awg_control_word[0];
+       in_sample_load_r <= awg_control_word[1];
+   end
+  end
+
+  assign sample_passthrough = sample_passthrough_r;
+  assign in_sample_load = in_sample_load_r;
+
+
+axi_stream_buffer #(.FIFO_SIZE(64),.WIDTH(32))
+axi_stream_buffer_i (.clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
+.i_tdata(m_axis_data_tdata),.i_tuser(m_axis_data_tuser), .i_tlast(m_axis_data_tlast), .i_tvalid(m_axis_data_tvalid), .i_tready(m_axis_data_tready),
+.o_tdata(buf_m_axis_data_tdata), .o_tuser(buf_m_axis_data_tuser), .o_tlast(buf_m_axis_data_tlast), .o_tvalid(buf_m_axis_data_tvalid), .o_tready(buf_m_axis_data_tready));
+
+axi_pulse_mux #(.NUM_INPUTS(2),.MUX_PRE_FIFO_SIZE(0),.MUX_POST_FIFO_SIZE(0),.FIFO_SIZE(5),.WIDTH(32))
+axi_pulse_mux_i (.clk(ce_clk), .reset(ce_rst), .clear(1'b0),
+.i_tdata({buf_m_axis_data_tdata,s_axis_awg_data_tdata}),.i_tuser({buf_m_axis_data_tuser,s_axis_awg_data_tuser}), .i_tlast({buf_m_axis_data_tlast,s_axis_awg_data_tlast}), .i_tvalid({buf_m_axis_data_tvalid,s_axis_awg_data_tvalid}), .i_tready({buf_m_axis_data_tready,s_axis_awg_data_tready}),
+.o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
+
+    // pulse sample reload bus
   // (see Xilinx FIR Filter Compiler documentation)
   axi_setting_reg #(
     .ADDR(SR_AWG_RELOAD),
@@ -367,7 +411,8 @@ assign m_axis_data_tready = 1'b1;
      (.clk(ce_clk), .reset(ce_rst),
       .max_spp(max_spp),
       .i_tdata(awg_data_tdata), .i_tuser(awg_data_tuser), .i_tlast(awg_data_tlast), .i_tvalid(awg_data_tvalid), .i_tready(awg_data_tready),
-      .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
+      // .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));
+      .o_tdata(s_axis_awg_data_tdata), .o_tuser(s_axis_awg_data_tuser), .o_tlast(s_axis_awg_data_tlast), .o_tvalid(s_axis_awg_data_tvalid), .o_tready(s_axis_awg_data_tready));
 
     cvita_hdr_encoder cvita_hdr_encoder (
       .pkt_type(2'd0), .eob(1'b1), .has_time(has_time),

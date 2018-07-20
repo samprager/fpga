@@ -737,7 +737,7 @@ noc_block_wavegen noc_block_wavegen(
       end
     join
     `TEST_CASE_DONE(1);
-    
+
     /********************************************************
     ** Test 13 -- Send Chirp pulse with forward timestamp and chain command, to transmit 10 pulses and stop (manual mode). Also send command to rx
     ********************************************************/
@@ -800,7 +800,7 @@ noc_block_wavegen noc_block_wavegen(
     tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_LO, start_time[31:0]);
     $display("Command Sent");
 
-    
+
 
     /* Send and check impulse */
     fork
@@ -838,8 +838,8 @@ noc_block_wavegen noc_block_wavegen(
     ********************************************************/
     // Sending an impulse will readback the FIR filter coefficients
     `TEST_CASE_START("Changing to Chirp Source");
-    
-    
+
+
     wfrm_len = 10;
 
     $display("Changing Chirp Counter Length to %16x (max count = %16x)",wfrm_len,wfrm_len-1);
@@ -875,7 +875,7 @@ noc_block_wavegen noc_block_wavegen(
       end
     join
     `TEST_CASE_DONE(1);
-    
+
     $display("Changing SPP to 64");
     // Change CTRL Policy to dependent mode
     tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_MAXLEN, 32'd64);
@@ -884,7 +884,7 @@ noc_block_wavegen noc_block_wavegen(
     /** Test 14 -- Send Chirp pulse with with 0 orf
     ********************************************************/
     `TEST_CASE_START("Automatic pulse with 0 prf and with forward time and forward timed rx command");
-    
+
 
     $display("Testing PRF Count = 1 in auto mode with awg source");
         tb_streamer.write_reg(sid_noc_block_wavegen, SR_AWG_CTRL_WORD_ADDR, CTRL_WORD_SEL_AWG);
@@ -905,7 +905,7 @@ noc_block_wavegen noc_block_wavegen(
     $display("Read Policy: %16x", readback);
     $sformat(s, "Incorrect Policy Read! Expected: %0d, Received: %0d", 32'd0, readback);
     `ASSERT_ERROR(readback == 32'd0, s);
-    
+
 
     /* Send and check impulse */
     fork
@@ -996,6 +996,42 @@ noc_block_wavegen noc_block_wavegen(
     join
     `TEST_CASE_DONE(1);
 
+    /********************************************************
+    ** Test 16 -- Test pass through samples
+    ********************************************************/
+    // Sending an impulse will readback the FIR filter coefficients
+    `TEST_CASE_START("Send ramp samples for AWG to buffer and pass through");
+
+    $display("Changing policy to Manual, Fwd time, and Don't Fwd RX Command");
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd3);
+    $display("Changing SPP to %d",SPP);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_MAXLEN, SPP);
+
+    // Send a short ramp, should pass through unchanged
+    fork
+      begin
+        cvita_payload_t send_payload;
+        cvita_metadata_t tx_md;
+        for (int i = 0; i < SPP/2; i++) begin
+          send_payload.push_back({16'(2*i+SPP),16'(2*i),16'(2*i+1+SPP),16'(2*i+1)});
+        end
+        tx_md.eob = 1'b1;
+        tb_streamer.send(send_payload,tx_md);
+      end
+      begin
+        cvita_payload_t recv_payload;
+        cvita_metadata_t rx_md;
+        logic [63:0] expected_value, recv_value;
+        tb_streamer.recv(recv_payload,rx_md);
+        for (int i = 0; i < SPP/2; i++) begin
+          expected_value = {16'(2*i+SPP),16'(2*i),16'(2*i+1+SPP),16'(2*i+1)};
+          recv_value = recv_payload[i];
+          $sformat(s, "Incorrect value received on add output! Expected: %0d, Received: %0d", expected_value, recv_value);
+         `ASSERT_ERROR(recv_value == expected_value, s);
+        end
+      end
+    join
+    `TEST_CASE_DONE(1);
 
     `TEST_BENCH_DONE;
 
