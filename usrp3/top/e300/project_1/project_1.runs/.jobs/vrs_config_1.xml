@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<Runs Version="1" Minor="0">
-	<Run Id="axi_waveform_bram_ctrl_synth_1" LaunchDir="/home/radar/Projects/fpga/usrp3/top/e300/project_1/project_1.runs/axi_waveform_bram_ctrl_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
-</Runs>
-
