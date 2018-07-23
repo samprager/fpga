@@ -13,6 +13,7 @@ module axi_stream_buffer#(
   parameter WIDTH = 32
 )(
   input clk, input reset, input clear,
+  input [15:0] next_dst_sid,
   input [WIDTH-1:0] i_tdata, input i_tlast, input i_tvalid, output i_tready, input [127:0] i_tuser,
   output [WIDTH-1:0] o_tdata,output [127:0] o_tuser, output o_tlast, output o_tvalid, input o_tready
 );
@@ -57,3 +58,5 @@ inst_axi_fifo (
   .i_tdata({i_tlast,i_tdata}), .i_tvalid(i_tvalid), .i_tready(i_tready),
   .o_tdata({o_tlast,o_tdata}), .o_tvalid(o_tvalid), .o_tready(o_tready),
   .space(), .occupied());
+
+endmodule

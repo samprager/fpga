@@ -247,12 +247,12 @@ module noc_block_wavegen #(
    end
   end
 
-  assign sample_passthrough = sample_passthrough_r;
+  assign in_sample_passthrough = in_sample_passthrough_r;
   assign in_sample_load = in_sample_load_r;
 
 
 axi_stream_buffer #(.FIFO_SIZE(64),.WIDTH(32))
-axi_stream_buffer_i (.clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
+axi_stream_buffer_i (.clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum), .next_dst_sid(next_dst_sid),
 .i_tdata(m_axis_data_tdata),.i_tuser(m_axis_data_tuser), .i_tlast(m_axis_data_tlast), .i_tvalid(m_axis_data_tvalid), .i_tready(m_axis_data_tready),
 .o_tdata(buf_m_axis_data_tdata), .o_tuser(buf_m_axis_data_tuser), .o_tlast(buf_m_axis_data_tlast), .o_tvalid(buf_m_axis_data_tvalid), .o_tready(buf_m_axis_data_tready));
 
