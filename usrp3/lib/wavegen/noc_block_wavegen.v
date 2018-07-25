@@ -251,12 +251,12 @@ module noc_block_wavegen #(
   assign in_sample_load = in_sample_load_r;
 
 
-axi_stream_buffer #(.FIFO_SIZE(64),.WIDTH(32))
+axi_stream_buffer #(.FIFO_SIZE(16),.WIDTH(32))
 axi_stream_buffer_i (.clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum), .next_dst_sid(next_dst_sid),
 .i_tdata(m_axis_data_tdata),.i_tuser(m_axis_data_tuser), .i_tlast(m_axis_data_tlast), .i_tvalid(m_axis_data_tvalid), .i_tready(m_axis_data_tready),
 .o_tdata(buf_m_axis_data_tdata), .o_tuser(buf_m_axis_data_tuser), .o_tlast(buf_m_axis_data_tlast), .o_tvalid(buf_m_axis_data_tvalid), .o_tready(buf_m_axis_data_tready));
 
-axi_pulse_mux #(.NUM_INPUTS(2),.MUX_PRE_FIFO_SIZE(0),.MUX_POST_FIFO_SIZE(0),.FIFO_SIZE(5),.WIDTH(32))
+axi_pulse_mux #(.NUM_INPUTS(2),.MUX_PRE_FIFO_SIZE(3),.MUX_POST_FIFO_SIZE(3),.FIFO_SIZE(5),.WIDTH(32))
 axi_pulse_mux_i (.clk(ce_clk), .reset(ce_rst), .clear(1'b0),
 .i_tdata({buf_m_axis_data_tdata,s_axis_awg_data_tdata}),.i_tuser({buf_m_axis_data_tuser,s_axis_awg_data_tuser}), .i_tlast({buf_m_axis_data_tlast,s_axis_awg_data_tlast}), .i_tvalid({buf_m_axis_data_tvalid,s_axis_awg_data_tvalid}), .i_tready({buf_m_axis_data_tready,s_axis_awg_data_tready}),
 .o_tdata(s_axis_data_tdata), .o_tuser(s_axis_data_tuser), .o_tlast(s_axis_data_tlast), .o_tvalid(s_axis_data_tvalid), .o_tready(s_axis_data_tready));

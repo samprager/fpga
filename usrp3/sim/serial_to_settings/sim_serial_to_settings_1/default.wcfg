@@ -3,84 +3,1495 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="./isim.wdb" id="1" type="auto">
+      <db_ref path="noc_block_wavegen_tb_behav.wdb" id="1">
          <top_modules>
+            <top_module name="\$unit_1 " />
+            <top_module name="axi_bram_ctrl_funcs" />
             <top_module name="glbl" />
-            <top_module name="serial_to_settings_tb" />
+            <top_module name="lib_pkg" />
+            <top_module name="noc_block_wavegen_tb" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="17" />
-   <wvobject fp_name="/serial_to_settings_tb/clk" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
+   <zoom_setting>
+      <ZoomStartTime time="697060000000fs"></ZoomStartTime>
+      <ZoomEndTime time="710400000001fs"></ZoomEndTime>
+      <Cursor1Time time="708160000000fs"></Cursor1Time>
+   </zoom_setting>
+   <WVObjectSize size="9" />
+   <wvobject type="group" fp_name="group166">
+      <obj_property name="label">noc_block_Wavegen</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/bus_clk">
+         <obj_property name="ElementShortName">bus_clk</obj_property>
+         <obj_property name="ObjectShortName">bus_clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/bus_rst">
+         <obj_property name="ElementShortName">bus_rst</obj_property>
+         <obj_property name="ObjectShortName">bus_rst</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ce_clk">
+         <obj_property name="ElementShortName">ce_clk</obj_property>
+         <obj_property name="ObjectShortName">ce_clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ce_rst">
+         <obj_property name="ElementShortName">ce_rst</obj_property>
+         <obj_property name="ObjectShortName">ce_rst</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/i_tdata">
+         <obj_property name="ElementShortName">i_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/i_tlast">
+         <obj_property name="ElementShortName">i_tlast</obj_property>
+         <obj_property name="ObjectShortName">i_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/i_tvalid">
+         <obj_property name="ElementShortName">i_tvalid</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/i_tready">
+         <obj_property name="ElementShortName">i_tready</obj_property>
+         <obj_property name="ObjectShortName">i_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/o_tdata">
+         <obj_property name="ElementShortName">o_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/o_tlast">
+         <obj_property name="ElementShortName">o_tlast</obj_property>
+         <obj_property name="ObjectShortName">o_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/o_tvalid">
+         <obj_property name="ElementShortName">o_tvalid</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/o_tready">
+         <obj_property name="ElementShortName">o_tready</obj_property>
+         <obj_property name="ObjectShortName">o_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/debug">
+         <obj_property name="ElementShortName">debug[63:0]</obj_property>
+         <obj_property name="ObjectShortName">debug[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/pps">
+         <obj_property name="ElementShortName">pps</obj_property>
+         <obj_property name="ObjectShortName">pps</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/sync_in">
+         <obj_property name="ElementShortName">sync_in</obj_property>
+         <obj_property name="ObjectShortName">sync_in</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/sync_out">
+         <obj_property name="ElementShortName">sync_out</obj_property>
+         <obj_property name="ObjectShortName">sync_out</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rx_stb">
+         <obj_property name="ElementShortName">rx_stb</obj_property>
+         <obj_property name="ObjectShortName">rx_stb</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/set_data">
+         <obj_property name="ElementShortName">set_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">set_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/set_addr">
+         <obj_property name="ElementShortName">set_addr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">set_addr[7:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/set_stb">
+         <obj_property name="ElementShortName">set_stb</obj_property>
+         <obj_property name="ObjectShortName">set_stb</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rb_data">
+         <obj_property name="ElementShortName">rb_data[63:0]</obj_property>
+         <obj_property name="ObjectShortName">rb_data[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rb_addr">
+         <obj_property name="ElementShortName">rb_addr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rb_addr[7:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/cmdout_tdata">
+         <obj_property name="ElementShortName">cmdout_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">cmdout_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ackin_tdata">
+         <obj_property name="ElementShortName">ackin_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">ackin_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/cmdout_tlast">
+         <obj_property name="ElementShortName">cmdout_tlast</obj_property>
+         <obj_property name="ObjectShortName">cmdout_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/cmdout_tvalid">
+         <obj_property name="ElementShortName">cmdout_tvalid</obj_property>
+         <obj_property name="ObjectShortName">cmdout_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/cmdout_tready">
+         <obj_property name="ElementShortName">cmdout_tready</obj_property>
+         <obj_property name="ObjectShortName">cmdout_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ackin_tlast">
+         <obj_property name="ElementShortName">ackin_tlast</obj_property>
+         <obj_property name="ObjectShortName">ackin_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ackin_tvalid">
+         <obj_property name="ElementShortName">ackin_tvalid</obj_property>
+         <obj_property name="ObjectShortName">ackin_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/ackin_tready">
+         <obj_property name="ElementShortName">ackin_tready</obj_property>
+         <obj_property name="ObjectShortName">ackin_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_sink_tdata">
+         <obj_property name="ElementShortName">str_sink_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">str_sink_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_src_tdata">
+         <obj_property name="ElementShortName">str_src_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">str_src_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_sink_tlast">
+         <obj_property name="ElementShortName">str_sink_tlast</obj_property>
+         <obj_property name="ObjectShortName">str_sink_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_sink_tvalid">
+         <obj_property name="ElementShortName">str_sink_tvalid</obj_property>
+         <obj_property name="ObjectShortName">str_sink_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_sink_tready">
+         <obj_property name="ElementShortName">str_sink_tready</obj_property>
+         <obj_property name="ObjectShortName">str_sink_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_src_tlast">
+         <obj_property name="ElementShortName">str_src_tlast</obj_property>
+         <obj_property name="ObjectShortName">str_src_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_src_tvalid">
+         <obj_property name="ElementShortName">str_src_tvalid</obj_property>
+         <obj_property name="ObjectShortName">str_src_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/str_src_tready">
+         <obj_property name="ElementShortName">str_src_tready</obj_property>
+         <obj_property name="ObjectShortName">str_src_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/clear_tx_seqnum">
+         <obj_property name="ElementShortName">clear_tx_seqnum</obj_property>
+         <obj_property name="ObjectShortName">clear_tx_seqnum</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/next_dst_sid">
+         <obj_property name="ElementShortName">next_dst_sid[15:0]</obj_property>
+         <obj_property name="ObjectShortName">next_dst_sid[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/src_sid">
+         <obj_property name="ElementShortName">src_sid[15:0]</obj_property>
+         <obj_property name="ObjectShortName">src_sid[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_in_dst_sid">
+         <obj_property name="ElementShortName">resp_in_dst_sid[15:0]</obj_property>
+         <obj_property name="ObjectShortName">resp_in_dst_sid[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_out_dst_sid">
+         <obj_property name="ElementShortName">resp_out_dst_sid[15:0]</obj_property>
+         <obj_property name="ObjectShortName">resp_out_dst_sid[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/vita_time">
+         <obj_property name="ElementShortName">vita_time[63:0]</obj_property>
+         <obj_property name="ObjectShortName">vita_time[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/test_readback">
+         <obj_property name="ElementShortName">test_readback[31:0]</obj_property>
+         <obj_property name="ObjectShortName">test_readback[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_data_tdata">
+         <obj_property name="ElementShortName">m_axis_data_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_data_tuser">
+         <obj_property name="ElementShortName">m_axis_data_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_data_tlast">
+         <obj_property name="ElementShortName">m_axis_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_data_tvalid">
+         <obj_property name="ElementShortName">m_axis_data_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_data_tready">
+         <obj_property name="ElementShortName">m_axis_data_tready</obj_property>
+         <obj_property name="ObjectShortName">m_axis_data_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/buf_m_axis_data_tdata">
+         <obj_property name="ElementShortName">buf_m_axis_data_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">buf_m_axis_data_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/buf_m_axis_data_tuser">
+         <obj_property name="ElementShortName">buf_m_axis_data_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">buf_m_axis_data_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/buf_m_axis_data_tlast">
+         <obj_property name="ElementShortName">buf_m_axis_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">buf_m_axis_data_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/buf_m_axis_data_tvalid">
+         <obj_property name="ElementShortName">buf_m_axis_data_tvalid</obj_property>
+         <obj_property name="ObjectShortName">buf_m_axis_data_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/buf_m_axis_data_tready">
+         <obj_property name="ElementShortName">buf_m_axis_data_tready</obj_property>
+         <obj_property name="ObjectShortName">buf_m_axis_data_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_data_tdata">
+         <obj_property name="ElementShortName">s_axis_data_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis_data_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_data_tuser">
+         <obj_property name="ElementShortName">s_axis_data_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis_data_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_data_tlast">
+         <obj_property name="ElementShortName">s_axis_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">s_axis_data_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_data_tvalid">
+         <obj_property name="ElementShortName">s_axis_data_tvalid</obj_property>
+         <obj_property name="ObjectShortName">s_axis_data_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_data_tready">
+         <obj_property name="ElementShortName">s_axis_data_tready</obj_property>
+         <obj_property name="ObjectShortName">s_axis_data_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_awg_data_tdata">
+         <obj_property name="ElementShortName">s_axis_awg_data_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis_awg_data_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_awg_data_tuser">
+         <obj_property name="ElementShortName">s_axis_awg_data_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis_awg_data_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_awg_data_tlast">
+         <obj_property name="ElementShortName">s_axis_awg_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">s_axis_awg_data_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_awg_data_tvalid">
+         <obj_property name="ElementShortName">s_axis_awg_data_tvalid</obj_property>
+         <obj_property name="ObjectShortName">s_axis_awg_data_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/s_axis_awg_data_tready">
+         <obj_property name="ElementShortName">s_axis_awg_data_tready</obj_property>
+         <obj_property name="ObjectShortName">s_axis_awg_data_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/vita_time_lastpps">
+         <obj_property name="ElementShortName">vita_time_lastpps[63:0]</obj_property>
+         <obj_property name="ObjectShortName">vita_time_lastpps[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_ready">
+         <obj_property name="ElementShortName">awg_ready</obj_property>
+         <obj_property name="ObjectShortName">awg_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_done">
+         <obj_property name="ElementShortName">awg_done</obj_property>
+         <obj_property name="ObjectShortName">awg_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_active">
+         <obj_property name="ElementShortName">awg_active</obj_property>
+         <obj_property name="ObjectShortName">awg_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_init">
+         <obj_property name="ElementShortName">awg_init</obj_property>
+         <obj_property name="ObjectShortName">awg_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_enable">
+         <obj_property name="ElementShortName">awg_enable</obj_property>
+         <obj_property name="ObjectShortName">awg_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/adc_enable">
+         <obj_property name="ElementShortName">adc_enable</obj_property>
+         <obj_property name="ObjectShortName">adc_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/adc_run">
+         <obj_property name="ElementShortName">adc_run</obj_property>
+         <obj_property name="ObjectShortName">adc_run</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/adc_last">
+         <obj_property name="ElementShortName">adc_last</obj_property>
+         <obj_property name="ObjectShortName">adc_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_control_word">
+         <obj_property name="ElementShortName">awg_control_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_control_word[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/num_adc_samples">
+         <obj_property name="ElementShortName">num_adc_samples[31:0]</obj_property>
+         <obj_property name="ObjectShortName">num_adc_samples[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/prf">
+         <obj_property name="ElementShortName">prf[63:0]</obj_property>
+         <obj_property name="ObjectShortName">prf[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/policy">
+         <obj_property name="ElementShortName">policy[31:0]</obj_property>
+         <obj_property name="ObjectShortName">policy[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/max_spp">
+         <obj_property name="ElementShortName">max_spp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">max_spp[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/timestamp">
+         <obj_property name="ElementShortName">timestamp[63:0]</obj_property>
+         <obj_property name="ObjectShortName">timestamp[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/has_time">
+         <obj_property name="ElementShortName">has_time</obj_property>
+         <obj_property name="ObjectShortName">has_time</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_tdata">
+         <obj_property name="ElementShortName">awg_data_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_data_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_tuser">
+         <obj_property name="ElementShortName">awg_data_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_data_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_tlast">
+         <obj_property name="ElementShortName">awg_data_tlast</obj_property>
+         <obj_property name="ObjectShortName">awg_data_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_tvalid">
+         <obj_property name="ElementShortName">awg_data_tvalid</obj_property>
+         <obj_property name="ObjectShortName">awg_data_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_tready">
+         <obj_property name="ElementShortName">awg_data_tready</obj_property>
+         <obj_property name="ObjectShortName">awg_data_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/awg_data_len">
+         <obj_property name="ElementShortName">awg_data_len[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_data_len[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_awg_reload_tdata">
+         <obj_property name="ElementShortName">m_axis_awg_reload_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m_axis_awg_reload_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_awg_reload_tvalid">
+         <obj_property name="ElementShortName">m_axis_awg_reload_tvalid</obj_property>
+         <obj_property name="ObjectShortName">m_axis_awg_reload_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_awg_reload_tready">
+         <obj_property name="ElementShortName">m_axis_awg_reload_tready</obj_property>
+         <obj_property name="ObjectShortName">m_axis_awg_reload_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/m_axis_awg_reload_tlast">
+         <obj_property name="ElementShortName">m_axis_awg_reload_tlast</obj_property>
+         <obj_property name="ObjectShortName">m_axis_awg_reload_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rx_cmdout_tdata">
+         <obj_property name="ElementShortName">rx_cmdout_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">rx_cmdout_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_tdata">
+         <obj_property name="ElementShortName">resp_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">resp_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rx_cmdout_tlast">
+         <obj_property name="ElementShortName">rx_cmdout_tlast</obj_property>
+         <obj_property name="ObjectShortName">rx_cmdout_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rx_cmdout_tvalid">
+         <obj_property name="ElementShortName">rx_cmdout_tvalid</obj_property>
+         <obj_property name="ObjectShortName">rx_cmdout_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/rx_cmdout_tready">
+         <obj_property name="ElementShortName">rx_cmdout_tready</obj_property>
+         <obj_property name="ObjectShortName">rx_cmdout_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_tlast">
+         <obj_property name="ElementShortName">resp_tlast</obj_property>
+         <obj_property name="ObjectShortName">resp_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_tvalid">
+         <obj_property name="ElementShortName">resp_tvalid</obj_property>
+         <obj_property name="ObjectShortName">resp_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/resp_tready">
+         <obj_property name="ElementShortName">resp_tready</obj_property>
+         <obj_property name="ObjectShortName">resp_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/in_sample_passthrough_r">
+         <obj_property name="ElementShortName">in_sample_passthrough_r</obj_property>
+         <obj_property name="ObjectShortName">in_sample_passthrough_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/in_sample_load_r">
+         <obj_property name="ElementShortName">in_sample_load_r</obj_property>
+         <obj_property name="ObjectShortName">in_sample_load_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/in_sample_passthrough">
+         <obj_property name="ElementShortName">in_sample_passthrough</obj_property>
+         <obj_property name="ObjectShortName">in_sample_passthrough</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/in_sample_load">
+         <obj_property name="ElementShortName">in_sample_load</obj_property>
+         <obj_property name="ObjectShortName">in_sample_load</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/reset" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
+   <wvobject type="group" fp_name="group251">
+      <obj_property name="label">wavegen_block</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/rst">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/clear">
+         <obj_property name="ElementShortName">clear</obj_property>
+         <obj_property name="ObjectShortName">clear</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_out_iq">
+         <obj_property name="ElementShortName">awg_out_iq[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_out_iq[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_data_valid">
+         <obj_property name="ElementShortName">awg_data_valid</obj_property>
+         <obj_property name="ObjectShortName">awg_data_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_data_last">
+         <obj_property name="ElementShortName">awg_data_last</obj_property>
+         <obj_property name="ObjectShortName">awg_data_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_data_ready">
+         <obj_property name="ElementShortName">awg_data_ready</obj_property>
+         <obj_property name="ObjectShortName">awg_data_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_data_len">
+         <obj_property name="ElementShortName">awg_data_len[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_data_len[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/vita_time">
+         <obj_property name="ElementShortName">vita_time[63:0]</obj_property>
+         <obj_property name="ObjectShortName">vita_time[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/resp_sid">
+         <obj_property name="ElementShortName">resp_sid[31:0]</obj_property>
+         <obj_property name="ObjectShortName">resp_sid[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/resp_tdata">
+         <obj_property name="ElementShortName">resp_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">resp_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/resp_tlast">
+         <obj_property name="ElementShortName">resp_tlast</obj_property>
+         <obj_property name="ObjectShortName">resp_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/resp_tvalid">
+         <obj_property name="ElementShortName">resp_tvalid</obj_property>
+         <obj_property name="ObjectShortName">resp_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/resp_tready">
+         <obj_property name="ElementShortName">resp_tready</obj_property>
+         <obj_property name="ObjectShortName">resp_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/set_stb">
+         <obj_property name="ElementShortName">set_stb</obj_property>
+         <obj_property name="ObjectShortName">set_stb</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/set_addr">
+         <obj_property name="ElementShortName">set_addr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">set_addr[7:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/set_data">
+         <obj_property name="ElementShortName">set_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">set_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tdata">
+         <obj_property name="ElementShortName">wr_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tvalid">
+         <obj_property name="ElementShortName">wr_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tlast">
+         <obj_property name="ElementShortName">wr_axis_tlast</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tready">
+         <obj_property name="ElementShortName">wr_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tuser">
+         <obj_property name="ElementShortName">wr_axis_tuser[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tuser[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tkeep">
+         <obj_property name="ElementShortName">wr_axis_tkeep[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tkeep[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tdest">
+         <obj_property name="ElementShortName">wr_axis_tdest[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tdest[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wr_axis_tid">
+         <obj_property name="ElementShortName">wr_axis_tid[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_axis_tid[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_control_word">
+         <obj_property name="ElementShortName">awg_control_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">awg_control_word[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_ready">
+         <obj_property name="ElementShortName">awg_ready</obj_property>
+         <obj_property name="ObjectShortName">awg_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_done">
+         <obj_property name="ElementShortName">awg_done</obj_property>
+         <obj_property name="ObjectShortName">awg_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_active">
+         <obj_property name="ElementShortName">awg_active</obj_property>
+         <obj_property name="ObjectShortName">awg_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_init">
+         <obj_property name="ElementShortName">awg_init</obj_property>
+         <obj_property name="ObjectShortName">awg_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/awg_enable">
+         <obj_property name="ElementShortName">awg_enable</obj_property>
+         <obj_property name="ObjectShortName">awg_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/adc_enable">
+         <obj_property name="ElementShortName">adc_enable</obj_property>
+         <obj_property name="ObjectShortName">adc_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_freq_offset">
+         <obj_property name="ElementShortName">chirp_freq_offset[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_freq_offset[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_tuning_word_coeff">
+         <obj_property name="ElementShortName">chirp_tuning_word_coeff[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_tuning_word_coeff[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_count_max">
+         <obj_property name="ElementShortName">chirp_count_max[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_count_max[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tdata">
+         <obj_property name="ElementShortName">wfin_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tvalid">
+         <obj_property name="ElementShortName">wfin_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tlast">
+         <obj_property name="ElementShortName">wfin_axis_tlast</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tuser">
+         <obj_property name="ElementShortName">wfin_axis_tuser[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tuser[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tkeep">
+         <obj_property name="ElementShortName">wfin_axis_tkeep[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tkeep[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tdest">
+         <obj_property name="ElementShortName">wfin_axis_tdest[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tdest[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tid">
+         <obj_property name="ElementShortName">wfin_axis_tid[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tid[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfin_axis_tready">
+         <obj_property name="ElementShortName">wfin_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">wfin_axis_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_axis_tdata">
+         <obj_property name="ElementShortName">wfout_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfout_axis_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_axis_tvalid">
+         <obj_property name="ElementShortName">wfout_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">wfout_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_axis_tlast">
+         <obj_property name="ElementShortName">wfout_axis_tlast</obj_property>
+         <obj_property name="ObjectShortName">wfout_axis_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_axis_tkeep">
+         <obj_property name="ElementShortName">wfout_axis_tkeep[3:0]</obj_property>
+         <obj_property name="ObjectShortName">wfout_axis_tkeep[3:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_axis_tready">
+         <obj_property name="ElementShortName">wfout_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">wfout_axis_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_parameters">
+         <obj_property name="ElementShortName">waveform_parameters[127:0]</obj_property>
+         <obj_property name="ObjectShortName">waveform_parameters[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/init_wf_write">
+         <obj_property name="ElementShortName">init_wf_write</obj_property>
+         <obj_property name="ObjectShortName">init_wf_write</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_write_ready">
+         <obj_property name="ElementShortName">wf_write_ready</obj_property>
+         <obj_property name="ObjectShortName">wf_write_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_read_ready">
+         <obj_property name="ElementShortName">wf_read_ready</obj_property>
+         <obj_property name="ObjectShortName">wf_read_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfout_size">
+         <obj_property name="ElementShortName">wfout_size[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfout_size[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_out_size">
+         <obj_property name="ElementShortName">chirp_out_size[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_size[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_data_iq">
+         <obj_property name="ElementShortName">wfrm_data_iq[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_iq[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_data_valid">
+         <obj_property name="ElementShortName">wfrm_data_valid</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_data_last">
+         <obj_property name="ElementShortName">wfrm_data_last</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_data_iq">
+         <obj_property name="ElementShortName">chirp_data_iq[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_data_iq[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_data_valid">
+         <obj_property name="ElementShortName">chirp_data_valid</obj_property>
+         <obj_property name="ObjectShortName">chirp_data_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirp_data_last">
+         <obj_property name="ElementShortName">chirp_data_last</obj_property>
+         <obj_property name="ObjectShortName">chirp_data_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/adc_counter">
+         <obj_property name="ElementShortName">adc_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">adc_counter[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/adc_data_valid">
+         <obj_property name="ElementShortName">adc_data_valid</obj_property>
+         <obj_property name="ObjectShortName">adc_data_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_source_ctrl">
+         <obj_property name="ElementShortName">dds_source_ctrl[1:0]</obj_property>
+         <obj_property name="ObjectShortName">dds_source_ctrl[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_source_select">
+         <obj_property name="ElementShortName">dds_source_select</obj_property>
+         <obj_property name="ObjectShortName">dds_source_select</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_source_ctrl_r">
+         <obj_property name="ElementShortName">dds_source_ctrl_r[1:0]</obj_property>
+         <obj_property name="ObjectShortName">dds_source_ctrl_r[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_ready">
+         <obj_property name="ElementShortName">wfrm_ready</obj_property>
+         <obj_property name="ObjectShortName">wfrm_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_done">
+         <obj_property name="ElementShortName">wfrm_done</obj_property>
+         <obj_property name="ObjectShortName">wfrm_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_active">
+         <obj_property name="ElementShortName">wfrm_active</obj_property>
+         <obj_property name="ObjectShortName">wfrm_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_init">
+         <obj_property name="ElementShortName">wfrm_init</obj_property>
+         <obj_property name="ObjectShortName">wfrm_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wfrm_enable">
+         <obj_property name="ElementShortName">wfrm_enable</obj_property>
+         <obj_property name="ObjectShortName">wfrm_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_ready">
+         <obj_property name="ElementShortName">dds_ready</obj_property>
+         <obj_property name="ObjectShortName">dds_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_done">
+         <obj_property name="ElementShortName">dds_done</obj_property>
+         <obj_property name="ObjectShortName">dds_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_active">
+         <obj_property name="ElementShortName">dds_active</obj_property>
+         <obj_property name="ObjectShortName">dds_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_init">
+         <obj_property name="ElementShortName">dds_init</obj_property>
+         <obj_property name="ObjectShortName">dds_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/dds_enable">
+         <obj_property name="ElementShortName">dds_enable</obj_property>
+         <obj_property name="ObjectShortName">dds_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_tdata">
+         <obj_property name="ElementShortName">wf_resp_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_tuser">
+         <obj_property name="ElementShortName">wf_resp_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_last">
+         <obj_property name="ElementShortName">wf_resp_last</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_tvalid">
+         <obj_property name="ElementShortName">wf_resp_tvalid</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_tready">
+         <obj_property name="ElementShortName">wf_resp_tready</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/changed">
+         <obj_property name="ElementShortName">changed</obj_property>
+         <obj_property name="ObjectShortName">changed</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/wf_resp_tlast">
+         <obj_property name="ElementShortName">wf_resp_tlast</obj_property>
+         <obj_property name="ObjectShortName">wf_resp_tlast</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/scl_r" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">scl_r</obj_property>
-      <obj_property name="ObjectShortName">scl_r</obj_property>
+   <wvobject type="group" fp_name="group161">
+      <obj_property name="label">axi_pulse_mux_signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/reset">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/clear">
+         <obj_property name="ElementShortName">clear</obj_property>
+         <obj_property name="ObjectShortName">clear</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tdata">
+         <obj_property name="ElementShortName">i_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tlast">
+         <obj_property name="ElementShortName">i_tlast[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tlast[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tvalid">
+         <obj_property name="ElementShortName">i_tvalid[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tready">
+         <obj_property name="ElementShortName">i_tready[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tready[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tuser">
+         <obj_property name="ElementShortName">i_tuser[255:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tuser[255:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/o_tdata">
+         <obj_property name="ElementShortName">o_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/o_tuser">
+         <obj_property name="ElementShortName">o_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/o_tlast">
+         <obj_property name="ElementShortName">o_tlast</obj_property>
+         <obj_property name="ObjectShortName">o_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/o_tvalid">
+         <obj_property name="ElementShortName">o_tvalid</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/o_tready">
+         <obj_property name="ElementShortName">o_tready</obj_property>
+         <obj_property name="ObjectShortName">o_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/i_tdata_flat">
+         <obj_property name="ElementShortName">i_tdata_flat[319:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata_flat[319:0]</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/sda_r" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">sda_r</obj_property>
-      <obj_property name="ObjectShortName">sda_r</obj_property>
+   <wvobject type="group" fp_name="group160">
+      <obj_property name="label">axi_mux_signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/reset">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/clear">
+         <obj_property name="ElementShortName">clear</obj_property>
+         <obj_property name="ObjectShortName">clear</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tdata">
+         <obj_property name="ElementShortName">i_tdata[319:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata[319:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tlast">
+         <obj_property name="ElementShortName">i_tlast[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tlast[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tvalid">
+         <obj_property name="ElementShortName">i_tvalid[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tready">
+         <obj_property name="ElementShortName">i_tready[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tready[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tdata">
+         <obj_property name="ElementShortName">o_tdata[159:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata[159:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tlast">
+         <obj_property name="ElementShortName">o_tlast</obj_property>
+         <obj_property name="ObjectShortName">o_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tvalid">
+         <obj_property name="ElementShortName">o_tvalid</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tready">
+         <obj_property name="ElementShortName">o_tready</obj_property>
+         <obj_property name="ObjectShortName">o_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tdata_int">
+         <obj_property name="ElementShortName">i_tdata_int[319:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata_int[319:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tlast_int">
+         <obj_property name="ElementShortName">i_tlast_int[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tlast_int[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tvalid_int">
+         <obj_property name="ElementShortName">i_tvalid_int[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid_int[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/i_tready_int">
+         <obj_property name="ElementShortName">i_tready_int[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tready_int[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tdata_int">
+         <obj_property name="ElementShortName">o_tdata_int[159:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata_int[159:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tlast_int">
+         <obj_property name="ElementShortName">o_tlast_int</obj_property>
+         <obj_property name="ObjectShortName">o_tlast_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tvalid_int">
+         <obj_property name="ElementShortName">o_tvalid_int</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/o_tready_int">
+         <obj_property name="ElementShortName">o_tready_int</obj_property>
+         <obj_property name="ObjectShortName">o_tready_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/st_port">
+         <obj_property name="ElementShortName">st_port[3:0]</obj_property>
+         <obj_property name="ObjectShortName">st_port[3:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_pulse_mux_i/axi_mux/st_active">
+         <obj_property name="ElementShortName">st_active</obj_property>
+         <obj_property name="ObjectShortName">st_active</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/scl" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">scl</obj_property>
-      <obj_property name="ObjectShortName">scl</obj_property>
+   <wvobject type="group" fp_name="group277">
+      <obj_property name="label">wavegen_dds</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/axi_tclk">
+         <obj_property name="ElementShortName">axi_tclk</obj_property>
+         <obj_property name="ObjectShortName">axi_tclk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/axi_tresetn">
+         <obj_property name="ElementShortName">axi_tresetn</obj_property>
+         <obj_property name="ObjectShortName">axi_tresetn</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wf_read_ready">
+         <obj_property name="ElementShortName">wf_read_ready</obj_property>
+         <obj_property name="ObjectShortName">wf_read_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/chirp_ready">
+         <obj_property name="ElementShortName">chirp_ready</obj_property>
+         <obj_property name="ObjectShortName">chirp_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/chirp_done">
+         <obj_property name="ElementShortName">chirp_done</obj_property>
+         <obj_property name="ObjectShortName">chirp_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/chirp_active">
+         <obj_property name="ElementShortName">chirp_active</obj_property>
+         <obj_property name="ObjectShortName">chirp_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/chirp_init">
+         <obj_property name="ElementShortName">chirp_init</obj_property>
+         <obj_property name="ObjectShortName">chirp_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/chirp_enable">
+         <obj_property name="ElementShortName">chirp_enable</obj_property>
+         <obj_property name="ObjectShortName">chirp_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/dds_source_select">
+         <obj_property name="ElementShortName">dds_source_select</obj_property>
+         <obj_property name="ObjectShortName">dds_source_select</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_axis_tdata">
+         <obj_property name="ElementShortName">wfrm_axis_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfrm_axis_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_axis_tvalid">
+         <obj_property name="ElementShortName">wfrm_axis_tvalid</obj_property>
+         <obj_property name="ObjectShortName">wfrm_axis_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_axis_tlast">
+         <obj_property name="ElementShortName">wfrm_axis_tlast</obj_property>
+         <obj_property name="ObjectShortName">wfrm_axis_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_axis_tready">
+         <obj_property name="ElementShortName">wfrm_axis_tready</obj_property>
+         <obj_property name="ObjectShortName">wfrm_axis_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_iq">
+         <obj_property name="ElementShortName">wfrm_data_iq[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_iq[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_valid">
+         <obj_property name="ElementShortName">wfrm_data_valid</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_last">
+         <obj_property name="ElementShortName">wfrm_data_last</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_ready">
+         <obj_property name="ElementShortName">wfrm_data_ready</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_iq_r">
+         <obj_property name="ElementShortName">wfrm_data_iq_r[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_iq_r[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_valid_r">
+         <obj_property name="ElementShortName">wfrm_data_valid_r</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_valid_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_data_last_r">
+         <obj_property name="ElementShortName">wfrm_data_last_r</obj_property>
+         <obj_property name="ObjectShortName">wfrm_data_last_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/next_gen_state">
+         <obj_property name="ElementShortName">next_gen_state[2:0]</obj_property>
+         <obj_property name="ObjectShortName">next_gen_state[2:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/gen_state">
+         <obj_property name="ElementShortName">gen_state[2:0]</obj_property>
+         <obj_property name="ObjectShortName">gen_state[2:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/data_count">
+         <obj_property name="ElementShortName">data_count[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_count[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/wfrm_axis_tready_int">
+         <obj_property name="ElementShortName">wfrm_axis_tready_int</obj_property>
+         <obj_property name="ObjectShortName">wfrm_axis_tready_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/waveform_dds_inst/axi_treset">
+         <obj_property name="ElementShortName">axi_treset</obj_property>
+         <obj_property name="ObjectShortName">axi_treset</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/sda" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">sda</obj_property>
-      <obj_property name="ObjectShortName">sda</obj_property>
+   <wvobject type="group" fp_name="group1086">
+      <obj_property name="label">chirpgen</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/rst">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_out_i">
+         <obj_property name="ElementShortName">chirp_out_i[15:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_i[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_out_q">
+         <obj_property name="ElementShortName">chirp_out_q[15:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_q[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_out_valid">
+         <obj_property name="ElementShortName">chirp_out_valid</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_out_last">
+         <obj_property name="ElementShortName">chirp_out_last</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_last</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_out_ready">
+         <obj_property name="ElementShortName">chirp_out_ready</obj_property>
+         <obj_property name="ObjectShortName">chirp_out_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_ready">
+         <obj_property name="ElementShortName">chirp_ready</obj_property>
+         <obj_property name="ObjectShortName">chirp_ready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_done">
+         <obj_property name="ElementShortName">chirp_done</obj_property>
+         <obj_property name="ObjectShortName">chirp_done</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_active">
+         <obj_property name="ElementShortName">chirp_active</obj_property>
+         <obj_property name="ObjectShortName">chirp_active</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_init">
+         <obj_property name="ElementShortName">chirp_init</obj_property>
+         <obj_property name="ObjectShortName">chirp_init</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_enable">
+         <obj_property name="ElementShortName">chirp_enable</obj_property>
+         <obj_property name="ObjectShortName">chirp_enable</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/freq_offset_in">
+         <obj_property name="ElementShortName">freq_offset_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">freq_offset_in[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/tuning_word_coeff_in">
+         <obj_property name="ElementShortName">tuning_word_coeff_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">tuning_word_coeff_in[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_count_max_in">
+         <obj_property name="ElementShortName">chirp_count_max_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_count_max_in[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_i">
+         <obj_property name="ElementShortName">chirp_i[15:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_i[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_q">
+         <obj_property name="ElementShortName">chirp_q[15:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_q[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_valid">
+         <obj_property name="ElementShortName">chirp_valid</obj_property>
+         <obj_property name="ObjectShortName">chirp_valid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_ready_r">
+         <obj_property name="ElementShortName">chirp_ready_r</obj_property>
+         <obj_property name="ObjectShortName">chirp_ready_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_active_r">
+         <obj_property name="ElementShortName">chirp_active_r</obj_property>
+         <obj_property name="ObjectShortName">chirp_active_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_done_r">
+         <obj_property name="ElementShortName">chirp_done_r</obj_property>
+         <obj_property name="ObjectShortName">chirp_done_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/phase_acc">
+         <obj_property name="ElementShortName">phase_acc[31:0]</obj_property>
+         <obj_property name="ObjectShortName">phase_acc[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/tuning_word">
+         <obj_property name="ElementShortName">tuning_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">tuning_word[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/tuning_word_coeff">
+         <obj_property name="ElementShortName">tuning_word_coeff[31:0]</obj_property>
+         <obj_property name="ObjectShortName">tuning_word_coeff[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_count">
+         <obj_property name="ElementShortName">chirp_count[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_count[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/chirp_count_max">
+         <obj_property name="ElementShortName">chirp_count_max[31:0]</obj_property>
+         <obj_property name="ObjectShortName">chirp_count_max[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/freq_offset">
+         <obj_property name="ElementShortName">freq_offset[31:0]</obj_property>
+         <obj_property name="ObjectShortName">freq_offset[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_dout_tdata">
+         <obj_property name="ElementShortName">dds_dout_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">dds_dout_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_dout_tvalid">
+         <obj_property name="ElementShortName">dds_dout_tvalid</obj_property>
+         <obj_property name="ObjectShortName">dds_dout_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_phase_tdata">
+         <obj_property name="ElementShortName">dds_phase_tdata[15:0]</obj_property>
+         <obj_property name="ObjectShortName">dds_phase_tdata[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_phase_tvalid">
+         <obj_property name="ElementShortName">dds_phase_tvalid</obj_property>
+         <obj_property name="ObjectShortName">dds_phase_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_phase_tvalid_r">
+         <obj_property name="ElementShortName">dds_phase_tvalid_r</obj_property>
+         <obj_property name="ObjectShortName">dds_phase_tvalid_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_latency_counter">
+         <obj_property name="ElementShortName">dds_latency_counter[7:0]</obj_property>
+         <obj_property name="ObjectShortName">dds_latency_counter[7:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_aresetn_r">
+         <obj_property name="ElementShortName">dds_aresetn_r</obj_property>
+         <obj_property name="ObjectShortName">dds_aresetn_r</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/dds_aresetn">
+         <obj_property name="ElementShortName">dds_aresetn</obj_property>
+         <obj_property name="ObjectShortName">dds_aresetn</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/wavegen_block_inst/chirpgen_inst/DDS_LATENCY">
+         <obj_property name="ElementShortName">DDS_LATENCY[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DDS_LATENCY[31:0]</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/set_stb" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">set_stb</obj_property>
-      <obj_property name="ObjectShortName">set_stb</obj_property>
+   <wvobject type="group" fp_name="group2572">
+      <obj_property name="label">axi_buffer</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/reset">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/clear">
+         <obj_property name="ElementShortName">clear</obj_property>
+         <obj_property name="ObjectShortName">clear</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/next_dst_sid">
+         <obj_property name="ElementShortName">next_dst_sid[15:0]</obj_property>
+         <obj_property name="ObjectShortName">next_dst_sid[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/i_tdata">
+         <obj_property name="ElementShortName">i_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/i_tlast">
+         <obj_property name="ElementShortName">i_tlast</obj_property>
+         <obj_property name="ObjectShortName">i_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/i_tvalid">
+         <obj_property name="ElementShortName">i_tvalid</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/i_tready">
+         <obj_property name="ElementShortName">i_tready</obj_property>
+         <obj_property name="ObjectShortName">i_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/i_tuser">
+         <obj_property name="ElementShortName">i_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tdata">
+         <obj_property name="ElementShortName">o_tdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tuser">
+         <obj_property name="ElementShortName">o_tuser[127:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tuser[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tlast">
+         <obj_property name="ElementShortName">o_tlast</obj_property>
+         <obj_property name="ObjectShortName">o_tlast</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tvalid">
+         <obj_property name="ElementShortName">o_tvalid</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tready">
+         <obj_property name="ElementShortName">o_tready</obj_property>
+         <obj_property name="ObjectShortName">o_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/sof_in">
+         <obj_property name="ElementShortName">sof_in</obj_property>
+         <obj_property name="ObjectShortName">sof_in</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/o_tlast_int">
+         <obj_property name="ElementShortName">o_tlast_int</obj_property>
+         <obj_property name="ObjectShortName">o_tlast_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/header_fifo_i_tdata">
+         <obj_property name="ElementShortName">header_fifo_i_tdata[127:0]</obj_property>
+         <obj_property name="ObjectShortName">header_fifo_i_tdata[127:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/header_fifo_i_tvalid">
+         <obj_property name="ElementShortName">header_fifo_i_tvalid</obj_property>
+         <obj_property name="ObjectShortName">header_fifo_i_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/FIFO_SIZE">
+         <obj_property name="ElementShortName">FIFO_SIZE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">FIFO_SIZE[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/WIDTH">
+         <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/set_addr" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">set_addr[7:0]</obj_property>
-      <obj_property name="ObjectShortName">set_addr[7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+   <wvobject type="group" fp_name="group2605">
+      <obj_property name="label">axi_fifo_bram</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /reset">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /clear">
+         <obj_property name="ElementShortName">clear</obj_property>
+         <obj_property name="ObjectShortName">clear</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /i_tdata">
+         <obj_property name="ElementShortName">i_tdata[32:0]</obj_property>
+         <obj_property name="ObjectShortName">i_tdata[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /i_tvalid">
+         <obj_property name="ElementShortName">i_tvalid</obj_property>
+         <obj_property name="ObjectShortName">i_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /i_tready">
+         <obj_property name="ElementShortName">i_tready</obj_property>
+         <obj_property name="ObjectShortName">i_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /o_tdata">
+         <obj_property name="ElementShortName">o_tdata[32:0]</obj_property>
+         <obj_property name="ObjectShortName">o_tdata[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /o_tvalid">
+         <obj_property name="ElementShortName">o_tvalid</obj_property>
+         <obj_property name="ObjectShortName">o_tvalid</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /o_tready">
+         <obj_property name="ElementShortName">o_tready</obj_property>
+         <obj_property name="ObjectShortName">o_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /space">
+         <obj_property name="ElementShortName">space[15:0]</obj_property>
+         <obj_property name="ObjectShortName">space[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /occupied">
+         <obj_property name="ElementShortName">occupied[15:0]</obj_property>
+         <obj_property name="ObjectShortName">occupied[15:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /int_tdata">
+         <obj_property name="ElementShortName">int_tdata[32:0]</obj_property>
+         <obj_property name="ObjectShortName">int_tdata[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /int_tready">
+         <obj_property name="ElementShortName">int_tready</obj_property>
+         <obj_property name="ObjectShortName">int_tready</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /full">
+         <obj_property name="ElementShortName">full</obj_property>
+         <obj_property name="ObjectShortName">full</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /empty">
+         <obj_property name="ElementShortName">empty</obj_property>
+         <obj_property name="ObjectShortName">empty</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /write">
+         <obj_property name="ElementShortName">write</obj_property>
+         <obj_property name="ObjectShortName">write</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /read_int">
+         <obj_property name="ElementShortName">read_int</obj_property>
+         <obj_property name="ObjectShortName">read_int</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /read">
+         <obj_property name="ElementShortName">read</obj_property>
+         <obj_property name="ObjectShortName">read</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /wr_addr">
+         <obj_property name="ElementShortName">wr_addr[63:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_addr[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /rd_addr">
+         <obj_property name="ElementShortName">rd_addr[63:0]</obj_property>
+         <obj_property name="ObjectShortName">rd_addr[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /read_state">
+         <obj_property name="ElementShortName">read_state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">read_state[1:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /empty_reg">
+         <obj_property name="ElementShortName">empty_reg</obj_property>
+         <obj_property name="ObjectShortName">empty_reg</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /full_reg">
+         <obj_property name="ElementShortName">full_reg</obj_property>
+         <obj_property name="ObjectShortName">full_reg</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /dont_write_past_me">
+         <obj_property name="ElementShortName">dont_write_past_me[63:0]</obj_property>
+         <obj_property name="ObjectShortName">dont_write_past_me[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /becoming_full">
+         <obj_property name="ElementShortName">becoming_full</obj_property>
+         <obj_property name="ObjectShortName">becoming_full</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /WIDTH">
+         <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /SIZE">
+         <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ST_EMPTY">
+         <obj_property name="ElementShortName">ST_EMPTY[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ST_EMPTY[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /PRE_READ">
+         <obj_property name="ElementShortName">PRE_READ[31:0]</obj_property>
+         <obj_property name="ObjectShortName">PRE_READ[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /READING">
+         <obj_property name="ElementShortName">READING[31:0]</obj_property>
+         <obj_property name="ObjectShortName">READING[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /NUMLINES">
+         <obj_property name="ElementShortName">NUMLINES[31:0]</obj_property>
+         <obj_property name="ObjectShortName">NUMLINES[31:0]</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/set_data" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">set_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">set_data[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/state" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">state[2:0]</obj_property>
-      <obj_property name="ObjectShortName">state[2:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/scl_pre_reg" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">scl_pre_reg</obj_property>
-      <obj_property name="ObjectShortName">scl_pre_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/scl_reg" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">scl_reg</obj_property>
-      <obj_property name="ObjectShortName">scl_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/scl_reg2" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">scl_reg2</obj_property>
-      <obj_property name="ObjectShortName">scl_reg2</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/sda_pre_reg" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">sda_pre_reg</obj_property>
-      <obj_property name="ObjectShortName">sda_pre_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/sda_reg" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">sda_reg</obj_property>
-      <obj_property name="ObjectShortName">sda_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/sda_reg2" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">sda_reg2</obj_property>
-      <obj_property name="ObjectShortName">sda_reg2</obj_property>
-   </wvobject>
-   <wvobject fp_name="/serial_to_settings_tb/serial_to_settings_i/counter" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">counter[4:0]</obj_property>
-      <obj_property name="ObjectShortName">counter[4:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+   <wvobject type="group" fp_name="group3368">
+      <obj_property name="label">ram2port</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/clka">
+         <obj_property name="ElementShortName">clka</obj_property>
+         <obj_property name="ObjectShortName">clka</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/ena">
+         <obj_property name="ElementShortName">ena</obj_property>
+         <obj_property name="ObjectShortName">ena</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/wea">
+         <obj_property name="ElementShortName">wea</obj_property>
+         <obj_property name="ObjectShortName">wea</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/addra">
+         <obj_property name="ElementShortName">addra[63:0]</obj_property>
+         <obj_property name="ObjectShortName">addra[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/dia">
+         <obj_property name="ElementShortName">dia[32:0]</obj_property>
+         <obj_property name="ObjectShortName">dia[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/doa">
+         <obj_property name="ElementShortName">doa[32:0]</obj_property>
+         <obj_property name="ObjectShortName">doa[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/clkb">
+         <obj_property name="ElementShortName">clkb</obj_property>
+         <obj_property name="ObjectShortName">clkb</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/enb">
+         <obj_property name="ElementShortName">enb</obj_property>
+         <obj_property name="ObjectShortName">enb</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="logic" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/web">
+         <obj_property name="ElementShortName">web</obj_property>
+         <obj_property name="ObjectShortName">web</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/addrb">
+         <obj_property name="ElementShortName">addrb[63:0]</obj_property>
+         <obj_property name="ObjectShortName">addrb[63:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/dib">
+         <obj_property name="ElementShortName">dib[32:0]</obj_property>
+         <obj_property name="ObjectShortName">dib[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/dob">
+         <obj_property name="ElementShortName">dob[32:0]</obj_property>
+         <obj_property name="ObjectShortName">dob[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/ram">
+         <obj_property name="ElementShortName">ram[-1:0][32:0]</obj_property>
+         <obj_property name="ObjectShortName">ram[-1:0][32:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/\genblk1.i ">
+         <obj_property name="ElementShortName">\genblk1.i [31:0]</obj_property>
+         <obj_property name="ObjectShortName">\genblk1.i [31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/doa_r">
+         <obj_property name="ElementShortName">doa_r[32:0]</obj_property>
+         <obj_property name="ObjectShortName">doa_r[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/dob_r">
+         <obj_property name="ElementShortName">dob_r[32:0]</obj_property>
+         <obj_property name="ObjectShortName">dob_r[32:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/DWIDTH">
+         <obj_property name="ElementShortName">DWIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DWIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/AWIDTH">
+         <obj_property name="ElementShortName">AWIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">AWIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/RW_MODE">
+         <obj_property name="ElementShortName">RW_MODE[79:0]</obj_property>
+         <obj_property name="ObjectShortName">RW_MODE[79:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/OUT_REG">
+         <obj_property name="ElementShortName">OUT_REG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">OUT_REG[31:0]</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" type="array" fp_name="/noc_block_wavegen_tb/noc_block_wavegen/axi_stream_buffer_i/inst_axi_fifo/\genblk1.fifo_bram /ram/INIT_FILE">
+         <obj_property name="ElementShortName">INIT_FILE[7:0]</obj_property>
+         <obj_property name="ObjectShortName">INIT_FILE[7:0]</obj_property>
+      </wvobject>
    </wvobject>
 </wave_config>

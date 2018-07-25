@@ -69,8 +69,8 @@ SP_DDS sp_dds_inst (
  );
  assign dds_phase_tdata = phase_acc[15:0];
  // assign dds_phase_tvalid = dds_phase_tvalid_r;
+ //assign dds_phase_tvalid = (chirp_active & !chirp_out_valid) ? 1 : (chirp_active & chirp_out_ready);
  assign dds_phase_tvalid = (chirp_active & chirp_out_ready);
-
 
  always @(posedge clk) begin
     if(rst)
