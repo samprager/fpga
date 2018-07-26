@@ -41,8 +41,3 @@ set_property PULLDOWN true [get_ports {PL_GPIO[3]}]
 set_property PULLDOWN true [get_ports {PL_GPIO[2]}]
 set_property PULLDOWN true [get_ports {PL_GPIO[1]}]
 set_property PULLDOWN true [get_ports {PL_GPIO[0]}]
-
-
-
-
-

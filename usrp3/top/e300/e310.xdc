@@ -466,12 +466,3 @@ set_property PACKAGE_PIN AB12 [get_ports {DB_EXP_1_8V[24]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {DB_EXP_1_8V[24]}]
 
 ### Other I/O
-
-
-
-
-
-
-
-
-
