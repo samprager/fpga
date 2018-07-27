@@ -100,7 +100,6 @@ end
 // end
 
 // assign wfrm_axis_tready_int = (gen_state == DATA & wfrm_data_ready);
-// assign wfrm_axis_tready_int = (next_gen_state == DATA & gen_state == IDLE) ? 1 : (gen_state == DATA & wfrm_data_ready);
 assign wfrm_axis_tready_int = (gen_state == DATA & !wfrm_data_valid) ? 1 : (gen_state == DATA & wfrm_data_ready);
 
 
