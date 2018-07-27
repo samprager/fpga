@@ -99,7 +99,9 @@ end
 //     wfrm_axis_tready_int <= 0;
 // end
 
-assign wfrm_axis_tready_int = (gen_state == DATA & wfrm_data_ready);
+// assign wfrm_axis_tready_int = (gen_state == DATA & wfrm_data_ready);
+assign wfrm_axis_tready_int = (gen_state == DATA & !wfrm_data_valid) ? 1 : (gen_state == DATA & wfrm_data_ready);
+
 
 always @(posedge axi_tclk)
 begin

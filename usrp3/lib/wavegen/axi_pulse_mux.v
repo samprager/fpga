@@ -39,3 +39,4 @@ module axi_pulse_mux #(
    //   .clk(clk), .reset(reset), .clear(1'b0),
    //   .i_tdata(int_tdata), .i_tuser(int_tuser), .i_tlast(int_tlast), .i_tvalid(int_tvalid), .i_tready(int_tready),
    //   .o_tdata(o_tdata), .o_tlast(o_tlast), .o_tvalid(o_tvalid), .o_tready(o_tready));
+endmodule

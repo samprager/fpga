@@ -855,6 +855,29 @@ noc_block_wavegen noc_block_wavegen(
     tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_LEN, readback);
     $display("AWG Length Word: %16x", readback);
     /* Send and check impulse */
+
+    $display("Changing policy to Manual, Fwd time, and Don't Fwd RX Command");
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_POLICY, 32'd3);
+
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_AWG_POLICY, readback);
+    $display("Read Policy: %16x", readback);
+    $sformat(s, "Incorrect Policy Read! Expected: %0d, Received: %0d", 32'd3, readback);
+    `ASSERT_ERROR(readback == 32'd3, s);
+
+    $display("Reading Vita Time");
+    tb_streamer.read_user_reg(sid_noc_block_wavegen, RB_VITA_TIME, readback);
+    $display("Read Vita time: %d",readback);
+
+    start_time = readback+64'ha00;
+    $display("Sending command for pulse to start at time %d", start_time);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_COMMAND,
+                   {1'b0 /* Start at time */, 31'b0});
+    // Set start time
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_HI, start_time[63:32]);
+    tb_streamer.write_reg(sid_noc_block_wavegen, SR_RADAR_CTRL_TIME_LO, start_time[31:0]);
+    $display("Command Sent");
+
+
     fork
       begin
         logic [31:0] recv_val;
