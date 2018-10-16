@@ -28,7 +28,7 @@ XG_DEFS=SFP0_10GBE=1  SFP1_10GBE=1  BUILD_10G=1                   $(OPTIONS)
 HA_DEFS=SFP0_1GBE=1   SFP1_AURORA=1 BUILD_1G=1     BUILD_AURORA=1 $(OPTIONS)
 XA_DEFS=SFP0_10GBE=1  SFP1_AURORA=1 BUILD_10G=1    BUILD_AURORA=1 $(OPTIONS)
 AA_DEFS=SFP0_AURORA=1 SFP1_AURORA=1 BUILD_AURORA=1                $(OPTIONS)
-
+AWG_DEFS=SFP0_1GBE=1   SFP1_10GBE=1  BUILD_1G=1     BUILD_10G=1    BUILD_AWG=1 	$(OPTIONS)
 # Option to stop after RTL elaboration. Use this flag as a synthesis check.
 ifdef CHECK
 TARGET = rtl
@@ -174,6 +174,11 @@ N300_RFNOC_XA:
 N300_RFNOC_AA:
 	$(call vivado_build,N300,$(AA_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_AA)
+
+##N300_RFNOC_AWG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+N300_RFNOC_AWG:
+	$(call vivado_build,N300,$(AWG_DEFS) RFNOC=1 N300=1 AWG=1)
+	$(call post_build,N300,RFNOC_AWG)
 
 build/%.dts: dts/%.dts dts/*.dtsi
 	-mkdir -p build

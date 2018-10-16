@@ -1074,7 +1074,11 @@ module n3xx_core #(
   `ifdef N310
     `include "rfnoc_ce_auto_inst_n310.v"
   `elsif N300
-    `include "rfnoc_ce_auto_inst_n300.v"
+    `ifdef AWG
+      `include "rfnoc_ce_awg_inst_n300.v"
+    `else
+      `include "rfnoc_ce_auto_inst_n300.v"
+    `endif
   `endif
 `else
   `ifdef N310

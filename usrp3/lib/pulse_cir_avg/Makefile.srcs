@@ -1,0 +1,12 @@
+
+##################################################
+# Radar Sources
+##################################################
+PULSE_CIR_AVG_SRCS = $(abspath $(addprefix $(BASE_DIR)/../lib/pulse_cir_avg/, \
+noc_block_pulse_cir_avg.v \
+pulse_cir_avg.v \
+FIFO_pulse_cir_avg_data_fifo_V_V.v \
+FIFO_pulse_cir_avg_out_fifo_V_V.v \
+pulse_cir_avg_udiv_65ns_8ns_65_69.v \
+pulse_cir_avg_udiv_65ns_32ns_65_69.v \
+))

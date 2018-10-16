@@ -14,6 +14,10 @@ include $(IP_DIR)/processing_system7_1/Makefile.inc
 include $(IP_DIR)/processing_system7_3/Makefile.inc
 include $(IP_DIR)/mig_7series_0/Makefile.inc
 
+include $(IP_DIR)/axi_waveform_bram_ctrl/Makefile.inc
+include $(IP_DIR)/axi_waveform_datamover/Makefile.inc
+include $(IP_DIR)/SP_DDS/Makefile.inc
+
 IP_XCI_SRCS = \
 $(IP_AXI3_TO_AXI4LITE_PROTOCOL_CONVERTER_SRCS) \
 $(IP_AXI4_FIFO_512X64_SRCS) \
@@ -24,7 +28,10 @@ $(IP_E300_PS_FCLK0_MMCM_SRCS) \
 $(IP_FIFO_4K_2CLK_SRCS) \
 $(IP_MIG_7SERIES_0_SRCS) \
 $(IP_MIG_7SERIES_TG_SRCS) \
-$(IP_FIFO_SHORT_2CLK_SRCS)
+$(IP_FIFO_SHORT_2CLK_SRCS) \
+$(IP_AXI_WAVEFORM_BRAM_SRCS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_SRCS) \
+$(IP_SP_DDS_SRCS)
 
 IP_PS7_1_SRCS = \
 $(IP_PROCESSING_SYSTEM7_1_SRCS)
@@ -41,7 +48,10 @@ $(IP_E300_PS_FCLK0_MMCM_OUTS) \
 $(IP_PROCESSING_SYSTEM7_OUTS) \
 $(IP_FIFO_4K_2CLK_OUTS) \
 $(IP_MIG_7SERIES_0_OUTS) \
-$(IP_FIFO_SHORT_2CLK_OUTS)
+$(IP_FIFO_SHORT_2CLK_OUTS) \
+$(IP_AXI_WAVEFORM_BRAM_OUTS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_OUTS) \
+$(IP_SP_DDS_OUTS)
 
 ip: $(IP_XCI_SRCS)
 

@@ -228,7 +228,19 @@ module x300_core #(
    // Included automatically instantiated CEs sources file created by RFNoC mod tool
 `ifdef RFNOC
  `ifdef X300
-   `include "rfnoc_ce_auto_inst_x300.v"
+    `ifdef AWG
+      `ifdef CIRAVG
+        `include "rfnoc_ce_ciravg_inst_x300.v"
+        // SARINA KAPAI EDIT
+      `endif
+       `ifdef PULSECIRAVG
+        `include "rfnoc_ce_pulseciravg_inst_x300.v"
+      `else
+        `include "rfnoc_ce_awg_inst_x300.v"
+      `endif
+    `else
+        `include "rfnoc_ce_auto_inst_x300.v"
+    `endif
  `endif
  `ifdef X310
    `include "rfnoc_ce_auto_inst_x310.v"
@@ -240,6 +252,7 @@ module x300_core #(
  `ifdef X310
    `include "rfnoc_ce_default_inst_x310.v"
  `endif
+`endif
 `endif
 
    /////////////////////////////////////////////////////////////////////////////////

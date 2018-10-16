@@ -5,6 +5,6 @@
 ##################################################
 # RFNoC Sources
 ##################################################
-RFNOC_OOT_SRCS = \
+RFNOC_OOT_SRCS = $(AWG_SRCS) $(CIRAVG_SRCS) $(PULSECIRAVG_SRCS) \
 
 
