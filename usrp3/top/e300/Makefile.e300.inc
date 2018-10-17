@@ -36,6 +36,7 @@ include $(LIB_DIR)/radio/Makefile.srcs
 include $(LIB_DIR)/rfnoc/Makefile.srcs
 include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(BASE_DIR)/e300/Makefile.OOT.inc
+include $(BASE_DIR)/e300/Makefile.srcs
 
 ##################################################
 # Sources
