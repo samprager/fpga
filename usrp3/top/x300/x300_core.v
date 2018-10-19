@@ -253,7 +253,6 @@ module x300_core #(
    `include "rfnoc_ce_default_inst_x310.v"
  `endif
 `endif
-`endif
 
    /////////////////////////////////////////////////////////////////////////////////
    // Internal time synchronization
