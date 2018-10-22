@@ -54,7 +54,7 @@ module rx_command_gen #(
     reg [2:0] state;
 
     wire [1:0] pkt_type = 2'b10;
-    wire        eob = 1'b1;
+    wire        eob = 1'b0;
    // wire        has_time = 1'b0;
     wire [11:0] seqnum = 12'd0; // don't care
     wire [15:0] payload_length = 16'd16; //don't care (payload length in bytes)
