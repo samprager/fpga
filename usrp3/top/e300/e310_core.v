@@ -198,18 +198,17 @@ module e310_core
   // Specify RFNoC blocks
   `ifdef RFNOC
     `ifdef E310
-      `ifdef AWG
+     `ifdef AWG
           `include "rfnoc_ce_awg_inst_e310.v"
       `else
-          `include "rfnoc_ce_auto_inst_e310.v"
+        `include "rfnoc_ce_auto_inst_e310.v"
       `endif
-    `endif
+    `endif  
   `else
     `ifdef E310
       `include "rfnoc_ce_default_inst_e310.v"
     `endif
   `endif
-
 
   ////////////////////////////////////////////////////////////////////
   // routing logic, aka crossbar

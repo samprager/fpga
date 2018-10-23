@@ -29,6 +29,7 @@ HA_DEFS=SFP0_1GBE=1   SFP1_AURORA=1 BUILD_1G=1     BUILD_AURORA=1 $(OPTIONS)
 XA_DEFS=SFP0_10GBE=1  SFP1_AURORA=1 BUILD_10G=1    BUILD_AURORA=1 $(OPTIONS)
 AA_DEFS=SFP0_AURORA=1 SFP1_AURORA=1 BUILD_AURORA=1                $(OPTIONS)
 AWG_DEFS=SFP0_1GBE=1   SFP1_10GBE=1  BUILD_1G=1     BUILD_10G=1    BUILD_AWG=1 	$(OPTIONS)
+
 # Option to stop after RTL elaboration. Use this flag as a synthesis check.
 ifdef CHECK
 TARGET = rtl
@@ -37,8 +38,15 @@ TARGET = bin
 endif
 TOP ?= n3xx
 
+# Additional HLS options
+ifdef HLS
+HLS_DEFS = HLS=1
+else
+HLS_DEFS =
+endif
+
 # vivado_build($1=Device, $2=Definitions)
-vivado_build = make -f Makefile.n3xx.inc $(TARGET) NAME=$@ ARCH=$(XIL_ARCH_$1) PART_ID=$(XIL_PART_ID_$1) $2 TOP_MODULE=$(TOP) EXTRA_DEFS="$2"
+vivado_build = make -f Makefile.n3xx.inc $(TARGET) NAME=$@ ARCH=$(XIL_ARCH_$1) PART_ID=$(XIL_PART_ID_$1) $2 $(HLS_DEFS) TOP_MODULE=$(TOP) EXTRA_DEFS="$2 $(HLS_DEFS)"
 
 # vivado_build($1=Device, $2=Option)
 post_build = @\
@@ -115,62 +123,62 @@ N300_AA: build/usrp_n300_fpga_AA.dts
 	$(call vivado_build,N300,$(AA_DEFS) N300=1)
 	$(call post_build,N300,AA)
 
-##N310_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_WX:
 	$(call vivado_build,N310,$(WX_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_WX)
 
-##N310_RFNOC_HG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_HG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_HG:
 	$(call vivado_build,N310,$(HG_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_HG)
 
-##N310_RFNOC_XG: 10GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_XG: 10GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_XG:
 	$(call vivado_build,N310,$(XG_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_XG)
 
-##N310_RFNOC_HA: 1GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_HA: 1GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_HA:
 	$(call vivado_build,N310,$(HA_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_HA)
 
-##N310_RFNOC_XA: 10GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_XA: 10GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_XA:
 	$(call vivado_build,N310,$(XA_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_XA)
 
-##N310_RFNOC_AA: Aurora on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N310_RFNOC_AA: Aurora on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N310_RFNOC_AA:
 	$(call vivado_build,N310,$(AA_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_AA)
 
-##N300_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_WX:
 	$(call vivado_build,N300,$(WX_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_WX)
 
-##N300_RFNOC_HG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_HG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_HG:
 	$(call vivado_build,N300,$(HG_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_HG)
 
-##N300_RFNOC_XG: 10GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_XG: 10GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_XG:
 	$(call vivado_build,N300,$(XG_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_XG)
 
-##N300_RFNOC_HA: 1GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_HA: 1GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_HA:
 	$(call vivado_build,N300,$(HA_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_HA)
 
-##N300_RFNOC_XA: 10GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_XA: 10GigE on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_XA:
 	$(call vivado_build,N300,$(XA_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_XA)
 
-##N300_RFNOC_AA: Aurora on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled.
+##N300_RFNOC_AA: Aurora on SFP+ Port0, Aurora on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 N300_RFNOC_AA:
 	$(call vivado_build,N300,$(AA_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_AA)
@@ -179,6 +187,7 @@ N300_RFNOC_AA:
 N300_RFNOC_AWG:
 	$(call vivado_build,N300,$(AWG_DEFS) RFNOC=1 N300=1 AWG=1)
 	$(call post_build,N300,RFNOC_AWG)
+
 
 build/%.dts: dts/%.dts dts/*.dtsi
 	-mkdir -p build

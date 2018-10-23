@@ -40,7 +40,6 @@ module n3xx_core #(
   output reg       meas_clk_reset,
   input            ref_clk_locked,
   input            meas_clk_locked,
-  output reg       enable_ref_clk_async,
 
   // AXI lite interface
   input                    s_axi_aclk,
@@ -195,7 +194,7 @@ module n3xx_core #(
   // Compatibility Number
   //
   localparam [15:0] COMPAT_MAJOR = 16'd5;
-  localparam [15:0] COMPAT_MINOR = 16'd3;
+  localparam [15:0] COMPAT_MINOR = 16'd2;
   /////////////////////////////////////////////////////////////////////////////////
 
   // Computation engines that need access to IO
@@ -227,7 +226,6 @@ module n3xx_core #(
   localparam REG_SFP_PORT1_INFO    = REG_BASE_MISC + 14'h2C;
   localparam REG_FP_GPIO_MASTER    = REG_BASE_MISC + 14'h30;
   localparam REG_FP_GPIO_RADIO_SRC = REG_BASE_MISC + 14'h34;
-  localparam REG_XBAR_BASEPORT     = REG_BASE_MISC + 14'h38;
 
   reg [31:0] scratch_reg = 32'b0;
   reg [31:0] bus_counter = 32'h0;
@@ -335,7 +333,6 @@ module n3xx_core #(
       pps_out_enb    <= 1'b0;
       ref_clk_reset  <= 1'b0;
       meas_clk_reset <= 1'b0;
-      enable_ref_clk_async <= 1'b1;
     end else if (reg_wr_req) begin
       case (reg_wr_addr)
         REG_FP_GPIO_MASTER: begin
@@ -353,9 +350,6 @@ module n3xx_core #(
           pps_select_sfp <= reg_wr_data[6:5];
           ref_clk_reset  <= reg_wr_data[8];
           meas_clk_reset <= reg_wr_data[12];
-          // This bit is defined as "to disable, write '1' to bit 16" for backwards
-          // compatibility.
-          enable_ref_clk_async <= ~reg_wr_data[16];
         end
       endcase
     end
@@ -415,7 +409,6 @@ module n3xx_core #(
           reg_rd_data_glob[9]   <= b_ref_clk_locked;
           reg_rd_data_glob[12]  <= meas_clk_reset;
           reg_rd_data_glob[13]  <= b_meas_clk_locked;
-          reg_rd_data_glob[16]  <= ~enable_ref_clk_async;
         end
 
         REG_XADC_READBACK:
@@ -432,9 +425,6 @@ module n3xx_core #(
 
         REG_SFP_PORT1_INFO:
           reg_rd_data_glob <= sfp_ports_info[63:32];
-
-        REG_XBAR_BASEPORT:
-          reg_rd_data_glob <= XBAR_FIXED_PORTS;
 
         default:
           reg_rd_resp_glob <= 1'b0;
@@ -1075,9 +1065,9 @@ module n3xx_core #(
     `include "rfnoc_ce_auto_inst_n310.v"
   `elsif N300
     `ifdef AWG
-      `include "rfnoc_ce_awg_inst_n300.v"
+        `include "rfnoc_ce_awg_inst_n300.v"
     `else
-      `include "rfnoc_ce_auto_inst_n300.v"
+        `include "rfnoc_ce_auto_inst_n300.v"
     `endif
   `endif
 `else

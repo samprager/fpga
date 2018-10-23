@@ -38,6 +38,7 @@ include $(LIB_DIR)/io_cap_gen/Makefile.srcs
 include $(BASE_DIR)/e300/Makefile.OOT.inc
 include $(BASE_DIR)/e300/Makefile.srcs
 
+
 ##################################################
 # Sources
 ##################################################
@@ -55,6 +56,12 @@ TOP_SRCS += e310_timing.xdc
 else
 TOP_SRCS += e3xx_idle.v
 TOP_SRCS += e3xx_idle.xdc
+endif
+
+ifdef HLS
+HLS_IP_TARGETS = $(HLS_IP_OUTPUT_SRCS) hls_ip
+else
+HLS_IP_TARGETS =
 endif
 
 # Vivado seems somewhat unhappy when adding above
@@ -85,7 +92,7 @@ DESIGN_SRCS = $(abspath $(TOP_SRCS)) \
           $(RFNOC_SRCS) \
           $(RFNOC_OOT_SRCS) \
           $(LIB_IP_XCI_SRCS) \
-          $(LIB_HLS_IP_SRCS)
+          $(HLS_IP_TARGETS)
 
 ##################################################
 # Dependency Targets

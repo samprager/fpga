@@ -76,6 +76,12 @@ else
 DRAM_SRCS =
 endif
 
+ifdef HLS
+HLS_IP_GEN_SRCS = $(HLS_IP_OUTPUT_SRCS)
+else
+HLS_IP_GEN_SRCS =
+endif
+
 # The XDC files must be read in a specific order, motherboard first and then daughterboard.
 # Outside of that, all the other sources can be read in any order desired.
 DESIGN_SRCS = \
@@ -101,11 +107,9 @@ $(DRAM_SRCS) \
 $(COREGEN_DSP_SRCS) \
 $(DSP_SRCS) \
 $(LIB_IP_XCI_SRCS) \
-$(LIB_HLS_IP_SRCS) \
 $(EXTRAM_SRCS) \
 $(CAP_GEN_GENERIC_SRCS) \
-$(RFNOC_OOT_SRCS)\
-$(LIBCOREGEN_SRCS) \
+$(RFNOC_OOT_SRCS) $(HLS_IP_GEN_SRCS) $(LIBCOREGEN_SRCS) \
 $(abspath $(MB_XDC))
 
 SHORT_HASH=$(addprefix GIT_HASH=,$(shell ../../tools/scripts/git-hash.sh))
@@ -124,4 +128,6 @@ bin: .prereqs $$(DESIGN_SRCS) ip
 rtl: .prereqs $$(DESIGN_SRCS) ip
 	$(call CHECK_VIVADO_DESIGN,$(TOOLS_DIR)/scripts/viv_check_syntax.tcl,$(TOP_MODULE),$(ARCH),$(PART_ID))
 
-.PHONY: bin
+hls: .prereqs hls_ip bin
+
+.PHONY: bin hls

@@ -22,8 +22,15 @@ TARGET = bin
 endif
 TOP ?= e300
 
+# Additional HLS options
+ifdef HLS
+HLS_DEFS = HLS=1
+else
+HLS_DEFS =
+endif
+
 # vivado_build($1=Device, $2=SG, $3=Definitions)
-vivado_build = make -f Makefile.e300.inc $(TARGET) NAME=$@ ARCH=zynq PART_ID=$1/clg484/-$2 TOP_MODULE=$(TOP) $3 EXTRA_DEFS="$3"
+vivado_build = make -f Makefile.e300.inc $(TARGET) NAME=$@ ARCH=zynq PART_ID=$1/clg484/-$2 TOP_MODULE=$(TOP) $3 $(HLS_DEFS) EXTRA_DEFS="$3 $(HLS_DEFS)"
 
 # post_build($1=Device, $2=TYPE, $3=SG)
 post_build = @\
@@ -60,12 +67,12 @@ E310_sg3:
 	$(call vivado_build,xc7z020,3,E310=1 E3XX_SG3=1)
 	$(call post_build,E310,_,sg3)
 
-##E310_RFNOC: Build USRP E310 with RFNoC enabled.
+##E310_RFNOC: Build USRP E310 with RFNoC enabled. (Use HLS=1 to build HLS IP)
 E310_RFNOC:
 	$(call vivado_build,xc7z020,1,RFNOC=1 E310=1)
 	$(call post_build,E310,_RFNOC,)
 
-##E310_RFNOC_sg3: Build USRP E310 with RFNoC enabled.
+##E310_RFNOC_sg3: Build USRP E310 with RFNoC enabled. (Use HLS=1 to build HLS IP)
 E310_RFNOC_sg3:
 	$(call vivado_build,xc7z020,3,RFNOC=1 E310=1)
 	$(call post_build,E310,_RFNOC,_sg3)
@@ -79,6 +86,18 @@ E310_dram_test:
 E310_dram_test_sg3:
 	$(call vivado_build,xc7z020,3,E310 DRAM_TEST=1 E3XX_SG3=1)
 	$(call post_build,E310,_dram_test_,sg3)
+
+E310_RFNOC_AWG: ##Build USRP E310 with RFNoC enabled.
+	$(call vivado_build,xc7z020,1,RFNOC=1 E310=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,E310,_RFNOC,RFNOC_AWG)
+
+E310_RFNOC_AWG_sg3: ##Build USRP E310 with RFNoC enabled.
+	$(call vivado_build,xc7z020,3,RFNOC=1 E310=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,E310,_RFNOC,_sg3,RFNOC_AWG)
+
+E310_RFNOC_AWG_PULSECIRAVG_sg3: ##Build USRP E310 with RFNoC enabled.
+	$(call vivado_build,xc7z020,3,RFNOC=1 E310=1 AWG=1 BUILD_AWG=1 BUILD_PULSECIRAVG=1)
+	$(call post_build,E310,_RFNOC,_sg3,RFNOC_AWG)
 
 clean: ##Clean up all itarget build outputs.
 	@echo "Cleaning targets..."
@@ -99,6 +118,7 @@ help: ## Show this help message.
 ##-----------------
 ##GUI=1        Launch the build in the Vivado GUI.
 ##CHECK=1      Launch the syntax checker instead of building a bitfile.
+##HLS=1        Build HLS IP
 ##TOP=<module> Specify a top module for syntax checking. (Optional. Default is the bitfile top)
 
 .PHONY: all clean cleanall E310 E310_sg3 E310_RFNOC E310_RFNOC_sg3 E3XX_idle E3XX_idle_sg3 help

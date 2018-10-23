@@ -42,5 +42,4 @@ small_hb_dec.v \
 small_hb_int.v \
 srl.v \
 tx_frontend.v \
-variable_delay_line.v \
 ))

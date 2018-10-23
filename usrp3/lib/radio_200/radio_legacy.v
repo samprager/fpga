@@ -101,12 +101,12 @@ module radio_legacy
       .i_aclk(radio_clk), .i_tvalid(rmux_tvalid_r), .i_tready(rmux_tready_r), .i_tdata({rmux_tlast_r, rmux_tdata_r}),
       .o_aclk(bus_clk), .o_tvalid(resp_tvalid), .o_tready(resp_tready), .o_tdata({resp_tlast, resp_tdata}));
 
-   axi_fifo_2clk #(.WIDTH(65), .SIZE(RADIO_FIFO_SIZE)) rx_fifo
+   axi_fifo_2clk #(.WIDTH(65), .SIZE(0)) rx_fifo
      (.reset(radio_rst),
       .i_aclk(radio_clk), .i_tvalid(rx_tvalid_r), .i_tready(rx_tready_r), .i_tdata({rx_tlast_r, rx_tdata_r}),
       .o_aclk(bus_clk), .o_tvalid(rx_tvalid_int), .o_tready(rx_tready_int), .o_tdata({rx_tlast_int, rx_tdata_int}));
 
-   axi_packet_gate #(.WIDTH(64), .SIZE(SAMPLE_FIFO_SIZE), .USE_AS_BUFF(0)) buffer_whole_pkt
+   axi_packet_gate #(.WIDTH(64), .SIZE(RADIO_FIFO_SIZE)) buffer_whole_pkt
      (
       .clk(bus_clk), .reset(bus_rst), .clear(1'b0),
       .i_tdata(rx_tdata_int), .i_tlast(rx_tlast_int), .i_terror(1'b0), .i_tvalid(rx_tvalid_int), .i_tready(rx_tready_int),
@@ -185,18 +185,9 @@ generate
       // Enter user settings registers here
       // ----------------------------------
 
-      // Example code for 32-bit settings registers and 64-bit readback registers
-      //
-      // To test this, modify the *_core.v file for your specific USRP and set
-      // USER_SETTINGS=1 for the parameters for the radio_legacy instantiation.
-      //
-      // You can then use the get_user_settings_iface() like this:
-      //
-      // auto usrp = multi_usrp::make("type=b200,enable_user_regs");
-      // auto regs = usrp->get_user_settings_iface(0);
-      // regs->poke32(0, 0xCAFE);
-      // regs->poke32(4, 0xBEEF);
-      // std::cout << boost::format("0x%016X") % regs->peek64(0) << std::endl;
+      /*
+      //Example code for 32-bit settings registers and 64-bit readback registers
+
       wire [31:0] user_reg_0_value, user_reg_1_value;
 
       setting_reg #(.my_addr(8'd0), .awidth(8), .width(32)) user_reg_0
@@ -213,6 +204,7 @@ generate
             default : rb_data_user <= 64'd0;
          endcase
       end
+      */
 
    end else begin    //for USER_SETTINGS == 1
       always @* rb_data_user <= 64'd0;

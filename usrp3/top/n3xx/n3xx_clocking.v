@@ -23,7 +23,6 @@
 
 module n3xx_clocking (
   // Input buffers for clocks
-  input  enable_ref_clk_async, // enables the ref_clk BUFG (driven async to ref_clk)
   input  FPGA_REFCLK_P, FPGA_REFCLK_N,
   output ref_clk,
 
@@ -73,16 +72,9 @@ module n3xx_clocking (
     .IB(FPGA_REFCLK_N)
   );
 
-  // BUFG ref_clk_bufg (
-    // .I(ref_clk_buf),
-    // .O(ref_clk)
-  // );
-  WrapBufg #(
-     .kEnableIsAsync(1'b1)
-  ) ref_clk_bufg (
-     .ClkIn(ref_clk_buf),
-     .aCe(enable_ref_clk_async),
-     .ClkOut(ref_clk)
+  BUFG ref_clk_bufg (
+    .I(ref_clk_buf),
+    .O(ref_clk)
   );
 
   // Buffers for SI Purposes
