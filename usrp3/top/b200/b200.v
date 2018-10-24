@@ -265,15 +265,15 @@ module b200 (
 
    always @(posedge bus_clk) misc_outs_r <= misc_outs; //register misc ios to ease routing to flop
 
-   wire spare_signal; // WAS codec_arst...now obselete, this bit can be reused when UHD doesn't contain codec_arst code.
+   wire codec_arst;
 
-   assign { swap_atr_n, tx_bandsel_a, tx_bandsel_b, rx_bandsel_a, rx_bandsel_b, rx_bandsel_c, spare_signal, mimo, ref_sel } = misc_outs_r[8:0];
+   assign { swap_atr_n, tx_bandsel_a, tx_bandsel_b, rx_bandsel_a, rx_bandsel_b, rx_bandsel_c, codec_arst, mimo, ref_sel } = misc_outs_r[8:0];
 
    assign codec_ctrl_in = 4'b1;
    assign codec_en_agc = 1'b1;
    assign codec_txrx = 1'b1;
    assign codec_enable = 1'b1;
-   assign codec_reset = !reset_global;   // Codec Reset // RESETB // Operates active-low
+   assign codec_reset = ~codec_arst;   // Codec Reset // RESETB // Operates active-low
    assign codec_sync = 1'b0;
 
    ///////////////////////////////////////////////////////////////////////
@@ -341,7 +341,7 @@ module b200 (
     // GPIF2
     ///////////////////////////////////////////////////////////////////////
 
-   gpif2_slave_fifo32 #(.DATA_RX_FIFO_SIZE(14), .DATA_TX_FIFO_SIZE(14)) slave_fifo32
+   gpif2_slave_fifo32 #(.DATA_RX_FIFO_SIZE(13), .DATA_TX_FIFO_SIZE(13)) slave_fifo32
     (
         .gpif_clk(gpif_clk), .gpif_rst(gpif_rst), .gpif_enb(1'b1),
         .gpif_ctl({GPIF_CTL8, GPIF_CTL6, GPIF_CTL5, GPIF_CTL4}), .fifoadr({GPIF_CTL11,GPIF_CTL12}),
