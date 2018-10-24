@@ -84,6 +84,36 @@ module cmd_pkt_proc #(
   wire [63:0] int_tdata;
   reg int_tready;
   wire int_tlast, int_tvalid;
+  
+  (* dont_touch="true", mark_debug="true"*) wire ila_trig; 
+  (* dont_touch="true", mark_debug="true"*) wire [63:0] probe0;
+  (* dont_touch="true", mark_debug="true"*) wire probe1;
+  (* dont_touch="true", mark_debug="true"*) wire probe2;
+  (* dont_touch="true", mark_debug="true"*) wire probe3;
+  (* dont_touch="true", mark_debug="true"*) wire [7:0] probe4;
+  (* dont_touch="true", mark_debug="true"*) wire [31:0] probe5;
+  (* dont_touch="true", mark_debug="true"*) wire probe6;
+  (* dont_touch="true", mark_debug="true"*) wire probe7;
+//  (* dont_touch="true", mark_debug="true"*) wire [63:0] probe8;
+//  (* dont_touch="true", mark_debug="true"*) wire probe9;
+//  (* dont_touch="true", mark_debug="true"*) wire probe10;
+//  (* dont_touch="true", mark_debug="true"*) wire probe11;
+  
+  assign ila_trig = cmd_fifo_tvalid & cmd_fifo_tready;
+  assign probe0 = cmd_fifo_tdata;
+  assign probe1 = cmd_fifo_tvalid;
+  assign probe2 = cmd_fifo_tready;
+  assign probe3 = cmd_fifo_tlast;
+  assign probe4 = set_addr;
+  assign probe5 = set_data;
+  assign probe6 = set_stb;
+  assign probe7 = is_cmd_pkt;
+//  assign probe8 = int_tdata;
+//  assign probe9 = int_tvalid;
+//  assign probe10 = int_tready;
+//  assign probe11 = int_tlast;
+
+
 
   // Extracts header fields
   cvita_hdr_parser #(.REGISTER(0)) cvita_hdr_parser (
@@ -286,5 +316,11 @@ module cmd_pkt_proc #(
       endcase
     end
   end
+  
+  
+  ila_0 ILA_inst (.clk(clk),.trig_in(ila_trig),
+  .probe0(probe0),.probe1(probe1),.probe2(probe2),.probe3(probe3),
+  .probe4(probe4),.probe5(probe5),.probe6(probe6), .probe7(probe7));
+//  .probe8(probe8),.probe9(probe9),.probe10(probe10),.probe11(probe11));
 
 endmodule
