@@ -26,7 +26,7 @@ module noc_block_wavegen #(
   input ce_clk, input ce_rst,
   input  [63:0] i_tdata, input  i_tlast, input  i_tvalid, output i_tready,
   output [63:0] o_tdata, output o_tlast, output o_tvalid, input  o_tready,
-  output [63:0] debug,
+  output [63:0] debug, output [65:0] cmdout_debug,
   input pps, input sync_in, output sync_out,
   input rx_stb
 );
@@ -439,6 +439,8 @@ module noc_block_wavegen #(
   // assign rx_cmdout_tready = (policy[3]) ? cmdout_tready : 1;
 
   assign resp_tready = 1'b1;
+
+  assign cmdout_debug = {cmdout_tdata,cmdout_tvalid,cmdout_tready};
 
 
 endmodule

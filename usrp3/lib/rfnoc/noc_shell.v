@@ -63,7 +63,13 @@ module noc_shell
     output [INPUT_PORTS*16-1:0] resp_in_dst_sid,     // Stream IDs to forward errors / special messages, one per input
     output [OUTPUT_PORTS*16-1:0] resp_out_dst_sid,   // and one per output port
 
-    output [63:0] debug
+    output [63:0] debug,
+
+    //cmd in debug added by sp
+    output [65:0] cmdin_bclk_debug,
+    output [65:0] cmdin_debug,
+    output [BLOCK_PORTS*66-1:0] cmdin_ports_debug,
+    output [BLOCK_PORTS*42-1:0] set_data_debug
     );
 
    `include "noc_shell_regs.vh"
@@ -88,20 +94,24 @@ module noc_shell
    wire cmdout_tvalid_bclk, ackout_tvalid_bclk, ackin_tvalid_bclk, cmdin_tvalid_bclk;
    wire cmdout_tready_bclk, ackout_tready_bclk, ackin_tready_bclk, cmdin_tready_bclk;
 
+   assign cmdin_debug = {cmdin_tdata,cmdin_tvalid,cmdin_tready};
+   assign cmdin_bclk_debug = {cmdin_tdata_bclk,cmdin_tvalid_bclk,cmdin_tready_bclk};
+   assign set_has_time
+
    ///////////////////////////////////////////////////////////////////////////////////////
    // 2-clock fifos get cmd/ack ports into ce_clk domain
    ///////////////////////////////////////////////////////////////////////////////////////
 
    axi_fifo_2clk #(.WIDTH(65), .SIZE(5)) ackin_2clk_i   // Very little buffering needed here, only a clock domain crossing
      (.reset(bus_rst),
-      .i_aclk(bus_clk), 
+      .i_aclk(bus_clk),
       .i_tvalid(ackin_tvalid_bclk), .i_tready(ackin_tready_bclk), .i_tdata({ackin_tlast_bclk, ackin_tdata_bclk}),
       .o_aclk(clk),
       .o_tvalid(ackin_tvalid), .o_tready(ackin_tready), .o_tdata({ackin_tlast,ackin_tdata}));
 
    axi_fifo_2clk #(.WIDTH(65), .SIZE(5)) cmdin_2clk_i   // Very little buffering needed here, only a clock domain crossing
      (.reset(bus_rst),
-      .i_aclk(bus_clk), 
+      .i_aclk(bus_clk),
       .i_tvalid(cmdin_tvalid_bclk), .i_tready(cmdin_tready_bclk), .i_tdata({cmdin_tlast_bclk, cmdin_tdata_bclk}),
       .o_aclk(clk),
       .o_tvalid(cmdin_tvalid), .o_tready(cmdin_tready), .o_tdata({cmdin_tlast,cmdin_tdata}));
@@ -240,6 +250,10 @@ module noc_shell
        reg rb_stb_int;
        reg [63:0] rb_data_int;
        wire [RB_AWIDTH-1:0] rb_addr_noc_shell;
+
+       assign cmdin_ports_debug[66*k+65:66*k] = {cmdin_ports_tdata[64*k+63:64*k],cmdin_ports_tvalid[k],cmdin_ports_tready[k]};
+       assign set_data_debug[42*k+41:42*k] = {set_data[32*k+31:32*k],set_addr[8*k+7:8*k],set_stb[k],set_has_time[k]};
+
        cmd_pkt_proc #(
          .SR_AWIDTH(8),
          .SR_DWIDTH(32),

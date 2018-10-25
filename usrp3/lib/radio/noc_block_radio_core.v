@@ -26,7 +26,12 @@ module noc_block_radio_core #(
   output [NUM_CHANNELS*32-1:0] tx, input [NUM_CHANNELS-1:0] tx_stb, output [NUM_CHANNELS-1:0] tx_running,
   // Interfaces to front panel and daughter board
   input pps, input sync_in, output sync_out,
-  output [63:0] debug
+  output [63:0] debug,
+  //cmd in debug added by sp
+  output [65:0] cmdin_bclk_debug,
+  output [65:0] cmdin_debug,
+  output [NUM_CHANNELS*66-1:0] cmdin_ports_debug,
+  output [NUM_CHANNELS*42-1:0] set_data_debug
 );
 
   ////////////////////////////////////////////////////////////
@@ -78,7 +83,12 @@ module noc_block_radio_core #(
     // Misc
     .vita_time(vita_time), .clear_tx_seqnum(clear_tx_seqnum),
     .src_sid(src_sid), .next_dst_sid(next_dst_sid), .resp_in_dst_sid(resp_in_dst_sid), .resp_out_dst_sid(resp_out_dst_sid),
-    .debug(debug)
+    .debug(debug),
+    //cmdin debug added by sp
+    .cmdin_debug(cmdin_debug),
+    .cmdin_ports_debug(cmdin_ports_debug),
+    .cmdin_bclk_debug(cmdin_bclk_debug),
+    .set_data_debug(set_data_debug)
   );
 
   // Disable unused response port
