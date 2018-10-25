@@ -683,8 +683,8 @@ module x300_core #(
    //cmd in debug added by sp
    wire [65:0] cmdin_bclk_debug_r0,cmdin_bclk_debug_r1;
    wire [65:0] cmdin_debug_r0,cmdin_debug_r1;
-   output [2*66-1:0] cmdin_ports_debug_r0,cmdin_ports_debug_r1;
-   output [2*42-1:0] set_data_debug_r0,set_data_debug_r1;
+   wire [2*66-1:0] cmdin_ports_debug_r0,cmdin_ports_debug_r1;
+   wire [2*42-1:0] set_data_debug_r0,set_data_debug_r1;
 
    //------------------------------------
    // Radio 0,1 (XB Radio Port 0)
