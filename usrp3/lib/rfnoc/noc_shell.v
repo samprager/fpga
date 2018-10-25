@@ -96,7 +96,6 @@ module noc_shell
 
    assign cmdin_debug = {cmdin_tdata,cmdin_tvalid,cmdin_tready};
    assign cmdin_bclk_debug = {cmdin_tdata_bclk,cmdin_tvalid_bclk,cmdin_tready_bclk};
-   assign set_has_time
 
    ///////////////////////////////////////////////////////////////////////////////////////
    // 2-clock fifos get cmd/ack ports into ce_clk domain
