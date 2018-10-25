@@ -21,6 +21,9 @@ include $(IP_DIR)/aurora_64b66b_pcs_pma/Makefile.inc
 include $(IP_DIR)/axi_waveform_bram_ctrl/Makefile.inc
 include $(IP_DIR)/axi_waveform_datamover/Makefile.inc
 include $(IP_DIR)/SP_DDS/Makefile.inc
+include $(IP_DIR)/ila_0/Makefile.inc
+include $(IP_DIR)/ila_1/Makefile.inc
+
 
 IP_XCI_SRCS = \
 $(IP_AXI64_4K_2CLK_FIFO_SRCS) \
@@ -34,6 +37,8 @@ $(IP_RADIO_CLK_GEN_SRCS) \
 $(IP_AXI_WAVEFORM_BRAM_SRCS) \
 $(IP_AXI_WAVEFORM_DATAMOVER_SRCS) \
 $(IP_SP_DDS_SRCS) \
+$(IP_ILA0_SRCS) \
+$(IP_ILA1_SRCS) \
 # $(IP_AXI4_BRAM_SRCS) \
 
 BD_SRCS = \
@@ -75,6 +80,8 @@ $(IP_AURORA_64B66B_PCS_PMA_OUTS) \
 $(IP_AXI_WAVEFORM_BRAM_OUTS) \
 $(IP_AXI_WAVEFORM_DATAMOVER_OUTS) \
 $(IP_SP_DDS_OUTS) \
+$(IP_ILA0_OUTS) \
+$(IP_ILA1_OUTS) \
 # $(IP_AXI4_BRAM_OUTS) \
 
 BD_OUTPUTS = \
@@ -88,4 +95,3 @@ $(IP_AXI_INTERCON_2X64_128_BD_OUTS)
 ip: $(IP_SYNTH_OUTPUTS) $(IP_CODEGEN_SRCS) $(BD_OUTPUTS)
 
 .PHONY: ip
-
