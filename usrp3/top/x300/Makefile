@@ -130,7 +130,7 @@ X300_RFNOC_XG:
 	$(call vivado_build,X300,$(XG_DEFS) RFNOC=1 X300=1)
 	$(call post_build,X300,RFNOC_XG)
 
-X300_RFNOC_AWG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
+X300_RFNOC_AWGDEBUG: ##USRP X300 AWG. 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled. (Use HLS=1 to build HLS IP)
 	$(call vivado_build,X300,$(AWG_DEFS) RFNOC=1 X300=1 AWG=1)
 	$(call post_build,X300,RFNOC_AWG)
 
