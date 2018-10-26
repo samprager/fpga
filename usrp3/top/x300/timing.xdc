@@ -522,3 +522,4 @@ set_false_path -to [get_ports {SFPP*_RS0 SFPP*_RS1 SFPP*_SCL SFPP*_SDA SFPP*_TxD
 set_false_path -from [get_ports {SFPP*_ModAbs SFPP*_RxLOS SFPP*_SCL SFPP*_SDA SFPP*_TxFault}]
 set_false_path -to [get_ports GPSDO_PWR_ENA]
 
+

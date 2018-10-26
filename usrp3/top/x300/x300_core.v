@@ -846,7 +846,7 @@ module x300_core #(
    (* dont_touch="true", mark_debug="true"*) wire [63:0] probe0_r0_0;
    (* dont_touch="true", mark_debug="true"*) wire probe1_r0_0;
    (* dont_touch="true", mark_debug="true"*) wire probe2_r0_0;
-   (* dont_touch="true", mark_debug="true"*) wire [31:0] probe03r0_0;
+   (* dont_touch="true", mark_debug="true"*) wire [31:0] probe3_r0_0;
    (* dont_touch="true", mark_debug="true"*) wire [7:0] probe4_r0_0;
    (* dont_touch="true", mark_debug="true"*) wire probe5_r0_0;
    (* dont_touch="true", mark_debug="true"*) wire probe6_r0_0;
@@ -856,14 +856,20 @@ module x300_core #(
    assign {probe0_r0_0,probe1_r0_0,probe2_r0_0} = cmdin_ports_debug_r0[65:0]; //{cmdin_tdata,cmdin_tvalid,cmdin_tready};
    assign {probe3_r0_0,probe4_r0_0,probe5_r0_0,probe6_r0_0} = set_data_debug_r0[41:0]; //{set_data,set_addr,set_stb,set_has_time};
 
- ila_0 ILA_0_awg (.clk(radio_clk),
- .probe0(probe0_awg),.probe1(probe1_awg),.probe2(probe2_awg));
+//  ila_0 ILA_0_awg (.clk(radio_clk),
+//  .probe0(probe0_awg),.probe1(probe1_awg),.probe2(probe2_awg));
+//
+// ila_0 ILA_0_r0 (.clk(radio_clk),
+// .probe0(probe0_r0),.probe1(probe1_r0),.probe2(probe2_r0));
+//
+// ila_1 ILA_1_r0_0 (.clk(radio_clk),
+// .probe0(probe0_r0_0),.probe1(probe1_r0_0),.probe2(probe2_r0_0),
+// .probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0));
 
-ila_0 ILA_0_r0 (.clk(radio_clk),
-.probe0(probe0_r0),.probe1(probe1_r0),.probe2(probe2_r0));
-
-ila_1 ILA_1_r0_0 (.clk(radio_clk),
+ila_1 ILA_1_rad_awg (.clk(radio_clk),
 .probe0(probe0_r0_0),.probe1(probe1_r0_0),.probe2(probe2_r0_0),
-.probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0));
+.probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0),
+.probe7(probe0_awg),.probe8(probe1_awg),.probe9(probe2_awg));
+
 
 endmodule // x300_core
