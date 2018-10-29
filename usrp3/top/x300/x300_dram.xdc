@@ -20,3 +20,5 @@ set_property BITSTREAM.GENERAL.COMPRESS False [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 6 [current_design]
 
 
+
+

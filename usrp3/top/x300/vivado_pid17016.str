@@ -1,0 +1,847 @@
+/*
+
+Xilinx Vivado v2017.4 (64-bit) [Major: 2017, Minor: 4]
+SW Build: 2086221 on Fri Dec 15 20:54:30 MST 2017
+IP Build: 2085800 on Fri Dec 15 22:25:07 MST 2017
+
+Process ID: 17016
+License: Customer
+
+Current time: 	Mon Sep 03 14:20:11 PDT 2018
+Time zone: 	Pacific Standard Time (America/Los_Angeles)
+
+OS: Ubuntu
+OS Version: 3.16.0-30-generic
+OS Architecture: amd64
+Available processors (cores): 8
+
+Display: :0
+Screen size: 1280x1024
+Screen resolution (DPI): 96
+Available screens: 1
+Available disk space: 216 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	1.8.0_112 64-bit
+Java home: 	/opt/Xilinx/Vivado/2017.4/tps/lnx64/jre
+JVM executable location: 	/opt/Xilinx/Vivado/2017.4/tps/lnx64/jre/bin/java
+
+User name: 	radar
+User home directory: /home/radar
+User working directory: /home/radar/Projects/fpga-v2017/usrp3/top/x300
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /opt/Xilinx/Vivado
+HDI_APPROOT: /opt/Xilinx/Vivado/2017.4
+RDI_DATADIR: /opt/Xilinx/Vivado/2017.4/data
+RDI_BINDIR: /opt/Xilinx/Vivado/2017.4/bin
+
+Vivado preferences file location: /home/radar/.Xilinx/Vivado/2017.4/vivado.xml
+Vivado preferences directory: /home/radar/.Xilinx/Vivado/2017.4/
+Vivado layouts directory: /home/radar/.Xilinx/Vivado/2017.4/layouts
+PlanAhead jar file location: 	/opt/Xilinx/Vivado/2017.4/lib/classes/planAhead.jar
+Vivado log file location: 	/home/radar/Projects/fpga-v2017/usrp3/top/x300/vivado.log
+Vivado journal file location: 	/home/radar/Projects/fpga-v2017/usrp3/top/x300/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-17016-radar-All-Series
+
+GUI allocated memory:	179 MB
+GUI max memory:		3,052 MB
+Engine allocated memory: 4,982 MB
+
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+selectList(PAResourceQtoS.SyntheticaGettingStartedView_RECENT_PROJECTS, "/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.xpr", 0); // q (O, cj)
+// [GUI Memory]: 59 MB (+58907kb) [00:00:05]
+// [Engine Memory]: 4,948 MB (+5036612kb) [00:00:05]
+// bs (cj):  Open Project : addNotify
+// Opening Vivado Project: /home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.xpr. Version: Vivado v2017.4 
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_CURRENT
+// Tcl Message: open_project /home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.xpr 
+// TclEventType: FILE_SET_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 5,041 MB. GUI used memory: 32 MB. Current time: 9/3/18 2:20:14 PM PDT
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: PROJECT_NEW
+// Tcl Message: open_project /home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2017.4/data/ip'. 
+// Project name: project_3; location: /home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3; part: xc7k325tffg900-2
+// Tcl Message: open_project: Time (s): cpu = 00:00:11 ; elapsed = 00:00:06 . Memory (MB): peak = 6212.270 ; gain = 218.988 ; free physical = 6546 ; free virtual = 45685 
+dismissDialog("Open Project"); // bs (cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// [GUI Memory]: 66 MB (+4734kb) [00:00:20]
+// TclEventType: DG_GRAPH_GENERATED
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Syntax Error Files]", 6); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Syntax Error Files, bus_int.v]", 7, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Syntax Error Files, bus_int.v]", 7, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_USED_IN_PROP, "Set Used In..."); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SET_USED_IN_PROP
+// dc (cj): Set Used In: addNotify
+selectCheckBox(PAResourceQtoS.SetUsedInProp_SIMULATION, "Simulation", false); // g (N, dc): FALSE
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (dc)
+// 'da' command handler elapsed time: 3 seconds
+// TclEventType: DG_GRAPH_STALE
+dismissDialog("Set Used In"); // dc (cj)
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property used_in_simulation false [get_files  /home/radar/Projects/fpga-v2017/usrp3/top/x300/bus_int.v] 
+// [GUI Memory]: 71 MB (+2204kb) [00:00:44]
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Add Sources]", 2, false); // u (O, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectRadioButton(PAResourceAtoD.AddSrcWizard_SPECIFY_SIMULATION_SPECIFIC_HDL_FILES, "Add or create simulation sources"); // a (o, c)
+selectButton("NEXT", "Next >"); // JButton (h, c)
+// HMemoryUtils.trashcanNow. Engine heap size: 5,188 MB. GUI used memory: 43 MB. Current time: 9/3/18 2:20:59 PM PDT
+// [GUI Memory]: 75 MB (+60kb) [00:02:15]
+// Elapsed time: 377 seconds
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (C, c)
+// Elapsed time: 14 seconds
+dismissFileChooser();
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (C, c)
+// [GUI Memory]: 80 MB (+1222kb) [00:09:30]
+// Elapsed time: 430 seconds
+setFileChooser("/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb/noc_block_pulse_cir_avg_tb.sv");
+selectTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "SystemVerilog_small ; 1 ; noc_block_pulse_cir_avg_tb.sv ; xil_defaultlib ; /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb", 0, "xil_defaultlib", 3); // bC (O, c)
+selectTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "SystemVerilog_small ; 1 ; noc_block_pulse_cir_avg_tb.sv ; xil_defaultlib ; /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb", 0, "noc_block_pulse_cir_avg_tb.sv", 2, false, false, false, true, false); // bC (O, c) - Popup Trigger
+editTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "xil_defaultlib", 0, "Library", 3); // bC (O, c)
+selectTable(PAResourceQtoS.SrcChooserTable_SRC_CHOOSER_TABLE, "SystemVerilog_small ; 1 ; noc_block_pulse_cir_avg_tb.sv ; xil_defaultlib ; /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb", 0, "noc_block_pulse_cir_avg_tb.sv", 2, false, false, false, true, false); // bC (O, c) - Popup Trigger
+// Elapsed time: 183 seconds
+selectButton("FINISH", "Finish"); // JButton (h, c)
+// 'h' command handler elapsed time: 1014 seconds
+dismissDialog("Add Sources"); // c (cj)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: set_property SOURCE_SET sources_1 [get_filesets sim_1] 
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: add_files -fileset sim_1 -norecurse /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb/noc_block_pulse_cir_avg_tb.sv 
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// [Engine Memory]: 5,206 MB (+11822kb) [00:17:46]
+// TclEventType: DG_GRAPH_GENERATED
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Syntax Error Files, noc_block_pulse_cir_avg_tb.sv]", 114, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Syntax Error Files, noc_block_pulse_cir_avg_tb.sv]", 114, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+// [GUI Memory]: 87 MB (+3053kb) [00:18:00]
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_USED_IN_PROP, "Set Used In..."); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SET_USED_IN_PROP
+// dc (cj): Set Used In: addNotify
+selectCheckBox(PAResourceQtoS.SetUsedInProp_SIMULATION, "Simulation", false); // g (N, dc): FALSE
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (dc)
+// 'da' command handler elapsed time: 3 seconds
+// TclEventType: DG_GRAPH_STALE
+dismissDialog("Set Used In"); // dc (cj)
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property used_in_simulation false [get_files  /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_cir_avg/noc_block_pulse_cir_avg_tb/noc_block_pulse_cir_avg_tb.sv] 
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// HMemoryUtils.trashcanNow. Engine heap size: 5,222 MB. GUI used memory: 42 MB. Current time: 9/3/18 2:38:19 PM PDT
+// Elapsed time: 139 seconds
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (C, c)
+// Elapsed time: 43 seconds
+setFolderChooser("/home/radar/Projects/fpga-v2017/usrp3/lib");
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (C, c)
+// Elapsed time: 10 seconds
+setFolderChooser("/home/radar/Projects/fpga-v2017/usrp3/sim");
+selectButton("FINISH", "Finish"); // JButton (h, c)
+// 'h' command handler elapsed time: 63 seconds
+dismissDialog("Add Sources"); // c (cj)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: set_property SOURCE_SET sources_1 [get_filesets sim_1] 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// bs (cj):  Add Simulation Sources  : addNotify
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: PROJECT_CHANGE
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: LOAD_FEATURE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// a (cj): Critical Messages: addNotify
+dismissDialog("Add Simulation Sources"); // bs (cj)
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+// TclEventType: FILE_SET_CHANGE
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// Elapsed time: 25 seconds
+dismissDialog("Critical Messages"); // a (cj)
+// [GUI Memory]: 93 MB (+2025kb) [00:22:26]
+// Elapsed time: 82 seconds
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+// Elapsed time: 13 seconds
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): TRUE
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): FALSE
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): TRUE
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): TRUE
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): FALSE
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, "SourcesView", (HResource) null, "Hierarchy", 0, false, true); // i (N, cj) - Double Click
+selectTab((HResource) null, (HResource) null, "Sources", 0); // aF (Q, cj)
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectButton(PAResourceEtoH.FileSetView_EXPAND_ALL, "Sources_expand_all"); // B (f, cj)
+selectButton(PAResourceEtoH.FileSetView_COLLAPSE_ALL, "Sources_collapse_all"); // B (f, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "IP Sources", 1); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (C, c)
+// Elapsed time: 21 seconds
+dismissFolderChooser();
+selectButton("CANCEL", "Cancel"); // JButton (h, c)
+// 'h' command handler elapsed time: 26 seconds
+dismissDialog("Add Sources"); // c (cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Simulation Sources, sim_1]", 4); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Simulation Sources, sim_1]", 4, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Simulation Sources, sim_1]", 4, true, false, false, false, false, true); // B (D, cj) - Double Click - Node
+// Elapsed time: 211 seconds
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, "SourcesView", (HResource) null, "Hierarchy", 0, false, true); // i (N, cj) - Double Click
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): FALSE
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results]", 1, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+// Elapsed time: 47 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 109); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 110); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, noc_block_wavegen_tb (noc_block_wavegenradio_tb.sv)]", 117, false); // B (D, cj)
+// [GUI Memory]: 99 MB (+853kb) [00:29:47]
+// Elapsed time: 153 seconds
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): TRUE
+// W (cj): Search Sources: addNotify
+dismissDialog("Search Sources"); // W (cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Libraries", 2); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+// Elapsed time: 19 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, x300 (x300.v)]", 3); // B (D, cj)
+// Elapsed time: 198 seconds
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+// 'h' command handler elapsed time: 5 seconds
+dismissDialog("Add Sources"); // c (cj)
+selectButton(PAResourceCommand.PACommandNames_ADD_SOURCES, "Sources_add_sources"); // B (f, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (C, c)
+dismissFileChooser();
+selectButton("CANCEL", "Cancel"); // JButton (h, c)
+// 'h' command handler elapsed time: 14 seconds
+dismissDialog("Add Sources"); // c (cj)
+// Elapsed time: 127 seconds
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenuItem(PAResourceItoN.MsgTreePanel_MANAGE_SUPPRESSION, "Manage Suppression..."); // ac (K, cj)
+// a (cj): Manage Suppression: addNotify
+dismissDialog("Manage Suppression"); // a (cj)
+// Elapsed time: 109 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): TRUE
+// [GUI Memory]: 104 MB (+312kb) [00:40:24]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Design Sources, noc_block_addsub (noc_block_addsub.v)]", 1, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Design Sources, noc_block_addsub (noc_block_addsub.v), addsub_vhdl(rtl) (addsub.vhd), splitter : split_stream_fifo]", 3, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Missing Design Sources, noc_block_addsub (noc_block_addsub.v), addsub_vhdl(rtl) (addsub.vhd), splitter : split_stream_fifo]", 3, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (ai, cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+selectButton((HResource) null, "Sources_FileSetView.filterMissingAction"); // u (f, cj): FALSE
+// HMemoryUtils.trashcanNow. Engine heap size: 5,264 MB. GUI used memory: 48 MB. Current time: 9/3/18 3:00:44 PM PDT
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): TRUE
+// W (cj): Search Sources: addNotify
+dismissDialog("Search Sources"); // W (cj)
+// TclEventType: DG_GRAPH_GENERATED
+// Elapsed time: 15 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 109, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 110, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, noc_block_addsub_tb (noc_block_addsub_tb.sv)]", 123, false, false, false, false, false, true); // B (D, cj) - Double Click
+// Elapsed time: 89 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, noc_block_pulse_avg (noc_block_pulse_avg.v)]", 169, false); // B (D, cj)
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Add Sources]", 2, false); // u (O, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+dismissDialog("Add Sources"); // c (cj)
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Language Templates]", 3, false); // u (O, cj)
+// Run Command: PAResourceCommand.PACommandNames_LANGUAGE_TEMPLATES
+// a (cj): Language Templates: addNotify
+dismissDialog("Language Templates"); // a (cj)
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Add Sources]", 2, false); // u (O, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton("CANCEL", "Cancel"); // JButton (h, c)
+// 'h' command handler elapsed time: 7 seconds
+dismissDialog("Add Sources"); // c (cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 110, true); // B (D, cj) - Node
+// Elapsed time: 25 seconds
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): TRUE
+// W (cj): Search Sources: addNotify
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (W)
+dismissDialog("Search Sources"); // W (cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Libraries", 2); // i (N, cj)
+// Elapsed time: 13 seconds
+setText("PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE_SEARCH_FIELD", "noc_block_pulse"); // OverlayTextField (C, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog, xil_defaultlib, noc_block_pulse_cir_avg.v]", 3, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation-Only Sources, sim_1, SystemVerilog, xil_defaultlib, noc_block_pulse_cir_avg_tb.sv]", 12, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation-Only Sources, sim_1, SystemVerilog, xil_defaultlib, noc_block_pulse_cir_avg_tb.sv]", 12, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation-Only Sources, sim_1, SystemVerilog, xil_defaultlib, noc_block_pulse_cir_avg_tb.sv]", 12, false, false, false, false, false, true); // B (D, cj) - Double Click
+// HMemoryUtils.trashcanNow. Engine heap size: 5,327 MB. GUI used memory: 47 MB. Current time: 9/3/18 3:03:59 PM PDT
+// Elapsed time: 82 seconds
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Add Sources]", 2, false); // u (O, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (C, c)
+// Elapsed time: 38 seconds
+setFolderChooser("/home/radar/Projects/fpga-v2017/usrp3/lib/sim");
+selectButton("FINISH", "Finish"); // JButton (h, c)
+// 'h' command handler elapsed time: 48 seconds
+dismissDialog("Add Sources"); // c (cj)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: set_property SOURCE_SET sources_1 [get_filesets sim_1] 
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "IP Sources", 1); // i (N, cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 2, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0, true); // B (D, cj) - Node
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // B (D, cj)
+// Elapsed time: 71 seconds
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true); // ah (O, cj) - Node
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+// Elapsed time: 11 seconds
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Sources_search"); // u (f, cj): TRUE
+// W (cj): Search Sources: addNotify
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (W)
+dismissDialog("Search Sources"); // W (cj)
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Hierarchy", 0); // i (N, cj)
+// Elapsed time: 79 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+// Elapsed time: 22 seconds
+selectButton((HResource) null, "Properties_settings"); // u (f, cj): TRUE
+// Elapsed time: 125 seconds
+selectButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // q (bU, cj)
+// S (cj): Set Type: addNotify
+dismissDialog("Set Type"); // S (cj)
+selectButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // q (bU, cj)
+// S (cj): Set Type: addNotify
+dismissDialog("Set Type"); // S (cj)
+selectButton(PAResourceQtoS.SrcFilePropPanels_LIBRARY, (String) null); // q (bT, cj)
+// T (cj): Set Library: addNotify
+dismissDialog("Set Library"); // T (cj)
+selectButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // q (bU, cj)
+// S (cj): Set Type: addNotify
+dismissDialog("Set Type"); // S (cj)
+selectTab(RDIResource.PropertiesView_TABBED_PANE, (HResource) null, "Properties", 1); // i (c, cj)
+selectTab(RDIResource.PropertiesView_TABBED_PANE, (HResource) null, "General", 0); // i (c, cj)
+// Elapsed time: 21 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, x300 (x300.v)]", 3); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, x300 (x300.v)]", 3); // B (D, cj)
+// Elapsed time: 15 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, x300 (x300.v)]", 3); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // B (D, cj)
+// Elapsed time: 103 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/vita_200/float_to_iq_tb.v:67]. ]", 4, false, false, true, false, false, false); // ah (O, cj) - Control Key
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false, false, true, false, false, false); // ah (O, cj) - Control Key
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false, false, true, false, false, false); // ah (O, cj) - Control Key
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+// [GUI Memory]: 117 MB (+7805kb) [00:55:04]
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results]", 1); // ah (O, cj)
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. ]", 4); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. ]", 4, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. , [HDL 9-870] Macro <WORKING_DIR> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/lib/crossbar/crossbar_tb/crossbar_tb.sv:63]. ]", 5, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. , [HDL 9-870] Macro <WORKING_DIR> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/lib/crossbar/crossbar_tb/crossbar_tb.sv:63]. ]", 5, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1]", 2, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results]", 1, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results]", 1, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true, false, false, false, true, false); // ah (O, cj) - Popup Trigger - Node
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectMenu(PAResourceItoN.MsgTreePanel_MESSAGE_SEVERITY, "Message Severity"); // Z (K, cj)
+selectTab(RDIResource.PropertiesView_TABBED_PANE, (HResource) null, "Properties", 1); // i (c, cj)
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. ]", 4); // ah (O, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-870] Macro <N_DIMENSION> is not defined. [/home/radar/Projects/fpga-v2017/usrp3/sim/axi_crossbar/sim_NxM/simulation_script.v:2]. ]", 4); // ah (O, cj)
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+collapseTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3); // ah (O, cj)
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Tcl Object View_search"); // u (f, cj): TRUE
+setText("Search Field", "cr"); // OverlayTextField (au, cj)
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Tcl Object View_search"); // u (f, cj): FALSE
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Tcl Object View_search"); // u (f, cj): TRUE
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Tcl Object View_search"); // u (f, cj): FALSE
+selectButton(RDIResource.AbstractSearchablePanel_SHOW_SEARCH, "Tcl Object View_search"); // u (f, cj): TRUE
+setText("Search Field", "crossbar_tb.v"); // OverlayTextField (au, cj)
+applyEnter(PAResourceTtoZ.TclObjectTreeTable_TREETABLE, (String) null); // l (C, cj)
+selectTab(RDIResource.PropertiesView_TABBED_PANE, (HResource) null, "General", 0); // i (c, cj)
+selectButton(RDIResource.PropertiesView_PREVIOUS_OBJECT, "Properties_backward"); // B (f, cj)
+selectButton(RDIResource.PropertiesView_PREVIOUS_OBJECT, "Properties_backward"); // B (f, cj)
+selectButton(RDIResource.PropertiesView_NEXT_OBJECT, "Properties_forward"); // B (f, cj)
+selectButton(RDIResource.PropertiesView_NEXT_OBJECT, "Properties_forward"); // B (f, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog, noc_block_pulse_cir_avg_tb.sv]", 604, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_USED_IN_PROP, "Set Used In..."); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SET_USED_IN_PROP
+// dc (cj): Set Used In: addNotify
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (dc)
+dismissDialog("Set Used In"); // dc (cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog, noc_block_pulse_cir_avg_tb.sv]", 604, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog, noc_block_pulse_cir_avg_tb.sv]", 604, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog, noc_block_pulse_cir_avg_tb.sv]", 604, false, false, false, false, true, false); // B (D, cj) - Popup Trigger
+// Elapsed time: 19 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // B (D, cj)
+// Elapsed time: 24 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog]", 603); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog]", 603); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, SystemVerilog, noc_block_pulse_cir_avg_tb.sv]", 604, false); // B (D, cj)
+// Elapsed time: 433 seconds
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Simulation, Run Simulation]", 10, false); // u (O, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// V (cj): Specify Top Module: addNotify
+// 'd' command handler elapsed time: 3 seconds
+dismissDialog("Specify Top Module"); // V (cj)
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Simulation, Run Simulation]", 10, false); // u (O, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// V (cj): Specify Top Module: addNotify
+selectButton(PAResourceTtoZ.TopModuleDialog_SELECT_TOP_MODULE_FOR_YOUR_SIMULATION, (String) null); // q (ah, V)
+// bs (V):  Analyze source files for top modules : addNotify
+// Q (V): Select Top Module: addNotify
+// Elapsed time: 13 seconds
+setText("Search Field", "noc_block_pulse_"); // OverlayTextField (U, Q)
+selectList(PAResourceQtoS.SelectTopModuleDialog_SELECT_TOP_MODULE, "noc_block_pulse_cir_avg", 0); // R (O, Q)
+selectList(PAResourceQtoS.SelectTopModuleDialog_SELECT_TOP_MODULE, "noc_block_pulse_cir_avg", 0, false, false, false, false, true); // R (O, Q) - Double Click
+dismissDialog("Select Top Module"); // Q (V)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (V)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// e (cj):  Run Simulation : addNotify
+// Tcl Message: set_property top noc_block_pulse_cir_avg [get_filesets sim_1] 
+dismissDialog("Specify Top Module"); // V (cj)
+// TclEventType: LAUNCH_SIM
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// Tcl Message: launch_simulation 
+// Tcl Message: INFO: [Vivado 12-5698] Checking validity of IPs in the design for the 'XSim' simulator... 
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// HMemoryUtils.trashcanNow. Engine heap size: 5,354 MB. GUI used memory: 47 MB. Current time: 9/3/18 3:25:09 PM PDT
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// Tcl Message: INFO: [USF-XSim-97] Finding global include files... INFO: [USF-XSim-100] Fetching design files from 'sources_1'...(this may take a while)... 
+// Tcl Message: INFO: [USF-XSim-101] Fetching design files from 'sim_1'... INFO: [USF-XSim-2] XSim::Compile design INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim' 
+// Tcl Message: INFO: [USF-XSim-69] 'compile' step finished in '1' seconds INFO: [USF-XSim-99] Step results log file:'/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim/xvlog.log' 
+// Tcl Message: ERROR: [USF-XSim-62] 'compile' step failed with error(s). Please check the Tcl console output or '/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim/xvlog.log' file for more information. ERROR: [Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation. 
+// Tcl Message: launch_simulation: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 6414.145 ; gain = 11.203 ; free physical = 6284 ; free virtual = 45532 
+// Tcl Message: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors. 
+// CommandFailedException: ERROR: [Common 17-69] Command failed: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  
+// HOptionPane Error: 'ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  (Run Simulation)'
+// 'd' command handler elapsed time: 24 seconds
+selectButton("RDIResource.ProgressDialog_ERROR_ENCOUNTERED_PLEASE_SEE_TCL_OK", "OK"); // JButton (A, G)
+// a (cj): Critical Messages: addNotify
+// Run Command: PAResourceCommand.PACommandNames_MESSAGE_WINDOW
+// Elapsed time: 48 seconds
+dismissDialog("Critical Messages"); // a (cj)
+applyEscape(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 1, true); // ah (O, cj) - Node
+// Elapsed time: 132 seconds
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, RTL Analysis]", 11, true); // u (O, cj) - Node
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Simulation, Run Simulation]", 10, false); // u (O, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// e (cj):  Run Simulation : addNotify
+// TclEventType: LAUNCH_SIM
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// Tcl Message: launch_simulation 
+// Tcl Message: INFO: [Vivado 12-5698] Checking validity of IPs in the design for the 'XSim' simulator... 
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_UNLOAD_CORE
+// Tcl Message: INFO: [USF-XSim-97] Finding global include files... INFO: [USF-XSim-100] Fetching design files from 'sources_1'...(this may take a while)... 
+// Tcl Message: INFO: [USF-XSim-101] Fetching design files from 'sim_1'... 
+// Tcl Message: INFO: [USF-XSim-2] XSim::Compile design INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim' 
+// Tcl Message: INFO: [USF-XSim-69] 'compile' step finished in '2' seconds INFO: [USF-XSim-99] Step results log file:'/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim/xvlog.log' 
+// Tcl Message: ERROR: [USF-XSim-62] 'compile' step failed with error(s). Please check the Tcl console output or '/home/radar/Projects/fpga-v2017/usrp3/top/x300/build-X300_RFNOC_PULSECIRAVG/project_3/project_3.sim/sim_1/behav/xsim/xvlog.log' file for more information. ERROR: [Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation. 
+// Tcl Message: launch_simulation: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 6414.145 ; gain = 0.000 ; free physical = 6300 ; free virtual = 45538 
+// Tcl Message: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors. 
+// CommandFailedException: ERROR: [Common 17-69] Command failed: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  
+// HOptionPane Error: 'ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  (Run Simulation)'
+// 'd' command handler elapsed time: 7 seconds
+selectButton("RDIResource.ProgressDialog_ERROR_ENCOUNTERED_PLEASE_SEE_TCL_OK", "OK"); // JButton (A, G)
+// a (cj): Critical Messages: addNotify
+applyEnter(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, (String) null); // u (O, cj)
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK"); // f (a)
+dismissDialog("Critical Messages"); // a (cj)
+// Elapsed time: 494 seconds
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// HMemoryUtils.trashcanNow. Engine heap size: 5,372 MB. GUI used memory: 47 MB. Current time: 9/3/18 3:36:49 PM PDT
+// TclEventType: DG_GRAPH_GENERATED
+// Elapsed time: 28 seconds
+selectButton(PAResourceEtoH.FileSetPanel_MESSAGES, "87"); // h (f, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/dsp/sim/sim_ddc_chain/dc_in_cordic_decim_2/simulation_script.v:7]. ]", 6, false, false, false, false, false, true); // ah (O, cj) - Double Click
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false); // ah (O, cj)
+// Elapsed time: 179 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false, false, false, false, true, false); // ah (O, cj) - Popup Trigger
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. ]", 3, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false); // ah (O, cj)
+messagesViewCrossProbe(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "src;-;/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v;-;;-;16;-;line;-;61;-;;-;16;-;"); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Analysis Results, sim_1, [HDL 9-806] Syntax error near end. [/home/radar/Projects/fpga-v2017/usrp3/lib/sim/vita/float_to_iq/float_to_iq_tb.v:69]. , [HDL 9-806] Syntax error near always. [/home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v:61]. ]", 5, false, false, false, false, false, true); // ah (O, cj) - Double Click
+selectTab((HResource) null, (HResource) null, "Source File Properties", 0); // aF (Q, cj)
+selectCheckBox(PAResourceQtoS.SrcFilePropPanels_SIMULATION, "Simulation", false); // g (N, cj): FALSE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property used_in_simulation false [get_files  /home/radar/Projects/fpga-v2017/usrp3/lib/pulse_avg/pulse_avg_core.v] 
+selectButton(PAResourceEtoH.FileSetPanel_RELOAD, "Reload..."); // h (cZ, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (cj)
+selectMenuItem(PAResourceQtoS.SrcMenu_REFRESH_HIERARCHY, "Refresh Hierarchy"); // ac (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// HMemoryUtils.trashcanNow. Engine heap size: 5,393 MB. GUI used memory: 48 MB. Current time: 9/3/18 3:40:44 PM PDT
+// TclEventType: DG_GRAPH_GENERATED
