@@ -867,9 +867,9 @@ module x300_core #(
 // .probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0));
 
 ila_1 ILA_1_rad_awg (.clk(radio_clk),
-.probe0(probe0_r0_0),.probe1(probe1_r0_0),.probe2(probe2_r0_0),
-.probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0),
-.probe7(probe0_awg),.probe8(probe1_awg),.probe9(probe2_awg));
+.probe0(probe0_r0_0),.probe1(probe1_r0_0),.probe2(probe2_r0_0),  //{cmdin_tdata,cmdin_tvalid,cmdin_tready};
+.probe3(probe3_r0_0),.probe4(probe4_r0_0),.probe5(probe5_r0_0),.probe6(probe6_r0_0), //{set_data,set_addr,set_stb,set_has_time};
+.probe7(probe0_awg),.probe8(probe1_awg),.probe9(probe2_awg)); //{cmdout_tdata,cmdout_tvalid,cmdout_tready};
 
 
 endmodule // x300_core
