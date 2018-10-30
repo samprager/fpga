@@ -21,7 +21,7 @@ module chdr_framer
    wire 	  header_i_tvalid, header_i_tready;
    wire [63:0] 	  body_i_tdata;
    wire 	  body_i_tlast, body_i_tvalid, body_i_tready;
-   
+
    wire [127:0]   header_o_tdata;
    wire 	  header_o_tvalid, header_o_tready;
    wire [63:0] 	  body_o_tdata;
@@ -68,8 +68,8 @@ module chdr_framer
      else if(i_tvalid & i_tready)
        length <= (WIDTH == 32) ? length + 4 : length + 8;
 
-   axi_fifo_flop2 #(.WIDTH(128)) header_fifo_flop2
-     (.clk(clk), .reset(reset), .clear(clear),
+  axi_fifo_short #(.WIDTH(128)) header_fifo
+        (.clk(clk), .reset(reset), .clear(clear),
       .i_tdata({i_tuser[127:112],length,i_tuser[95:0]}), .i_tvalid(header_i_tvalid), .i_tready(header_i_tready),
       .o_tdata(header_o_tdata), .o_tvalid(header_o_tvalid), .o_tready(header_o_tready),
       .occupied(), .space());
@@ -79,7 +79,7 @@ module chdr_framer
       .i_tdata({body_i_tlast,body_i_tdata}), .i_tvalid(body_i_tvalid), .i_tready(body_i_tready),
       .o_tdata({body_o_tlast,body_o_tdata}), .o_tvalid(body_o_tvalid), .o_tready(body_o_tready),
       .occupied(), .space());
-     
+
    reg [3:0] 	  chdr_state;
    localparam ST_IDLE = 0;
    localparam ST_HEAD = 1;
@@ -114,9 +114,9 @@ module chdr_framer
      else
        if(o_tvalid & o_tready & o_tlast)
 	 seqnum <= seqnum + 12'd1;
-   
+
    wire [15:0] 	  out_length = header_o_tdata[111:96] + (header_o_tdata[125] ? 16'd16 : 16'd8);
-   
+
    assign o_tvalid = (chdr_state == ST_HEAD) | (chdr_state == ST_TIME) | (body_o_tvalid & (chdr_state == ST_BODY));
    assign o_tlast = (chdr_state == ST_BODY) & body_o_tlast;
    assign o_tdata = (chdr_state == ST_HEAD) ? {header_o_tdata[127:124], (USE_SEQ_NUM ? header_o_tdata[123:112] : seqnum), out_length, header_o_tdata[95:64] } :
@@ -124,5 +124,5 @@ module chdr_framer
 		    body_o_tdata;
    assign body_o_tready = (chdr_state == ST_BODY) & o_tready;
    assign header_o_tready = ((chdr_state == ST_TIME) | ((chdr_state == ST_HEAD) & ~header_o_tdata[125])) & o_tready;
-   	 
+
 endmodule // chdr_framer
