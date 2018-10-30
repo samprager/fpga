@@ -6,6 +6,7 @@ localparam NUM_CE = 10;  // Must be no more than 10 (6 ports taken by transport 
   wire [63:0]          ce_debug[0:NUM_CE-1];
 
   wire [65:0] awg_cmdout_debug;
+  wire [68:0] awg_cmd_internal_debug;
 
   // Flattern CE tdata arrays
   genvar k;
@@ -29,7 +30,7 @@ localparam NUM_CE = 10;  // Must be no more than 10 (6 ports taken by transport 
     .i_tdata(ce_o_tdata[0]), .i_tlast(ce_o_tlast[0]), .i_tvalid(ce_o_tvalid[0]), .i_tready(ce_o_tready[0]),
     .o_tdata(ce_i_tdata[0]), .o_tlast(ce_i_tlast[0]), .o_tvalid(ce_i_tvalid[0]), .o_tready(ce_i_tready[0]),
     .pps(pps_rclk), .sync_in(time_sync_r), .sync_out(),.rx_stb(rx_stb[0]),
-    .debug(ce_debug[0]),.cmdout_debug(awg_cmdout_debug));
+    .debug(ce_debug[0]),.cmdout_debug(awg_cmdout_debug),.cmd_internal_debug(awg_cmd_internal_debug));
 
 
   // Fill remaining crossbar ports with loopback FIFOs

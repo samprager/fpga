@@ -42,7 +42,9 @@ module rx_command_gen #(
 
       input awg_init,
       input adc_run,
-      input adc_enable          // high while adc samples saved
+      input adc_enable,          // high while adc samples saved,
+
+      output [68:0] debug_cmd
 
     );
     // State machine states
@@ -94,6 +96,8 @@ module rx_command_gen #(
       .i_tdata(cmd_tdata), .i_tuser(cmd_tuser), .i_tlast(cmd_tlast), .i_tvalid(cmd_tvalid), .i_tready(cmd_tready),
       .o_tdata(cmdout_tdata), .o_tlast(cmdout_tlast), .o_tvalid(cmdout_tvalid), .o_tready(cmdout_tready));
 
+    assign debug_cmd = {cmd_tdata,cmd_tvalid,cmd_tready,state};
+    
     always @(posedge clk) begin
       if (reset | clear) begin
         state      <= IDLE;

@@ -26,7 +26,7 @@ module noc_block_wavegen #(
   input ce_clk, input ce_rst,
   input  [63:0] i_tdata, input  i_tlast, input  i_tvalid, output i_tready,
   output [63:0] o_tdata, output o_tlast, output o_tvalid, input  o_tready,
-  output [63:0] debug, output [65:0] cmdout_debug,
+  output [63:0] debug, output [65:0] cmdout_debug, output [68:0] cmd_internal_debug,
   input pps, input sync_in, output sync_out,
   input rx_stb
 );
@@ -404,7 +404,8 @@ module noc_block_wavegen #(
           .send_cmds(policy[2]),
           .awg_init (awg_init),
           .adc_run (adc_run),
-          .adc_enable (adc_enable));
+          .adc_enable (adc_enable),
+          .debug_cmd(cmd_internal_debug));
 
 
   axi_burst_packetizer axi_burst_packetizer
