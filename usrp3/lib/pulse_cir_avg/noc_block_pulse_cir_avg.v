@@ -150,6 +150,11 @@ module noc_block_pulse_cir_avg #(
   localparam [7:0] SR_SEQ_LEN   = 133;
   localparam [7:0] SR_AVG_SIZE   = 134;
 
+  localparam [7:0] RB_BLOCK_RESET           = 0;
+  localparam [7:0] RB_THRESHOLD             = 1;
+  localparam [7:0] RB_SEQ_LEN               = 2;
+  localparam [7:0] RB_AVG_SIZE              = 3;
+
   wire block_reset;
   wire [31:0] threshold;
   wire [31:0] avg_size;
@@ -200,10 +205,10 @@ module noc_block_pulse_cir_avg #(
   // Readback registers
   always @*
     case(rb_addr)
-      8'd0    : rb_data <= {63'd0, block_reset};
-      8'd1    : rb_data <= {32'd0, threshold};
-      8'd2    : rb_data <= {48'd0, seq_len};
-      8'd2    : rb_data <= {32'd0, avg_size};
+      RB_BLOCK_RESET  : rb_data <= {63'd0, block_reset};
+      RB_THRESHOLD    : rb_data <= {32'd0, threshold};
+      RB_SEQ_LEN      : rb_data <= {48'd0, seq_len};
+      RB_AVG_SIZE     : rb_data <= {32'd0, avg_size};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
   endcase
 
