@@ -329,6 +329,8 @@ endfunction
     tb_streamer.read_user_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.RB_AVG_SIZE, readback);
     $display("Avg size reag readback: %16x", readback);
     `ASSERT_ERROR(readback == avg_size2, "Incorrect avg size read back");
+    
+    `TEST_CASE_DONE(1);
 
     /********************************************************
     ** Test 9 -- Send single pulse
@@ -350,10 +352,7 @@ endfunction
        end
 
        join
-       `TEST_CASE_DONE(1);
-
-
-    `TEST_CASE_DONE(1);
+      `TEST_CASE_DONE(1);
 
 
     `TEST_BENCH_DONE;
