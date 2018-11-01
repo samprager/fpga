@@ -26,7 +26,7 @@
     .ce_clk(radio_clk), .ce_rst(radio_rst), //lets go back to using the same clock as the radio
     .i_tdata(ce_o_tdata[0]), .i_tlast(ce_o_tlast[0]), .i_tvalid(ce_o_tvalid[0]), .i_tready(ce_o_tready[0]),
     .o_tdata(ce_i_tdata[0]), .o_tlast(ce_i_tlast[0]), .o_tvalid(ce_i_tvalid[0]), .o_tready(ce_i_tready[0]),
-    .pps(pps), .sync_in(time_sync_r), .sync_out(),.rx_stb(1'b1),
+    .pps(pps_rclk), .sync_in(time_sync_r), .sync_out(),.rx_stb(1'b1),
     .debug(ce_debug[0]));
 
   noc_block_cir_avg inst_noc_block_cir_avg (

@@ -30,6 +30,15 @@ Test bench for the cir_avg(averaging) NOC block.
 `define NUM_TEST_CASES 7
 `include "sim_exec_report.vh"
 `include "sim_rfnoc_lib.svh"
+// //wrong path! `include "./noc_block_pulse_cir_avg.v"
+// the correct path to this would be:
+// `include "../noc_block_pulse_cir_avg.v"
+// but i'm not sure why it would need to be included. you are also missing:
+`include "sim_rfnoc_lib.svh"
+
+// you may also want these if you start trying to test with the radio/wavegen blocks:
+// `include "wavegen_regs.vh"
+// `include "radio_core_regs.vh"
 
 
 typedef logic pn_seq_t[$];
@@ -37,25 +46,38 @@ typedef logic[31:0] sample_t[$];
 
 module noc_block_pulse_cir_avg_tb();
 
+// adding constant value samples
+function sample_t get_constant_samples(int num_samples, int value1);
+   sample_t sample;
+   begin
+     for(int i = 0; i<num_samples; i++)
+     begin
+       sample[i] = value1;
+     end
+   end
+   return sample;
+ endfunction;
 
 
-function sample_t get_random_samples(int num_samples);
-  sample_t sample;
-  begin
-    for(int i = 0; i<num_samples; i++)
-    begin
-      sample[i] = $random;
-    end
-  end
-  return sample;
-endfunction;
+ function sample_t get_random_samples(int num_samples);
+   sample_t sample;
+   begin
+     for(int i = 0; i<num_samples; i++)
+     begin
+       sample[i] = $random;
+     end
+   end
+   return sample;
+ endfunction;
 
 function sample_t get_repeatramp_samples(int num_samples, int num_ramp);
   sample_t sample;
   begin
     for(int i = 0; i<num_samples; i++)
     begin
-      sample[i] = (i % num_ramp);
+      automatic longint r = (i % num_ramp);
+      r = r*((2<<31)/(num_ramp));
+      sample[i] = r[31:0];
     end
   end
   return sample;
@@ -100,16 +122,32 @@ endfunction
   // localparam [9:0] gen_poly1 = 10'b0001110100;
   // localparam [9:0] gen_seed1 = 10'b0000010000;
   // localparam [3:0] gen_order1 = 4'd8;
-  localparam [15:0] seq_len1  = 16'd256;
+  localparam [15:0] seq_len1  = 16'd64;
   localparam [31:0] avg_size1 = 32'd2;
-  localparam num_samples1 = 512;
+  localparam num_samples1 = 128;
 
+  localparam [15:0] seq_len2  = 16'd64;
+  localparam [31:0] avg_size2 = 32'd1;
 
   pn_seq_t seq;
   sample_t sample;
   cvita_payload_t payload;// 64 bit word i.e., one payload word = 2 samples*/
 
+  sample_t sample1;
+  cvita_payload_t payload1;// 64 bit word i.e., one payload word = 2 samples*/
 
+  sample_t sample2;
+  cvita_payload_t payload2;// 64 bit word i.e., one payload word = 2 samples*/
+
+  // added for constant sample run
+  sample_t sample3;
+  cvita_payload_t payload3;
+
+  sample_t sample4;
+  cvita_payload_t payload4;
+
+  sample_t sample5;
+  cvita_payload_t payload5;
   // wire [19:0] gen_seed_poly = {gen_seed, gen_poly};
   // wire [13:0] gen_order_len = {gen_order, seq_len};
   // wire [12:0] avg_size_seq_len = {log_avg_size, seq_len};
@@ -166,57 +204,57 @@ endfunction
     /********************************************************
     ** Test 5 -- Send Samples
     ********************************************************/
-    `TEST_CASE_START("Send samples");
-    fork
-    begin
-      sample = get_random_samples(num_samples);
-      payload = get_payload(sample, num_samples); // 64 bit word i.e., one payload word = 2 samples
-      tb_streamer.send(payload);
-    end
-    begin
-      for(int n = 0; n < ((num_samples)/(avg_size*seq_len)) ; n++) begin
-       for(int i = 0; i < seq_len ; i++) begin
-        tb_streamer.pull_word({out_val},last);
+     `TEST_CASE_START("Send samples");
+     fork
+     begin
+       sample = get_random_samples(num_samples);
+       payload = get_payload(sample, num_samples); // 64 bit word i.e., one payload word = 2 samples
+       tb_streamer.send(payload);
+     end
+     begin
+       for(int n = 0; n < ((num_samples)/(avg_size*seq_len)) ; n++) begin
+        for(int i = 0; i < seq_len ; i++) begin
+         tb_streamer.pull_word({out_val},last);
+        end
+        $display("Out pkt : %d", n);
        end
-       $display("Out pkt : %d", n);
-      end
-    end
-    join
-    `TEST_CASE_DONE(1);
+     end
+     join
+     `TEST_CASE_DONE(1);
 
     /*******************************************************************
     ** Test 6 -- Reset the module and set new parameters
     ********************************************************************/
-    `TEST_CASE_START("Write to setting registers");
-    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b1);
-    #100
-    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b0);
-    #100
-    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_THRESHOLD, threshold);
-    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_SEQ_LEN, seq_len1);
-    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_AVG_SIZE, avg_size1);
-
-    `TEST_CASE_DONE(1);
+    // `TEST_CASE_START("Write to setting registers");
+    // tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b1);
+    // #100
+    // tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b0);
+    // #100
+    // tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_THRESHOLD, threshold);
+    // tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_SEQ_LEN, seq_len1);
+    // tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_AVG_SIZE, avg_size1);
+    //
+    // `TEST_CASE_DONE(1);
 
     /********************************************************
     ** Test 7 -- Send Samples
     ********************************************************/
-    `TEST_CASE_START("Send samples");
-    fork
-    begin
-      sample = get_random_samples(num_samples1);
-      payload = get_payload(sample, num_samples1); // 64 bit word i.e., one payload word = 2 samples
-      tb_streamer.send(payload);
-    end
-    begin
-      for(int n = 0; n < ((num_samples1)/(avg_size1*seq_len1)) ; n++) begin
-       for(int i = 0; i < seq_len1 ; i++) begin
-        tb_streamer.pull_word({out_val},last);
-       end
-      end
-    end
-    join
-    `TEST_CASE_DONE(1);
+    // `TEST_CASE_START("Send samples");
+    // fork
+    // begin
+    //   sample = get_random_samples(num_samples1);
+    //   payload = get_payload(sample, num_samples1); // 64 bit word i.e., one payload word = 2 samples
+    //   tb_streamer.send(payload);
+    // end
+    // begin
+    //   for(int n = 0; n < ((num_samples1)/(avg_size1*seq_len1)) ; n++) begin
+    //    for(int i = 0; i < seq_len1 ; i++) begin
+    //     tb_streamer.pull_word({out_val},last);
+    //    end
+    //   end
+    // end
+    // join
+    // `TEST_CASE_DONE(1);
 
     `TEST_CASE_START("Write to setting registers");
     tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b1);
@@ -235,13 +273,13 @@ endfunction
     `TEST_CASE_START("Send ramp samples");
     fork
     begin
-      sample = get_repeatramp_samples(num_samples1/2,seq_len1);
-      payload = get_payload(sample, num_samples1/2); // 64 bit word i.e., one payload word = 2 samples
-      tb_streamer.send(payload);
+      sample1 = get_repeatramp_samples(num_samples1/2,seq_len1);
+      payload1 = get_payload(sample1, num_samples1/2); // 64 bit word i.e., one payload word = 2 samples
+      tb_streamer.send(payload1);
       #100
-      sample = get_repeatramp_samples(num_samples1/2,seq_len1);
-      payload = get_payload(sample, num_samples1/2); // 64 bit word i.e., one payload word = 2 samples
-      tb_streamer.send(payload);
+      sample2 = get_repeatramp_samples(num_samples1/2,seq_len1);
+      payload2 = get_payload(sample2, num_samples1/2); // 64 bit word i.e., one payload word = 2 samples
+      tb_streamer.send(payload2);
     end
     begin
       for(int n = 0; n < ((num_samples1)/(avg_size1*seq_len1)) ; n++) begin
@@ -252,6 +290,69 @@ endfunction
     end
     join
     `TEST_CASE_DONE(1);
+
+ /********************************************************
+ ** Test 9 -- Send Constant Samples
+ ********************************************************/
+    `TEST_CASE_START("Send constant samples");
+    $display("SENDING CONSTANT SAMPLES", readback);
+     fork
+        begin
+          sample3 = get_constant_samples(num_samples,100);
+          payload3 = get_payload(sample3, num_samples); // 64 bit word i.e., one payload word = 2 samples
+          tb_streamer.send(payload3);
+          #100
+          sample4 = get_constant_samples(num_samples, 200);
+          payload4 = get_payload(sample4, num_samples); // 64 bit word i.e., one payload word = 2 samples
+          tb_streamer.send(payload4);
+        end
+        begin
+          for(int n = 0; n < ((num_samples1)/(avg_size1*seq_len1)) ; n++) begin
+           for(int i = 0; i < seq_len1 ; i++) begin
+            tb_streamer.pull_word({out_val},last);
+           end
+          end
+        end
+
+        join
+        `TEST_CASE_DONE(1);
+
+
+    `TEST_CASE_START("Write to setting registers to change avg size to 1");
+    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b1);
+    #100
+    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_BLOCK_RESET, 1'b0);
+    #100
+    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_THRESHOLD, threshold);
+    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_SEQ_LEN, seq_len2);
+    tb_streamer.write_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.SR_AVG_SIZE, avg_size2);
+    tb_streamer.read_user_reg(sid_noc_block_pulse_cir_avg, noc_block_pulse_cir_avg.RB_AVG_SIZE, readback);
+    $display("Avg size reag readback: %16x", readback);
+    `ASSERT_ERROR(readback == avg_size2, "Incorrect avg size read back");
+    
+    `TEST_CASE_DONE(1);
+
+    /********************************************************
+    ** Test 9 -- Send single pulse
+    ********************************************************/
+   `TEST_CASE_START("Send constant samples, single pulse (should pass through)");
+   $display("SENDING CONSTANT SAMPLES", readback);
+    fork
+       begin
+         sample5 = get_constant_samples(num_samples,8192);
+         payload5 = get_payload(sample5, num_samples); // 64 bit word i.e., one payload word = 2 samples
+         tb_streamer.send(payload5);
+       end
+       begin
+         for(int n = 0; n < ((num_samples)/(avg_size2*seq_len2)) ; n++) begin
+          for(int i = 0; i < seq_len2 ; i++) begin
+           tb_streamer.pull_word({out_val},last);
+          end
+         end
+       end
+
+       join
+      `TEST_CASE_DONE(1);
 
 
     `TEST_BENCH_DONE;

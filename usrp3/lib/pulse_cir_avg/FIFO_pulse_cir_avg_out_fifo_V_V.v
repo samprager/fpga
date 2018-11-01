@@ -11,7 +11,7 @@
 module FIFO_pulse_cir_avg_out_fifo_V_V
 #(parameter
     MEM_STYLE  = "block",
-    DATA_WIDTH = 64,
+    DATA_WIDTH = 32,
     ADDR_WIDTH = 10,
     DEPTH      = 1024
 )
