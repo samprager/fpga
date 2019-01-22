@@ -394,7 +394,7 @@ module noc_block_wavegen #(
         .SR_RX_CTRL_TIME_HI(SR_RX_CTRL_TIME_HI),
         .SR_RX_CTRL_TIME_LO(SR_RX_CTRL_TIME_LO)
     ) rx_command_gen(
-          .clk(ce_clk), .reset(ce_rst), .clear(1'b0),
+          .clk(ce_clk), .reset(ce_rst), .clear(clear_tx_seqnum),
           .cmdout_tdata(rx_cmdout_tdata), .cmdout_tlast(rx_cmdout_tlast), .cmdout_tvalid(rx_cmdout_tvalid),.cmdout_tready(rx_cmdout_tready),
           .awg_data_len(awg_data_len),
           .num_adc_samples (num_adc_samples),
