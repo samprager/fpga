@@ -146,6 +146,11 @@ N310_RFNOC_AA:
 	$(call vivado_build,N310,$(AA_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_AA)
 
+##N310_RFNOC_AWG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+N310_RFNOC_AWG:
+	$(call vivado_build,N310,$(AWG_DEFS) RFNOC=1 N310=1 AWG=1)
+	$(call post_build,N310,RFNOC_AWG)
+
 ##N300_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
 N300_RFNOC_WX:
 	$(call vivado_build,N300,$(WX_DEFS) RFNOC=1 N300=1)

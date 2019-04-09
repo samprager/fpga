@@ -1062,7 +1062,11 @@ module n3xx_core #(
   // Included automatically instantiated CEs sources file created by RFNoC mod tool
 `ifdef RFNOC
   `ifdef N310
-    `include "rfnoc_ce_auto_inst_n310.v"
+    `ifdef AWG
+        `include "rfnoc_ce_awg_inst_n310.v"
+    `else
+      `include "rfnoc_ce_auto_inst_n310.v"
+    `endif
   `elsif N300
     `ifdef AWG
         `include "rfnoc_ce_awg_inst_n300.v"
