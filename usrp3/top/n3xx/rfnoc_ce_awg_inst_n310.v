@@ -56,12 +56,18 @@
     .o_tdata(ce_i_tdata[5]), .o_tlast(ce_i_tlast[5]), .o_tvalid(ce_i_tvalid[5]), .o_tready(ce_i_tready[5]),
     .debug(ce_debug[5]));
 
-  noc_block_keep_one_in_n inst_noc_block_keep_one_in_n (
+  // noc_block_keep_one_in_n inst_noc_block_keep_one_in_n (
+  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
+  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
+  //   .i_tdata(ce_o_tdata[6]), .i_tlast(ce_o_tlast[6]), .i_tvalid(ce_o_tvalid[6]), .i_tready(ce_o_tready[6]),
+  //   .o_tdata(ce_i_tdata[6]), .o_tlast(ce_i_tlast[6]), .o_tvalid(ce_i_tvalid[6]), .o_tready(ce_i_tready[6]),
+  //   .debug(ce_debug[6]));
+  noc_block_doppler_tracker inst_noc_block_doppler_tracker (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
+    .ce_clk(radio_clk), .ce_rst(radio_rst),
     .i_tdata(ce_o_tdata[6]), .i_tlast(ce_o_tlast[6]), .i_tvalid(ce_o_tvalid[6]), .i_tready(ce_o_tready[6]),
     .o_tdata(ce_i_tdata[6]), .o_tlast(ce_i_tlast[6]), .o_tvalid(ce_i_tvalid[6]), .o_tready(ce_i_tready[6]),
-    .debug(ce_debug[6]));
+    .pps(pps), .debug(ce_debug[6]));
 
   // noc_block_fosphor inst_noc_block_fosphor (
   //   .bus_clk(bus_clk), .bus_rst(bus_rst),
