@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////
+qpart_zc_//////////////////////////////////////////////////////////////////////////////////
 // Company:MiXIL
 // Engineer: Samuel Prager
 //
@@ -24,132 +24,430 @@ module noc_block_doppler_tracker #(
 (
   input bus_clk, input bus_rst,
   input ce_clk, input ce_rst,
-  input  [63:0] i_tdata, input  i_tlast, input  i_tvalid, output i_tready,
+  input [63:0] i_tdata, input i_tlast, input i_tvalid, output i_tready,
   output [63:0] o_tdata, output o_tlast, output o_tvalid, input  o_tready,
-  output [63:0] debug
+  output [63:0] debug, input pps
 );
 
-wire [31:0] set_data;
-wire [7:0]  set_addr;
-wire        set_stb;
-reg  [63:0] rb_data;
-wire [7:0]  rb_addr;
+  //----------------------------------------------------------------------------
+  // Constants
+  //----------------------------------------------------------------------------
 
-wire [63:0] cmdout_tdata, ackin_tdata;
-wire        cmdout_tlast, cmdout_tvalid, cmdout_tready, ackin_tlast, ackin_tvalid, ackin_tready;
+  // Settings registers addresses
+  localparam SR_SUM_LEN    = 192;
+  localparam SR_DIVISOR    = 193;
+  localparam SR_THRESHOLD  = 194;
+  localparam SR_OFFSET     = 195;
+  localparam SR_CALIBRATE  = 196;
+  localparam SR_ZC_SUM_LEN = 197;
 
-wire [63:0] str_sink_tdata, str_src_tdata;
-wire        str_sink_tlast, str_sink_tvalid, str_sink_tready, str_src_tlast, str_src_tvalid, str_src_tready;
+  //----------------------------------------------------------------------------
+  // Wires
+  //----------------------------------------------------------------------------
 
-wire        clear_tx_seqnum;
-wire [15:0] next_dst_sid;
+  // Readback register address
+  wire [7:0] rb_addr;
 
-noc_shell #(
-  .NOC_ID(NOC_ID),
-  .STR_SINK_FIFOSIZE(STR_SINK_FIFOSIZE))
-noc_shell (
-  .bus_clk(bus_clk), .bus_rst(bus_rst),
-  .i_tdata(i_tdata), .i_tlast(i_tlast), .i_tvalid(i_tvalid), .i_tready(i_tready),
-  .o_tdata(o_tdata), .o_tlast(o_tlast), .o_tvalid(o_tvalid), .o_tready(o_tready),
-  // Computer Engine Clock Domain
-  .clk(ce_clk), .reset(ce_rst),
-  // Control Sink
-  .set_data(set_data), .set_addr(set_addr), .set_stb(set_stb),
-  .rb_stb(1'b1), .rb_data(rb_data), .rb_addr(rb_addr),
-  // Control Source
-  .cmdout_tdata(cmdout_tdata), .cmdout_tlast(cmdout_tlast), .cmdout_tvalid(cmdout_tvalid), .cmdout_tready(cmdout_tready),
-  .ackin_tdata(ackin_tdata), .ackin_tlast(ackin_tlast), .ackin_tvalid(ackin_tvalid), .ackin_tready(ackin_tready),
-  // Stream Sink
-  .str_sink_tdata(str_sink_tdata), .str_sink_tlast(str_sink_tlast), .str_sink_tvalid(str_sink_tvalid), .str_sink_tready(str_sink_tready),
-  // Stream Source
-  .str_src_tdata(str_src_tdata), .str_src_tlast(str_src_tlast), .str_src_tvalid(str_src_tvalid), .str_src_tready(str_src_tready),
-  .clear_tx_seqnum(clear_tx_seqnum), .src_sid(), .next_dst_sid(next_dst_sid), .resp_in_dst_sid(), .resp_out_dst_sid(),
-  .debug(debug));
+  // Number of samples to accumulate
+  wire [7:0] sum_len;
+  wire sum_len_changed;
 
-  // Control Source Unused
-  assign cmdout_tdata = 64'd0;
-  assign cmdout_tlast = 1'b0;
-  assign cmdout_tvalid = 1'b0;
-  assign ackin_tready = 1'b1;
+  wire [7:0] zc_sum_len;
+  wire zc_sum_len_changed;
 
-  ////////////////////////////////////////////////////////////
-  //
+  // Sum will be divided by this number
+  wire [23:0] divisor;
+
+  wire [31:0] threshold, offset;
+  wire [15:0] threshold_i,threshold_q, offset_i,offset_q;
+
+  // RFNoC Shell
+  wire [31:0] set_data;
+  wire [7:0]  set_addr;
+  wire        set_stb;
+
+  wire clear_tx_seqnum;
+  wire [15:0] next_dst_sid;
+
+  wire [63:0] str_sink_tdata, str_src_tdata;
+  wire str_sink_tlast, str_sink_tvalid, str_sink_tready;
+  wire str_src_tlast, str_src_tvalid, str_src_tready;
+
   // AXI Wrapper
-  // Convert RFNoC Shell interface into AXI stream interface
-  //
-  ////////////////////////////////////////////////////////////
-  wire [31:0] m_axis_data_tdata;
+  wire [31:0]  m_axis_data_tdata, s_axis_data_tdata;
   wire [127:0] m_axis_data_tuser;
-  wire        m_axis_data_tlast;
-  wire        m_axis_data_tvalid;
-  wire        m_axis_data_tready;
+  wire m_axis_data_tlast, m_axis_data_tvalid, m_axis_data_tready;
+  wire s_axis_data_tlast, s_axis_data_tvalid, s_axis_data_tready;
 
-  wire [31:0] s_axis_data_tdata;
-  wire [127:0] s_axis_data_tuser;
-  wire        s_axis_data_tlast;
-  wire        s_axis_data_tvalid;
-  wire        s_axis_data_tready;
+  // I part
+  wire [15:0] ipart_tdata;
+  wire ipart_tlast, ipart_tvalid, ipart_tready;
 
-  `include "pulse_avg_regs.vh"
+  // Q part
+  wire [15:0] qpart_tdata;
+  wire qpart_tlast, qpart_tvalid, qpart_tready;
 
-  axi_wrapper #(
-    .SIMPLE_MODE(0))
-  inst_axi_wrapper (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .clk(ce_clk), .reset(ce_rst),
+  // I part
+  wire [31:0] ipart_zc_tdata;
+  wire ipart_zc_tlast, ipart_zc_tvalid, ipart_zc_tready;
+
+  wire [31:0] ipart_zc_mavg_tdata
+  wire ipart_zc_mavg_tlast, ipart_zc_mavg_tvalid, ipart_zc_mavg_tready;
+
+  // Q part
+  wire [31:0] qpart_zc_tdata;
+  wire qpart_zc_tlast, qpart_zc_tvalid, qpart_zc_tready;
+
+  wire [31:0] qpart_zc_mavg_tdata
+  wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
+
+  wire [15:0] cal_len;
+  wire init_cal;
+
+  // I part
+   wire [31:0] o_mavg_tdata;
+   wire o_mavg_tlast, o_mavg_tvalid, o_mavg_tready;
+
+  //----------------------------------------------------------------------------
+  // Registers
+  //----------------------------------------------------------------------------
+
+  // Readback register data
+  reg [63:0] rb_data;
+
+  //----------------------------------------------------------------------------
+  // Instantiations
+  //----------------------------------------------------------------------------
+
+  // Sum length
+  setting_reg #(
+    .my_addr(SR_SUM_LEN),
+    .width(8),
+    .at_reset(1))
+  sr_sum_len (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(sum_len),
+    .changed(sum_len_changed));
+
+  // Divisor
+  setting_reg #(
+    .my_addr(SR_DIVISOR),
+    .width(24),
+    .at_reset(1))
+  sr_divisor (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(divisor),
+    .changed());
+
+  // threshold for detection
+  setting_reg #(
+    .my_addr(SR_THRESHOLD),
+    .width(32))
+  sr_zc_threshold (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(threshold),
+    .changed());
+
+  // ZC offset bias from zero
+  setting_reg #(
+    .my_addr(SR_OFFSET),
+    .width(32))
+  sr_zc_offset (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(offset),
+    .changed());
+
+  // Initialize calibration routine to estimate threshold and bias
+  setting_reg #(
+    .my_addr(SR_CALIBRATE),
+    .width(32))
+  sr_zc_offset (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(cal_len),
+    .changed(init_cal));
+
+  // Sum length
+  setting_reg #(
+    .my_addr(SR_ZC_SUM_LEN),
+    .width(8),
+    .at_reset(1))
+  sr_sum_len (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(zc_sum_len),
+    .changed(zc_sum_len_changed));
+
+  assign {threshold_i,threshold_q} = threshold;
+  assign {offset_i,offset_q} = offset;
+
+  // RFNoC Shell
+  noc_shell #(
+    .NOC_ID(NOC_ID),
+    .STR_SINK_FIFOSIZE(STR_SINK_FIFOSIZE))
+  noc_shell (
+    .bus_clk(bus_clk),
+    .bus_rst(bus_rst),
+    .i_tdata(i_tdata),
+    .i_tlast(i_tlast),
+    .i_tvalid(i_tvalid),
+    .i_tready(i_tready),
+    .o_tdata(o_tdata),
+    .o_tlast(o_tlast),
+    .o_tvalid(o_tvalid),
+    .o_tready(o_tready),
+    // Computer Engine Clock Domain
+    .clk(ce_clk),
+    .reset(ce_rst),
+    // Control Sink
+    .set_data(set_data),
+    .set_addr(set_addr),
+    .set_stb(set_stb),
+    .set_time(),
+    .set_has_time(),
+    .rb_stb(1'b1),
+    .rb_data(rb_data),
+    .rb_addr(rb_addr),
+    // Control Source
+    .cmdout_tdata(64'd0),
+    .cmdout_tlast(1'b0),
+    .cmdout_tvalid(1'b0),
+    .cmdout_tready(),
+    .ackin_tdata(),
+    .ackin_tlast(),
+    .ackin_tvalid(),
+    .ackin_tready(1'b1),
+    // Stream Sink
+    .str_sink_tdata(str_sink_tdata),
+    .str_sink_tlast(str_sink_tlast),
+    .str_sink_tvalid(str_sink_tvalid),
+    .str_sink_tready(str_sink_tready),
+    // Stream Source
+    .str_src_tdata(str_src_tdata),
+    .str_src_tlast(str_src_tlast),
+    .str_src_tvalid(str_src_tvalid),
+    .str_src_tready(str_src_tready),
+    .clear_tx_seqnum(clear_tx_seqnum),
+    .vita_time(),
+    .src_sid(),
+    .next_dst_sid(next_dst_sid),
+    .resp_in_dst_sid(),
+    .resp_out_dst_sid(),
+    .debug(debug));
+
+  // AXI Wrapper - Convert RFNoC Shell interface into AXI stream interface
+  axi_wrapper
+  axi_wrapper_i (
+    .bus_clk(bus_clk),
+    .bus_rst(bus_rst),
+    .clk(ce_clk),
+    .reset(ce_rst),
+    // RFNoC Shell
     .clear_tx_seqnum(clear_tx_seqnum),
     .next_dst(next_dst_sid),
-    .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
-    .i_tdata(str_sink_tdata), .i_tlast(str_sink_tlast), .i_tvalid(str_sink_tvalid), .i_tready(str_sink_tready),
-    .o_tdata(str_src_tdata), .o_tlast(str_src_tlast), .o_tvalid(str_src_tvalid), .o_tready(str_src_tready),
-    .m_axis_data_tuser(m_axis_data_tuser),
+    .set_stb(),
+    .set_addr(),
+    .set_data(),
+    .i_tdata(str_sink_tdata),
+    .i_tlast(str_sink_tlast),
+    .i_tvalid(str_sink_tvalid),
+    .i_tready(str_sink_tready),
+    .o_tdata(str_src_tdata),
+    .o_tlast(str_src_tlast),
+    .o_tvalid(str_src_tvalid),
+    .o_tready(str_src_tready),
+    // Internal AXI streams
     .m_axis_data_tdata(m_axis_data_tdata),
     .m_axis_data_tlast(m_axis_data_tlast),
     .m_axis_data_tvalid(m_axis_data_tvalid),
     .m_axis_data_tready(m_axis_data_tready),
-    .s_axis_data_tuser(s_axis_data_tuser),
+    .m_axis_data_tuser(m_axis_data_tuser),
     .s_axis_data_tdata(s_axis_data_tdata),
     .s_axis_data_tlast(s_axis_data_tlast),
     .s_axis_data_tvalid(s_axis_data_tvalid),
     .s_axis_data_tready(s_axis_data_tready),
-    .m_axis_pkt_len_tdata(),
-    .m_axis_pkt_len_tvalid(),
-    .m_axis_pkt_len_tready(),
+    .s_axis_data_tuser(),
     .m_axis_config_tdata(),
     .m_axis_config_tlast(),
     .m_axis_config_tvalid(),
-    .m_axis_config_tready());
+    .m_axis_config_tready(),
+    .m_axis_pkt_len_tdata(),
+    .m_axis_pkt_len_tvalid(),
+    .m_axis_pkt_len_tready());
 
 
-    // Control Source Unused
 
-    localparam MAX_PULSE_SIZE = 8192;
+  wire [31:0] sum_len32 = {24'b0,sum_len};
+  wire [31:0] divisor32 = {8'b0,divisor};
 
-    wire [31:0] pulse_size, num_avg, num_count;
+  wire [31:0] zc_divisor32 = {24'b0,zc_sum_len};
 
-    setting_reg #(.my_addr(SR_PULSE_LENGTH), .at_reset(MAX_PULSE_SIZE)) sr_pulse_len (
-          .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
-          .in(set_data),.out(pulse_size),.changed());
+axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
+   axi_moving_avg_inst (
+     .clk(ce_clk), .reset(ce_rst),
+     .len(sum_len32),
+     .divisor(divisor32),
+     .clear(sum_len_changed),
+     .i_tdata(m_axis_data_tdata),
+     .i_tlast(m_axis_data_tlast),
+     .i_tvalid(m_axis_data_tvalid),
+     .i_tready(m_axis_data_tready),
+     .o_tdata(o_mavg_tdata),
+     .o_tlast(o_mavg_tlast),
+     .o_tvalid(o_mavg_tvalid),
+     .o_tready(o_mavg_tready));
 
-    setting_reg #(.my_addr(SR_PULSE_NUM_AVG), .at_reset(1)) sr_avg_num (
-        .clk(ce_clk),.rst(ce_rst),.strobe(set_stb),.addr(set_addr),
-        .in(set_data),.out(num_avg),.changed());
+  // Split incoming data into I and Q parts
+  split_complex #(
+    .WIDTH(16))
+  split_complex_inst (
+    .i_tdata(o_mavg_tdata),
+    .i_tlast(o_mavg_tlast),
+    .i_tvalid(o_mavg_tvalid),
+    .i_tready(o_mavg_tready),
+    .oi_tdata(ipart_tdata),
+    .oi_tlast(ipart_tlast),
+    .oi_tvalid(ipart_tvalid),
+    .oi_tready(ipart_tready),
+    .oq_tdata(qpart_tdata),
+    .oq_tlast(qpart_tlast),
+    .oq_tvalid(qpart_tvalid),
+    .oq_tready(qpart_tready),
+    .error());
 
-    // Readback register for maximum window size
-    always @(*) begin
-      case(rb_addr)
-        RB_PULSE_LENGTH    : rb_data <= {MAX_PULSE_SIZE};
-        default : rb_data <= 64'h0BADC0DE0BADC0DE;
-      endcase
-    end
 
-    pulse_avg_core #(
-        .MAX_PULSE_SIZE(MAX_PULSE_SIZE)
-    )
-    pulse_avg_core_inst (
-        .clk(ce_clk), .reset(ce_rst), .clear(clear_avg),
-        .pulse_size(pulse_size), .num_avg(num_avg), .num_count(num_count),
-        .i_tdata(sample_tdata),.i_tuser(sample_tuser), .i_tvalid(sample_tvalid), .i_tlast(sample_tlast), .i_tready(sample_tready),
-        .o_tdata(avg_tdata), .o_tuser(avg_tuser), .o_tvalid(avg_tvalid), .o_tlast(avg_tlast), .o_tready(avg_tready));
+
+    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16))
+    zc_detect_i(
+        .clk(ce_clk),
+        .reset(ce_rst),
+        .clear(0),
+        .threshold(threshold),
+        .offset(offset_i),
+        .init_cal(init_cal),
+        .cal_len(cal_len),
+        .i_tdata(ipart_tdata),
+        .i_tlast(ipart_tlast),
+        .i_tvalid(ipart_tvalid),
+        .i_tready(ipart_tready),
+        .o_tdata(ipart_zc_tdata),
+        .o_tlast(ipart_zc_tlast),
+        .o_tvalid(ipart_zc_tvalid),
+        .o_tready(ipart_zc_tready),
+        .cycles_per_sec(ipart_cycles_per_sec),
+        .pps(pps)
+    );
+
+    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16))
+    zc_detect_q(
+        .clk(ce_clk),
+        .reset(ce_rst),
+        .clear(0),
+        .threshold(threshold),
+        .offset(offset_q),
+        .init_cal(init_cal),
+        .cal_len(cal_len),
+        .i_tdata(qpart_tdata),
+        .i_tlast(qpart_tlast),
+        .i_tvalid(qpart_tvalid),
+        .i_tready(qpart_tready),
+        .o_tdata(qpart_zc_tdata),
+        .o_tlast(qpart_zc_tlast),
+        .o_tvalid(qpart_zc_tvalid),
+        .o_tready(qpart_zc_tready),
+        .cycles_per_sec(qpart_cycles_per_sec),
+        .pps(pps)
+    );
+
+  // // Concatenate I and Q part again
+  // join_complex #(
+  //   .WIDTH(32))
+  // join_complex_inst (
+  //   .ii_tdata(ipart_zc_tdata),
+  //   .ii_tlast(ipart_zc_tlast),
+  //   .ii_tvalid(ipart_zc_tvalid),
+  //   .ii_tready(ipart_zc_tready),
+  //   .iq_tdata(qpart_zc_tdata),
+  //   .iq_tlast(qpart_zc_tlast),
+  //   .iq_tvalid(qpart_zc_tvalid),
+  //   .iq_tready(qpart_zc_tready),
+  //   .o_tdata(s_axis_data_tdata),
+  //   .o_tlast(s_axis_data_tlast),
+  //   .o_tvalid(s_axis_data_tvalid),
+  //   .o_tready(s_axis_data_tready),
+  //   .error());
+
+
+axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+   i_zc_moving_avg_inst (
+     .clk(ce_clk), .reset(ce_rst),
+     .len(zc_sum_len),
+     .divisor(zc_divisor32),
+     .clear(zc_sum_len_changed),
+     .i_tdata(ipart_zc_tdata),
+     .i_tlast(ipart_zc_tlast),
+     .i_tvalid(ipart_zc_tvalid),
+     .i_tready(ipart_zc_tready),
+     .o_tdata(ipart_zc_mavg_tdata),
+     .o_tlast(ipart_zc_mavg_tlast),
+     .o_tvalid(ipart_zc_mavg_tvalid),
+     .o_tready(ipart_zc_mavg_tready));
+
+ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+    q_zc_moving_avg_inst (
+      .clk(ce_clk), .reset(ce_rst),
+      .len(zc_sum_len),
+      .divisor(zc_divisor32),
+      .clear(zc_sum_len_changed),
+      .i_tdata(qpart_zc_tdata),
+      .i_tlast(qpart_zc_tlast),
+      .i_tvalid(qpart_zc_tvalid),
+      .i_tready(qpart_zc_tready),
+      .o_tdata(qpart_zc_mavg_tdata),
+      .o_tlast(qpart_zc_mavg_tlast),
+      .o_tvalid(qpart_zc_mavg_tvalid),
+      .o_tready(qpart_zc_mavg_tready));
+
+
+// don't care if we drop samples
+wire [32:0] iq_zc_sum = (qpart_zc_mavg_tdata + ipart_zc_mavg_tdata);
+assign s_axis_data_tdata = iq_zc_sum[32:1];
+assign s_axis_data_tvalid = qpart_zc_mavg_tvalid && ipart_zc_mavg_tvalid;
+assign s_axis_data_tlast =  ipart_zc_mavg_tlast && qpart_zc_mavg_tlast;
+
+assign qpart_zc_mavg_tready = 1'b1;
+assign ipart_zc_mavg_tready = 1'b1;
+
+  // Readback register values
+  always @*
+    case(rb_addr)
+      8'd0    : rb_data <= sum_len;
+      8'd1    : rb_data <= divisor;
+      8'd2    : rb_data <= {ipart_cycles_per_sec,qpart_cycles_per_sec};
+      8'd3    : rb_data <= {ipart_zc_mavg_tdata,qpart_zc_mavg_tdata};
+      default : rb_data <= 64'h0BADC0DE0BADC0DE;
+    endcase
 
 endmodule
