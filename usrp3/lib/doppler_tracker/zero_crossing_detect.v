@@ -24,14 +24,14 @@ module zero_crossing_detect #(
 (
     input clk, input reset, input clear,
     input [WIDTH-1:0] threshold,input [WIDTH-1:0] offset,
-    input init_cal, input [31:0] cal_len,
+    input init_cal, input [31:0] log_cal_len,
     input [WIDTH-1:0] i_tdata, input i_tvalid, input i_tlast, output i_tready,
     output [COUNTER_SIZE-1:0] o_tdata, output o_tvalid, output o_tlast, input o_tready,
     output [COUNTER_SIZE-1:0] cycles_per_sec,
     input pps
 );
 localparam     IDLE      = 2'b00,
-               P_SIG     = 2'b01
+               P_SIG     = 2'b01,
                N_SIG     = 2'b10;
 
  reg [1:0] next_gen_state;
@@ -41,7 +41,7 @@ reg [COUNTER_SIZE-1:0] zc_count;
 reg [COUNTER_SIZE-1:0] zc_count_r;
 reg [COUNTER_SIZE-1:0] zc_persec;
 reg [COUNTER_SIZE-1:0] zc_persec_r;
-reg [COUNTER_SIZE-1:0] zc_count_period
+reg [COUNTER_SIZE-1:0] zc_count_period;
 
 reg zc_valid;
 reg zc_valid_next;
@@ -51,16 +51,18 @@ reg o_tvalid_r;
 reg p_sig_det_r;
 reg n_sig_det_r;
 
-reg cal_good;
-reg [31:0] cal_counter;
+reg use_cal;
+reg [47:0] cal_counter;
 reg signed [63:0] cal_sum;
 reg signed [63:0] cal_result;
 wire signed [63:0] offset_cal64;
 wire signed [15:0] offset_cal;
 wire signed [15:0] offset_use;
 
+wire [47:0] cal_len = (48'b1 << log_cal_len);
+
 wire p_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) >= ($signed(threshold)+offset_use));
-wire n_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) < (offset_use-$signed(threshold));
+wire n_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) < (offset_use-$signed(threshold)));
 
 wire p_sig_det = i_tready && i_tvalid && ($signed(i_tdata) >= $signed(offset_use));
 wire n_sig_det = i_tready && i_tvalid && ($signed(i_tdata) < $signed(offset_use));
@@ -110,14 +112,14 @@ end
 always @(posedge clk) begin
   if (reset | clear) begin
     use_cal <= 0;
-  end else if (init_cal && (cal_len == 0)) begin
+  end else if (init_cal && (log_cal_len == 0)) begin
     use_cal <= 0;
   end else if ((cal_counter == 32'b1) && i_tready && i_tvalid) begin
     use_cal <= 1;
   end
 end
 
-assign offset_cal64 = (cal_result >>> $clog2(cal_len));
+assign offset_cal64 = (cal_result >>> log_cal_len);
 assign offset_use = use_cal ? offset_cal64[15:0] : $signed(offset);
 
 always @(gen_state or p_sig_thresh_det or n_sig_thresh_det or p_sig_det or n_sig_det)
@@ -171,8 +173,8 @@ always @(posedge clk)
 begin
    if (reset | clear) begin
       o_tvalid_r <= 0;
-  end else if ((gen_state == P_SIG && n_sig_det) || (gen_state == N_SIG && p_sig_det))begin
-      o_tvalid_r <= zc_valid
+  end else if ((gen_state == P_SIG && n_sig_det) || (gen_state == N_SIG && p_sig_det)) begin
+      o_tvalid_r <= zc_valid;
   end else if (o_tready) begin
       o_tvalid_r <= 0;
   end
@@ -183,7 +185,7 @@ always @(posedge clk)
 begin
    if (reset | clear) begin
       zc_count <= 0;
-      zc_count_r = <= 0;
+      zc_count_r <= 0;
       zc_count_period <= 0;
    end else if (gen_state == P_SIG && n_sig_det)begin
        zc_count <= 0;

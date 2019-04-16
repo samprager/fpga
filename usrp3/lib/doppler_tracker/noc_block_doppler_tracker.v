@@ -1,4 +1,3 @@
-qpart_zc_//////////////////////////////////////////////////////////////////////////////////
 // Company:MiXIL
 // Engineer: Samuel Prager
 //
@@ -91,22 +90,24 @@ module noc_block_doppler_tracker #(
   wire [31:0] ipart_zc_tdata;
   wire ipart_zc_tlast, ipart_zc_tvalid, ipart_zc_tready;
 
-  wire [31:0] ipart_zc_mavg_tdata
+  wire [31:0] ipart_zc_mavg_tdata;
   wire ipart_zc_mavg_tlast, ipart_zc_mavg_tvalid, ipart_zc_mavg_tready;
 
   // Q part
   wire [31:0] qpart_zc_tdata;
   wire qpart_zc_tlast, qpart_zc_tvalid, qpart_zc_tready;
 
-  wire [31:0] qpart_zc_mavg_tdata
+  wire [31:0] qpart_zc_mavg_tdata;
   wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
 
-  wire [15:0] cal_len;
+  wire [31:0] log_cal_len;
   wire init_cal;
 
   // I part
    wire [31:0] o_mavg_tdata;
    wire o_mavg_tlast, o_mavg_tvalid, o_mavg_tready;
+   
+   reg [31:0] ipart_zc_mavg_tdata_r, qpart_zc_mavg_tdata_r;
 
   //----------------------------------------------------------------------------
   // Registers
@@ -177,13 +178,13 @@ module noc_block_doppler_tracker #(
   setting_reg #(
     .my_addr(SR_CALIBRATE),
     .width(32))
-  sr_zc_offset (
+  sr_zc_cal (
     .clk(ce_clk),
     .rst(ce_rst),
     .strobe(set_stb),
     .addr(set_addr),
     .in(set_data),
-    .out(cal_len),
+    .out(log_cal_len),
     .changed(init_cal));
 
   // Sum length
@@ -191,7 +192,7 @@ module noc_block_doppler_tracker #(
     .my_addr(SR_ZC_SUM_LEN),
     .width(8),
     .at_reset(1))
-  sr_sum_len (
+  sr_zc_sum_len (
     .clk(ce_clk),
     .rst(ce_rst),
     .strobe(set_stb),
@@ -347,7 +348,7 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
         .threshold(threshold),
         .offset(offset_i),
         .init_cal(init_cal),
-        .cal_len(cal_len),
+        .log_cal_len(log_cal_len),
         .i_tdata(ipart_tdata),
         .i_tlast(ipart_tlast),
         .i_tvalid(ipart_tvalid),
@@ -368,7 +369,7 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
         .threshold(threshold),
         .offset(offset_q),
         .init_cal(init_cal),
-        .cal_len(cal_len),
+        .log_cal_len(log_cal_len),
         .i_tdata(qpart_tdata),
         .i_tlast(qpart_tlast),
         .i_tvalid(qpart_tvalid),
@@ -431,11 +432,23 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
       .o_tready(qpart_zc_mavg_tready));
 
 
+always @(posedge ce_clk) begin
+  if (ce_rst) begin
+    qpart_zc_mavg_tdata_r     <= 0;
+    ipart_zc_mavg_tdata_r     <= 0;
+  end else begin
+    if (ipart_zc_mavg_tvalid && ipart_zc_mavg_tready)
+        ipart_zc_mavg_tdata_r     <= ipart_zc_mavg_tdata;
+    if (qpart_zc_mavg_tvalid && qpart_zc_mavg_tready)
+        qpart_zc_mavg_tdata_r     <= qpart_zc_mavg_tdata;
+  end
+end
+
 // don't care if we drop samples
-wire [32:0] iq_zc_sum = (qpart_zc_mavg_tdata + ipart_zc_mavg_tdata);
+wire [32:0] iq_zc_sum = (qpart_zc_mavg_tdata_r + ipart_zc_mavg_tdata_r);
 assign s_axis_data_tdata = iq_zc_sum[32:1];
-assign s_axis_data_tvalid = qpart_zc_mavg_tvalid && ipart_zc_mavg_tvalid;
-assign s_axis_data_tlast =  ipart_zc_mavg_tlast && qpart_zc_mavg_tlast;
+assign s_axis_data_tvalid = qpart_zc_mavg_tvalid || ipart_zc_mavg_tvalid;
+assign s_axis_data_tlast =  ipart_zc_mavg_tlast || qpart_zc_mavg_tlast;
 
 assign qpart_zc_mavg_tready = 1'b1;
 assign ipart_zc_mavg_tready = 1'b1;
@@ -446,7 +459,7 @@ assign ipart_zc_mavg_tready = 1'b1;
       8'd0    : rb_data <= sum_len;
       8'd1    : rb_data <= divisor;
       8'd2    : rb_data <= {ipart_cycles_per_sec,qpart_cycles_per_sec};
-      8'd3    : rb_data <= {ipart_zc_mavg_tdata,qpart_zc_mavg_tdata};
+      8'd3    : rb_data <= {ipart_zc_mavg_tdata_r,qpart_zc_mavg_tdata_r};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
 
