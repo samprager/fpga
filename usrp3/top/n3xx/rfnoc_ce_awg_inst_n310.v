@@ -1,4 +1,4 @@
-  localparam NUM_CE = 10;  // Must be no more than 10 (6 ports taken by transport and IO connected CEs)
+  localparam NUM_CE = 7;  // Must be no more than 10 (6 ports taken by transport and IO connected CEs)
 
   wire [NUM_CE*64-1:0] ce_flat_o_tdata, ce_flat_i_tdata;
   wire [63:0]          ce_o_tdata[0:NUM_CE-1], ce_i_tdata[0:NUM_CE-1];
@@ -38,58 +38,40 @@
     .o_tdata(ce_i_tdata[2]), .o_tlast(ce_i_tlast[2]), .o_tvalid(ce_i_tvalid[2]), .o_tready(ce_i_tready[2]),
     .debug(ce_debug[2]));
 
-  noc_block_window inst_noc_block_window (
+  noc_block_fir_filter inst_noc_block_fir_filter (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(ce_clk), .ce_rst(ce_rst),
     .i_tdata(ce_o_tdata[3]), .i_tlast(ce_o_tlast[3]), .i_tvalid(ce_o_tvalid[3]), .i_tready(ce_o_tready[3]),
     .o_tdata(ce_i_tdata[3]), .o_tlast(ce_i_tlast[3]), .o_tvalid(ce_i_tvalid[3]), .o_tready(ce_i_tready[3]),
     .debug(ce_debug[3]));
 
-  noc_block_fir_filter inst_noc_block_fir_filter (
+  noc_block_siggen inst_noc_block_siggen (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(ce_clk), .ce_rst(ce_rst),
     .i_tdata(ce_o_tdata[4]), .i_tlast(ce_o_tlast[4]), .i_tvalid(ce_o_tvalid[4]), .i_tready(ce_o_tready[4]),
     .o_tdata(ce_i_tdata[4]), .o_tlast(ce_i_tlast[4]), .o_tvalid(ce_i_tvalid[4]), .o_tready(ce_i_tready[4]),
     .debug(ce_debug[4]));
 
-  noc_block_siggen inst_noc_block_siggen (
+  noc_block_doppler_tracker inst_noc_block_doppler_tracker (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(ce_clk), .ce_rst(ce_rst),
+    .ce_clk(radio_clk), .ce_rst(radio_rst),
     .i_tdata(ce_o_tdata[5]), .i_tlast(ce_o_tlast[5]), .i_tvalid(ce_o_tvalid[5]), .i_tready(ce_o_tready[5]),
     .o_tdata(ce_i_tdata[5]), .o_tlast(ce_i_tlast[5]), .o_tvalid(ce_i_tvalid[5]), .o_tready(ce_i_tready[5]),
-    .debug(ce_debug[5]));
+    .pps(pps), .debug(ce_debug[5]));
 
-  // noc_block_keep_one_in_n inst_noc_block_keep_one_in_n (
-  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
-  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
-  //   .i_tdata(ce_o_tdata[6]), .i_tlast(ce_o_tlast[6]), .i_tvalid(ce_o_tvalid[6]), .i_tready(ce_o_tready[6]),
-  //   .o_tdata(ce_i_tdata[6]), .o_tlast(ce_i_tlast[6]), .o_tvalid(ce_i_tvalid[6]), .o_tready(ce_i_tready[6]),
-  //   .debug(ce_debug[6]));
-  noc_block_doppler_tracker inst_noc_block_doppler_tracker (
+
+  noc_block_wavegen inst_noc_block_wavegen (
     .bus_clk(bus_clk), .bus_rst(bus_rst),
     .ce_clk(radio_clk), .ce_rst(radio_rst),
     .i_tdata(ce_o_tdata[6]), .i_tlast(ce_o_tlast[6]), .i_tvalid(ce_o_tvalid[6]), .i_tready(ce_o_tready[6]),
     .o_tdata(ce_i_tdata[6]), .o_tlast(ce_i_tlast[6]), .o_tvalid(ce_i_tvalid[6]), .o_tready(ce_i_tready[6]),
-    .pps(pps), .debug(ce_debug[6]));
-
-  // noc_block_fosphor inst_noc_block_fosphor (
-  //   .bus_clk(bus_clk), .bus_rst(bus_rst),
-  //   .ce_clk(ce_clk), .ce_rst(ce_rst),
-  //   .i_tdata(ce_o_tdata[7]), .i_tlast(ce_o_tlast[7]), .i_tvalid(ce_o_tvalid[7]), .i_tready(ce_o_tready[7]),
-  //   .o_tdata(ce_i_tdata[7]), .o_tlast(ce_i_tlast[7]), .o_tvalid(ce_i_tvalid[7]), .o_tready(ce_i_tready[7]),
-  //   .debug(ce_debug[7]));
-  noc_block_wavegen inst_noc_block_wavegen (
-    .bus_clk(bus_clk), .bus_rst(bus_rst),
-    .ce_clk(radio_clk), .ce_rst(radio_rst),
-    .i_tdata(ce_o_tdata[7]), .i_tlast(ce_o_tlast[7]), .i_tvalid(ce_o_tvalid[7]), .i_tready(ce_o_tready[7]),
-    .o_tdata(ce_i_tdata[7]), .o_tlast(ce_i_tlast[7]), .o_tvalid(ce_i_tvalid[7]), .o_tready(ce_i_tready[7]),
     .pps(pps), .sync_out(),.rx_stb(1'b1),
-    .debug(ce_debug[7]));
+    .debug(ce_debug[6]));
 
   // Fill remaining crossbar ports with loopback FIFOs
   genvar n;
   generate
-    for (n = 8; n < NUM_CE; n = n + 1) begin
+    for (n = 7; n < NUM_CE; n = n + 1) begin
       noc_block_axi_fifo_loopback inst_noc_block_axi_fifo_loopback (
         .bus_clk(bus_clk), .bus_rst(bus_rst),
         .ce_clk(ce_clk), .ce_rst(ce_rst),
