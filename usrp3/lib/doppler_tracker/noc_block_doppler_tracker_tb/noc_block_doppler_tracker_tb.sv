@@ -14,8 +14,8 @@ typedef logic[31:0] sample_t[$];
 
 module noc_block_doppler_tracker_tb();
 //import dpi task      C Name = SV function name
-import "DPI" pure function real cos (input real rTheta);
-import "DPI" pure function real sin (input real rTheta);
+import "DPI-C" pure function real cos (input real rTheta);
+import "DPI-C" pure function real sin (input real rTheta);
 
 function sample_t get_random_samples(int num_samples);
   sample_t sample;
@@ -39,6 +39,20 @@ function sample_t get_repeatramp_samples(int num_samples, int num_ramp);
   return sample;
 endfunction;
 
+function sample_t get_repeatrampIQ_samples(int num_samples, int num_ramp);
+  sample_t sample;
+  shortint sI, sQ;
+  begin
+    for(int i = 0; i<num_samples; i++)
+    begin
+      sI = (i % num_ramp)-num_ramp/2;
+      sQ = num_ramp/2 - (i % num_ramp);
+      sample[i] = {sI,sQ};
+    end
+  end
+  return sample;
+endfunction;
+
 function sample_t get_sin_samples(int num_samples, int fc, int fs, int ampl);
   sample_t sample;
   const real pi = 3.1416;
@@ -46,10 +60,12 @@ function sample_t get_sin_samples(int num_samples, int fc, int fs, int ampl);
   real       fs_r = $itor(fs);
   real       ampl_r = $itor(ampl);
   real       offset = 0;
+  real x;
   begin
     for(int i = 0; i<num_samples; i++)
     begin
-      sample[i] = $rtoi(offset + (ampl_r * sin(2*pi*$itor(i)*(fc/fs))));
+        x = 2.0*pi*$itor(i)*(fc_r/fs_r);
+      sample[i] = $rtoi(offset + (ampl_r * (x - (x**3)/6 + (x**5)/120 - (x**7)/5040)));
     end
   end
   return sample;
@@ -62,10 +78,12 @@ function sample_t get_cos_samples(int num_samples, int fc, int fs, int ampl);
   real       fs_r = $itor(fs);
   real       ampl_r = $itor(ampl);
   real       offset = 0;
+  real x;
   begin
     for(int i = 0; i<num_samples; i++)
     begin
-      sample[i] = $rtoi(offset + (ampl_r * cos(2*pi*$itor(i)*(fc/fs))));
+      x = 2.0*pi*$itor(i)*(fc_r/fs_r);
+      sample[i] = $rtoi(offset + (ampl_r * (1 - (x**2)/2 + (x**4)/24 - (x**6)/720)));
     end
   end
   return sample;
@@ -78,11 +96,18 @@ function sample_t get_sincos_samples(int num_samples, int fc, int fs, int ampl);
   real       fs_r = $itor(fs);
   real       ampl_r = $itor(ampl);
   real       offset = 0;
+  real x;
+  int mval = $rtoi(fs_r/fc_r);
+  shortint sI, sQ;
   begin
-    for(int i = 0; i<num_samples/2; i++)
+    for(int i = 0; i<num_samples; i++)
     begin
-      sample[2*i] = $rtoi(offset + (ampl_r * sin(2*pi*$itor(i)*(fc/fs))));
-      sample[2*i+1] = $rtoi(offset + (ampl_r * cos(2*pi*$itor(i)*(fc/fs))));
+      x = 2.0*pi*$itor((i%mval))*(fc_r/fs_r);
+//      sI = $rtoi(offset + (ampl_r * (x - (x**3)/6 + (x**5)/120 - (x**7)/5040)));
+//      sQ = $rtoi(offset + (ampl_r * (1 - (x**2)/2 + (x**4)/24 - (x**6)/720)));
+      sQ = $rtoi(offset + (ampl_r * (x - (x**3)/6 + (x**5)/120 - (x**7)/5040 + (x**9)/362880 - (x**11)/39916800 + ((x**13)/39916800)/(13*12) - ((x**15)/39916800)/(15*14*13*12) + ((x**17)/39916800)/(17*16*15*14*13*12))));
+      sI = $rtoi(offset + (ampl_r * (1 - (x**2)/2 + (x**4)/24 - (x**6)/720 + (x**8)/40320 - (x**10)/3628800 + (x**12)/479001600 - ((x**14)/479001600)/(14*13) + ((x**16)/479001600)/(16*15*14*13))));
+      sample[i] = {sI,sQ};
     end
   end
   return sample;
@@ -113,6 +138,10 @@ endfunction
   //`RFNOC_ADD_BLOCK(noc_block_doppler_tracker, 0);
 
   `RFNOC_ADD_BLOCK_CUSTOM(noc_block_doppler_tracker, 0 /* xbar port 0 */)
+  
+  reg pps;
+  reg [7:0] pps_counter;
+  
 noc_block_doppler_tracker noc_block_doppler_tracker(
   .bus_clk(bus_clk),
   .bus_rst(bus_rst),
@@ -126,7 +155,7 @@ noc_block_doppler_tracker noc_block_doppler_tracker(
   .o_tlast(noc_block_doppler_tracker_o_tlast),
   .o_tvalid(noc_block_doppler_tracker_o_tvalid),
   .o_tready(noc_block_doppler_tracker_o_tready),
-  .pps(0),
+  .pps(pps),
   .debug());
 
 
@@ -134,11 +163,23 @@ noc_block_doppler_tracker noc_block_doppler_tracker(
   localparam SPP = 32;
   localparam MAX_SUM_LENGTH = SPP/2;
 
-  localparam num_samples = 64;
-  localparam freq_wfrm = 20e6;
+  localparam num_samples = 128;
+  localparam freq_wfrm = 10e6;
   localparam freq_clk = 200e6;
-  localparam ampl_wfrm = 4096;
-
+  localparam ampl_wfrm = 1024;
+  
+always @(posedge ce_clk) begin
+    if (ce_rst) begin
+        pps <= 0;
+        pps_counter = 0;
+    end else begin
+        pps_counter <= pps_counter + 1;
+        if (pps_counter>=8'd192)
+            pps <= 1;
+        else
+            pps <= 0;
+    end
+ end
 
   /********************************************************
   ** Verification
@@ -241,11 +282,11 @@ noc_block_doppler_tracker noc_block_doppler_tracker(
     `TEST_CASE_START("Setting Moving Average Length to 1");
     tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_SUM_LEN, 1);
     tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_DIVISOR, 1);
-    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_ZC_SUM_LEN, 1);
+    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_ZC_SUM_LEN, 2);
 
     `TEST_CASE_START("Writing threshold and offset regs");
-    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_THRESHOLD, 0);
-    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_OFFSET, 0);
+    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_THRESHOLD, 1);
+    tb_streamer.write_user_reg(sid_noc_block_doppler_tracker, noc_block_doppler_tracker.SR_OFFSET, 5);
 
 
     /********************************************************
@@ -258,13 +299,74 @@ noc_block_doppler_tracker noc_block_doppler_tracker(
       send_payload = get_payload(sample, num_samples); // 64 bit word i.e., one payload word = 2 samples
       tb_streamer.send(send_payload);
     end
-    begin
-      tb_streamer.recv(recv_payload,rx_md);
-    end
+//    begin
+//      tb_streamer.recv(recv_payload,rx_md);
+//    end
     join
     `TEST_CASE_DONE(1);
-
-
+    
+        /********************************************************
+    ** Test 2 -- Check for correct NoC IDs
+    ********************************************************/
+    `TEST_CASE_START("Sin/Cos Waveform: Readback ZC registers");
+    // Read NOC IDs
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 2, readback);
+    $display("Read Cycles per Sec: %16x", readback);
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 3, readback);
+    $display("Read ZC Count: %16x", readback);
+        
+        /********************************************************
+    ** Test 5 -- Send Samples
+    ********************************************************/
+    `TEST_CASE_START("Send samples");
+    fork
+    begin
+      sample = get_repeatrampIQ_samples(num_samples,16);
+      send_payload = get_payload(sample, num_samples); // 64 bit word i.e., one payload word = 2 samples
+      tb_streamer.send(send_payload);
+    end
+//    begin
+//      tb_streamer.recv(recv_payload,rx_md);
+//    end
+    join
+    `TEST_CASE_DONE(1);
+    
+        /********************************************************
+    ** Test 2 -- Check for correct NoC IDs
+    ********************************************************/
+    `TEST_CASE_START("Ramp 16 Waveform: Readback ZC registers");
+    // Read NOC IDs
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 2, readback);
+    $display("Read Cycles per Sec: %16x", readback);
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 3, readback);
+    $display("Read ZC Count: %16x", readback);
+        
+        /********************************************************
+    ** Test 5 -- Send Samples
+    ********************************************************/
+    `TEST_CASE_START("Send samples");
+    fork
+    begin
+      sample = get_repeatrampIQ_samples(num_samples,8);
+      send_payload = get_payload(sample, num_samples); // 64 bit word i.e., one payload word = 2 samples
+      tb_streamer.send(send_payload);
+    end
+//    begin
+//      tb_streamer.recv(recv_payload,rx_md);
+//    end
+    join
+    `TEST_CASE_DONE(1);
+    
+        /********************************************************
+    ** Test 2 -- Check for correct NoC IDs
+    ********************************************************/
+    `TEST_CASE_START("Ramp8 Waveform: Readback ZC registers");
+    // Read NOC IDs
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 2, readback);
+    $display("Read Cycles per Sec: %16x", readback);
+    tb_streamer.read_user_reg(sid_noc_block_doppler_tracker, 3, readback);
+    $display("Read ZC Count: %16x", readback);
+    
     `TEST_BENCH_DONE;
   end
 

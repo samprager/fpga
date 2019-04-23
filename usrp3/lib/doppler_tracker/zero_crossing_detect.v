@@ -201,7 +201,7 @@ end
 
 always @(posedge clk)
 begin
-   if (reset | clear | pps_edge) begin
+   if (reset | clear) begin
       zc_persec <= 0;
       zc_persec_r <= 0;
    end else if (pps_edge) begin

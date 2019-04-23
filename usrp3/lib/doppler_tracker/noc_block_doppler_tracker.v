@@ -99,6 +99,8 @@ module noc_block_doppler_tracker #(
 
   wire [31:0] qpart_zc_mavg_tdata;
   wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
+  
+  wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
 
   wire [31:0] log_cal_len;
   wire init_cal;
@@ -106,6 +108,11 @@ module noc_block_doppler_tracker #(
   // I part
    wire [31:0] o_mavg_tdata;
    wire o_mavg_tlast, o_mavg_tvalid, o_mavg_tready;
+   
+   // for bypassing moving average
+   wire [31:0] o_mavg_use_tdata;
+   wire o_mavg_use_tlast, o_mavg_use_tvalid, o_mavg_use_tready;
+   wire m_axis_mavg_data_tready;
    
    reg [31:0] ipart_zc_mavg_tdata_r, qpart_zc_mavg_tdata_r;
 
@@ -314,7 +321,7 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
      .i_tdata(m_axis_data_tdata),
      .i_tlast(m_axis_data_tlast),
      .i_tvalid(m_axis_data_tvalid),
-     .i_tready(m_axis_data_tready),
+     .i_tready(m_axis_mavg_data_tready),
      .o_tdata(o_mavg_tdata),
      .o_tlast(o_mavg_tlast),
      .o_tvalid(o_mavg_tvalid),
@@ -324,9 +331,9 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
   split_complex #(
     .WIDTH(16))
   split_complex_inst (
-    .i_tdata(o_mavg_tdata),
-    .i_tlast(o_mavg_tlast),
-    .i_tvalid(o_mavg_tvalid),
+    .i_tdata(o_mavg_use_tdata),
+    .i_tlast(o_mavg_use_tlast),
+    .i_tvalid(o_mavg_use_tvalid),
     .i_tready(o_mavg_tready),
     .oi_tdata(ipart_tdata),
     .oi_tlast(ipart_tlast),
@@ -339,13 +346,17 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
     .error());
 
 
+assign o_mavg_use_tdata  = (sum_len32 == 32'b1) ? m_axis_data_tdata : o_mavg_tdata;
+assign o_mavg_use_tlast  = (sum_len32 == 32'b1) ? m_axis_data_tlast : o_mavg_tlast;
+assign o_mavg_use_tvalid  = (sum_len32 == 32'b1) ? m_axis_data_tvalid : o_mavg_tvalid;
+assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_data_tready;
 
     zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16))
     zc_detect_i(
         .clk(ce_clk),
         .reset(ce_rst),
         .clear(0),
-        .threshold(threshold),
+        .threshold(threshold_i),
         .offset(offset_i),
         .init_cal(init_cal),
         .log_cal_len(log_cal_len),
@@ -366,7 +377,7 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(1))
         .clk(ce_clk),
         .reset(ce_rst),
         .clear(0),
-        .threshold(threshold),
+        .threshold(threshold_q),
         .offset(offset_q),
         .init_cal(init_cal),
         .log_cal_len(log_cal_len),
@@ -447,8 +458,8 @@ end
 // don't care if we drop samples
 wire [32:0] iq_zc_sum = (qpart_zc_mavg_tdata_r + ipart_zc_mavg_tdata_r);
 assign s_axis_data_tdata = iq_zc_sum[32:1];
-assign s_axis_data_tvalid = qpart_zc_mavg_tvalid || ipart_zc_mavg_tvalid;
-assign s_axis_data_tlast =  ipart_zc_mavg_tlast || qpart_zc_mavg_tlast;
+assign s_axis_data_tvalid = qpart_zc_mavg_tvalid | ipart_zc_mavg_tvalid;
+assign s_axis_data_tlast =  ipart_zc_mavg_tlast | qpart_zc_mavg_tlast;
 
 assign qpart_zc_mavg_tready = 1'b1;
 assign ipart_zc_mavg_tready = 1'b1;
