@@ -20,14 +20,16 @@
 
 module zero_crossing_detect #(
   parameter COUNTER_SIZE = 32,
-  parameter WIDTH = 16)
+  parameter WIDTH = 16
+  parameter IS_Q_PART = 0)
 (
     input clk, input reset, input clear,
-    input [WIDTH-1:0] threshold,input [WIDTH-1:0] offset,
+    input [WIDTH-1:0] threshold,input [WIDTH-1:0] offset, output [WIDTH-1:0] offset_out,
     input init_cal, input [31:0] log_cal_len,
     input [WIDTH-1:0] i_tdata, input i_tvalid, input i_tlast, output i_tready,
     output [COUNTER_SIZE-1:0] o_tdata, output o_tvalid, output o_tlast, input o_tready,
     output [COUNTER_SIZE-1:0] cycles_per_sec,
+    input iq_sign,
     input pps
 );
 localparam     IDLE      = 2'b00,
@@ -51,13 +53,15 @@ reg o_tvalid_r;
 reg p_sig_det_r;
 reg n_sig_det_r;
 
+wire iq_sign_s;
+reg iq_sign_r;
+
 reg use_cal;
 reg [47:0] cal_counter;
 reg signed [63:0] cal_sum;
 reg signed [63:0] cal_result;
 wire signed [63:0] offset_cal64;
-wire signed [15:0] offset_cal;
-wire signed [15:0] offset_use;
+wire signed [(WIDTH-1):0] offset_use;
 
 wire [47:0] cal_len = (48'b1 << log_cal_len);
 
@@ -66,6 +70,9 @@ wire n_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) < (offset_use-
 
 wire p_sig_det = i_tready && i_tvalid && ($signed(i_tdata) >= $signed(offset_use));
 wire n_sig_det = i_tready && i_tvalid && ($signed(i_tdata) < $signed(offset_use));
+
+// flip sign bit if we're looking at imaginary part
+assign iq_sign_s = (IS_Q_PART==0) ? iq_sign : ~iq_sign;
 
 //////////////////////////////////////////////////////////////////////////
 // PPS edge detection logic
@@ -120,7 +127,7 @@ always @(posedge clk) begin
 end
 
 assign offset_cal64 = (cal_result >>> log_cal_len);
-assign offset_use = use_cal ? offset_cal64[15:0] : $signed(offset);
+assign offset_use = use_cal ? offset_cal64[(WIDTH-1):0] : $signed(offset);
 
 always @(gen_state or p_sig_thresh_det or n_sig_thresh_det or p_sig_det or n_sig_det)
 begin
@@ -212,10 +219,27 @@ begin
    end
 end
 
+always @(posedge clk)
+begin
+   if (reset | clear) begin
+      iq_sign_r <= 1; //assume freq is positive
+   end else if (gen_state == N_SIG && p_sig_det)begin
+       iq_sign_r <= iq_sign_s;
+   end
+end
+
 assign o_tvalid = o_tvalid_r;
-assign o_tdata = zc_count_r;
+
+// If we're looking at the real part:
+//  +freq: when I goes from - to +, Q should be -
+//  -freq: when I goes from - to +, Q should be +
+// If we're looking at the imag part:
+//  +freq: when Q goes from - to +, I part should be +
+//  -freq: when Q goes from - to +, I part should be -
+assign o_tdata = (iq_sign_r==1) ? $signed(zc_count_r) : -$signed(zc_count_r);
 assign o_tlast = 0;
-assign cycles_per_sec = zc_persec_r;
+assign cycles_per_sec = (iq_sign_r==1) ? $signed(zc_persec_r) : -$signed(zc_persec_r);
+assign offset_out = offset_use;
 
 
 

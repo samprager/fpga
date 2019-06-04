@@ -59,6 +59,7 @@ module noc_block_doppler_tracker #(
 
   wire [31:0] threshold, offset;
   wire [15:0] threshold_i,threshold_q, offset_i,offset_q;
+  wire [15:0] offset_auto_i,offset_auto_q;
 
   // RFNoC Shell
   wire [31:0] set_data;
@@ -99,7 +100,7 @@ module noc_block_doppler_tracker #(
 
   wire [31:0] qpart_zc_mavg_tdata;
   wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
-  
+
   wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
 
   wire [31:0] log_cal_len;
@@ -108,12 +109,12 @@ module noc_block_doppler_tracker #(
   // I part
    wire [31:0] o_mavg_tdata;
    wire o_mavg_tlast, o_mavg_tvalid, o_mavg_tready;
-   
+
    // for bypassing moving average
    wire [31:0] o_mavg_use_tdata;
    wire o_mavg_use_tlast, o_mavg_use_tvalid, o_mavg_use_tready;
    wire m_axis_mavg_data_tready;
-   
+
    reg [31:0] ipart_zc_mavg_tdata_r, qpart_zc_mavg_tdata_r;
 
   //----------------------------------------------------------------------------
@@ -351,13 +352,14 @@ assign o_mavg_use_tlast  = (sum_len32 == 32'b1) ? m_axis_data_tlast : o_mavg_tla
 assign o_mavg_use_tvalid  = (sum_len32 == 32'b1) ? m_axis_data_tvalid : o_mavg_tvalid;
 assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_data_tready;
 
-    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16))
+    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16),.IS_Q_PART(0))
     zc_detect_i(
         .clk(ce_clk),
         .reset(ce_rst),
         .clear(0),
         .threshold(threshold_i),
         .offset(offset_i),
+        .offset_out(offset_auto_i),
         .init_cal(init_cal),
         .log_cal_len(log_cal_len),
         .i_tdata(ipart_tdata),
@@ -369,16 +371,18 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tvalid(ipart_zc_tvalid),
         .o_tready(ipart_zc_tready),
         .cycles_per_sec(ipart_cycles_per_sec),
+        .iq_sign(qpart_tdata[15]),
         .pps(pps)
     );
 
-    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16))
+    zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16),.IS_Q_PART(1))
     zc_detect_q(
         .clk(ce_clk),
         .reset(ce_rst),
         .clear(0),
         .threshold(threshold_q),
         .offset(offset_q),
+        .offset_out(offset_auto_q),
         .init_cal(init_cal),
         .log_cal_len(log_cal_len),
         .i_tdata(qpart_tdata),
@@ -390,6 +394,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tvalid(qpart_zc_tvalid),
         .o_tready(qpart_zc_tready),
         .cycles_per_sec(qpart_cycles_per_sec),
+        .iq_sign(ipart_tdata[15]),
         .pps(pps)
     );
 
@@ -471,6 +476,7 @@ assign ipart_zc_mavg_tready = 1'b1;
       8'd1    : rb_data <= divisor;
       8'd2    : rb_data <= {ipart_cycles_per_sec,qpart_cycles_per_sec};
       8'd3    : rb_data <= {ipart_zc_mavg_tdata_r,qpart_zc_mavg_tdata_r};
+      8'd4    : rb_data <= {threshold_i,threshold_q,offset_auto_i,offset_auto_q};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
 
