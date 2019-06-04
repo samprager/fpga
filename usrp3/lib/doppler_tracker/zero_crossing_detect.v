@@ -20,7 +20,7 @@
 
 module zero_crossing_detect #(
   parameter COUNTER_SIZE = 32,
-  parameter WIDTH = 16
+  parameter WIDTH = 16,
   parameter IS_Q_PART = 0)
 (
     input clk, input reset, input clear,
