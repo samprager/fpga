@@ -28,3 +28,4 @@ create_generated_clock -name ddr3_ps_clk [get_pins {u_ddr3_32bit/u_ddr3_32bit_mi
 # because bus_clk already has a blanket asynchronous constraint from the top level XDC.
 
 set_property BITSTREAM.CONFIG.USR_ACCESS TIMESTAMP [current_design]
+

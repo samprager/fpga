@@ -19,6 +19,7 @@ include $(LIB_IP_DIR)/cordic_rotate_int24/Makefile.inc
 include $(LIB_IP_DIR)/divide_int16/Makefile.inc
 include $(LIB_IP_DIR)/divide_int24/Makefile.inc
 include $(LIB_IP_DIR)/divide_int32/Makefile.inc
+include $(LIB_IP_DIR)/divide_int40/Makefile.inc
 include $(LIB_IP_DIR)/divide_uint32/Makefile.inc
 include $(LIB_IP_DIR)/divide_int16_int32/Makefile.inc
 include $(LIB_IP_DIR)/dds_sin_cos_lut_only/Makefile.inc
@@ -39,6 +40,7 @@ $(LIB_IP_CORDIC_ROTATE_INT24_SRCS) \
 $(LIB_IP_DIVIDE_INT16_SRCS) \
 $(LIB_IP_DIVIDE_INT24_SRCS) \
 $(LIB_IP_DIVIDE_INT32_SRCS) \
+$(LIB_IP_DIVIDE_INT40_SRCS) \
 $(LIB_IP_DIVIDE_UINT32_SRCS) \
 $(LIB_IP_DIVIDE_INT16_INT32_SRCS) \
 $(LIB_IP_DDS_SIN_COS_LUT_ONLY_SRCS)
@@ -59,6 +61,7 @@ $(LIB_IP_CORDIC_ROTATE_INT24_OUTS) \
 $(LIB_IP_DIVIDE_INT16_OUTS) \
 $(LIB_IP_DIVIDE_INT24_OUTS) \
 $(LIB_IP_DIVIDE_INT32_OUTS) \
+$(LIB_IP_DIVIDE_INT40_OUTS) \
 $(LIB_IP_DIVIDE_UINT32_OUTS) \
 $(LIB_IP_DIVIDE_INT16_INT32_OUTS) \
 $(LIB_IP_COMPLEX_MULTIPLIER_DDS_OUTS) \

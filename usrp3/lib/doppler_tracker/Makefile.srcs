@@ -1,0 +1,9 @@
+
+##################################################
+# Doppler Tracker Sources
+##################################################
+DOPPLER_TRACKER_SRCS = $(abspath $(addprefix $(BASE_DIR)/../lib/doppler_tracker/, \
+noc_block_doppler_tracker.v \
+axi_moving_avg.v \
+zero_crossing_detect.v \
+))
