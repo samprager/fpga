@@ -79,7 +79,7 @@ cvita_hdr_decoder cvita_hdr_decoder (
          eob_r <= 32'b0;
          last_pkt_len_r <= 32'b0;
       end else if (i_tvalid & o_tready) begin
-         if (pkt_count_r == max_spp & (burst_len <= (samp_count_r + max_spp))) begin
+         if (pkt_count_r == max_spp & (burst_len <= (samp_count_r + max_spp)) & (burst_len>samp_count_r)) begin
              eob_r <= 32'b1;
              last_pkt_len_r <= burst_len - samp_count_r;
          end else if (i_tlast) begin
