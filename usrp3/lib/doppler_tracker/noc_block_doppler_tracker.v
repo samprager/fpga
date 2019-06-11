@@ -39,6 +39,7 @@ module noc_block_doppler_tracker #(
   localparam SR_OFFSET     = 195;
   localparam SR_CALIBRATE  = 196;
   localparam SR_ZC_SUM_LEN = 197;
+  localparam SR_RATE_HZ = 198;
 
   //----------------------------------------------------------------------------
   // Wires
@@ -91,6 +92,10 @@ module noc_block_doppler_tracker #(
   wire [31:0] ipart_zc_tdata;
   wire ipart_zc_tlast, ipart_zc_tvalid, ipart_zc_tready;
 
+  // I part
+  wire [31:0] ipart_zcf_tdata;
+  wire ipart_zcf_tlast, ipart_zcf_tvalid, ipart_zcf_tready;
+
   wire [31:0] ipart_zc_mavg_tdata;
   wire ipart_zc_mavg_tlast, ipart_zc_mavg_tvalid, ipart_zc_mavg_tready;
 
@@ -98,8 +103,18 @@ module noc_block_doppler_tracker #(
   wire [31:0] qpart_zc_tdata;
   wire qpart_zc_tlast, qpart_zc_tvalid, qpart_zc_tready;
 
+  // Q part
+  wire [31:0] qpart_zcf_tdata;
+  wire qpart_zcf_tlast, qpart_zcf_tvalid, qpart_zcf_tready;
+
   wire [31:0] qpart_zc_mavg_tdata;
   wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
+
+  wire ipart_zc_sign,qpart_zc_sign;
+  wire [1:0] ipart_zc_sign_2b,qpart_zc_sign_2b;
+
+  wire [9:0] qpart_zc_sign_sum_tdata,qpart_zc_sign_sum_tdata;
+  wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid
 
   wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
 
@@ -116,6 +131,20 @@ module noc_block_doppler_tracker #(
    wire m_axis_mavg_data_tready;
 
    reg [31:0] ipart_zc_mavg_tdata_r, qpart_zc_mavg_tdata_r;
+   reg [31:0] ipart_zc_tdata_r, qpart_zc_tdata_r;
+
+   wire [31:0] doppler_freq_numerator;
+
+   wire [39:0] doppler_freq_numerator40;
+   wire [47:0] fdopI_tdata_uncorrected,fdopQ_tdata_uncorrected;
+   wire fdopI_tvalid, fdopI_tready, fdopI_tlast;
+   wire fdopQ_tvalid, fdopQ_tready, fdopQ_tlast;
+   wire fdopI_div_by_zero, fdopQ_div_by_zero;
+
+   wire [39:0] ipart_zc_tdata40, qpart_zc_tdata40
+
+   wire [46:0] fdopI_tdata47,fdopQ_tdata47;
+   wire ipart_divisor_tready, ipart_dividend_tready, qpart_divisor_tready, qpart_dividend_tready;
 
   //----------------------------------------------------------------------------
   // Registers
@@ -208,6 +237,20 @@ module noc_block_doppler_tracker #(
     .in(set_data),
     .out(zc_sum_len),
     .changed(zc_sum_len_changed));
+
+    // reference sampling rate to be used in divider numerator
+    setting_reg #(
+      .my_addr(SR_RATE_HZ),
+      .width(32),
+      .at_reset(32'd1000000000))
+    sr_zc_freq_num (
+      .clk(ce_clk),
+      .rst(ce_rst),
+      .strobe(set_stb),
+      .addr(set_addr),
+      .in(set_data),
+      .out(doppler_freq_numerator),
+      .changed());
 
   assign {threshold_i,threshold_q} = threshold;
   assign {offset_i,offset_q} = offset;
@@ -372,6 +415,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tready(ipart_zc_tready),
         .cycles_per_sec(ipart_cycles_per_sec),
         .iq_sign(qpart_tdata[15]),
+        .zc_sign(ipart_zc_sign),
         .pps(pps)
     );
 
@@ -395,6 +439,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tready(qpart_zc_tready),
         .cycles_per_sec(qpart_cycles_per_sec),
         .iq_sign(ipart_tdata[15]),
+        .zc_sign(qpart_zc_sign),
         .pps(pps)
     );
 
@@ -417,16 +462,84 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
   //   .error());
 
 
+assign doppler_freq_numerator40 = {8'b0,doppler_freq_numerator};
+assign ipart_zc_tdata40 = {{8{ipart_zc_tdata[31]}},ipart_zc_tdata[31:0]};
+assign qpart_zc_tdata40 = {{8{qpart_zc_tdata[31]}},qpart_zc_tdata[31:0]};
+
+  // Divide part by divisor from settings register
+divide_int40 fcI_divide_inst (
+  .aclk(clk),
+  .aresetn(~reset),
+  .s_axis_divisor_tvalid(ipart_zc_tvalid),
+  .s_axis_divisor_tready(ipart_divisor_tready),
+  .s_axis_divisor_tlast(ipart_zc_tlast),
+  .s_axis_divisor_tdata(ipart_zc_tdata40),
+  .s_axis_dividend_tvalid(ipart_zc_tvalid),
+  .s_axis_dividend_tready(ipart_dividend_tready),
+  .s_axis_dividend_tlast(ipart_zc_tlast),
+  .s_axis_dividend_tdata(doppler_freq_numerator40),
+  .m_axis_dout_tvalid(fdopI_tvalid),
+  .m_axis_dout_tready(fdopI_tready),
+  .m_axis_dout_tuser(fdopI_div_by_zero),
+  .m_axis_dout_tlast(fdopI_tlast),
+  .m_axis_dout_tdata(fdopI_tdata_uncorrected));
+  // Xilinx divider separates integer and fraction parts. Combine into fixed point value Q23.23.
+  assign fdopI_tdata47 = fdopI_div_by_zero ? 47'd0 : ($signed({fdopI_tdata_uncorrected[47:8],7'd0}) + $signed(fdopI_tdata_uncorrected[7:0]));
+
+  axi_round_and_clip #(
+    .WIDTH_IN(47),
+    .WIDTH_OUT(32),
+    .CLIP_BITS(8))
+  axi_round_and_clip_fcI (
+    .clk(clk), .reset(reset),
+    .i_tdata(fdopI_tdata47), .i_tlast(fdopI_tlast), .i_tvalid(fdopI_tvalid), .i_tready(fdopI_tready),
+    .o_tdata(ipart_zcf_tdata), .o_tlast(ipart_zcf_tlast), .o_tvalid(ipart_zcf_tvalid), .o_tready(ipart_zcf_tready));
+
+   assign ipart_zc_tready = ipart_divisor_tready & ipart_dividend_tready;
+
+
+   // Divide part by divisor from settings register
+ divide_int40 fcQ_divide_inst (
+   .aclk(clk),
+   .aresetn(~reset),
+   .s_axis_divisor_tvalid(qpart_zc_tvalid),
+   .s_axis_divisor_tready(qpart_divisor_tready),
+   .s_axis_divisor_tlast(qpart_zc_tlast),
+   .s_axis_divisor_tdata(qpart_zc_tdata40),
+   .s_axis_dividend_tvalid(qpart_zc_tvalid),
+   .s_axis_dividend_tready(qpart_dividend_tready),
+   .s_axis_dividend_tlast(qpart_zc_tlast),
+   .s_axis_dividend_tdata(doppler_freq_numerator40),
+   .m_axis_dout_tvalid(fdopQ_tvalid),
+   .m_axis_dout_tready(fdopQ_tready),
+   .m_axis_dout_tuser(fdopQ_div_by_zero),
+   .m_axis_dout_tlast(fdopQ_tlast),
+   .m_axis_dout_tdata(fdopQ_tdata_uncorrected));
+   // Xilinx divider separates integer and fraction parts. Combine into fixed point value Q23.23.
+   assign fdopQ_tdata47 = fdopQ_div_by_zero ? 47'd0 : ($signed({fdopQ_tdata_uncorrected[47:8],7'd0}) + $signed(fdopQ_tdata_uncorrected[7:0]));
+
+   axi_round_and_clip #(
+     .WIDTH_IN(47),
+     .WIDTH_OUT(32),
+     .CLIP_BITS(8))
+   axi_round_and_clip_fcQ (
+     .clk(clk), .reset(reset),
+     .i_tdata(fdopQ_tdata47), .i_tlast(fdopQ_tlast), .i_tvalid(fdopQ_tvalid), .i_tready(fdopQ_tready),
+     .o_tdata(qpart_zcf_tdata), .o_tlast(qpart_zcf_tlast), .o_tvalid(qpart_zcf_tvalid), .o_tready(qpart_zcf_tready));
+
+    assign qpart_zc_tready = qpart_divisor_tready & qpart_dividend_tready;
+
+
 axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
    i_zc_moving_avg_inst (
      .clk(ce_clk), .reset(ce_rst),
      .len(zc_sum_len),
      .divisor(zc_divisor32),
      .clear(zc_sum_len_changed),
-     .i_tdata(ipart_zc_tdata),
-     .i_tlast(ipart_zc_tlast),
-     .i_tvalid(ipart_zc_tvalid),
-     .i_tready(ipart_zc_tready),
+     .i_tdata(ipart_zcf_tdata),
+     .i_tlast(ipart_zcf_tlast),
+     .i_tvalid(ipart_zcf_tvalid),
+     .i_tready(ipart_zcf_tready),
      .o_tdata(ipart_zc_mavg_tdata),
      .o_tlast(ipart_zc_mavg_tlast),
      .o_tvalid(ipart_zc_mavg_tvalid),
@@ -438,15 +551,53 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
       .len(zc_sum_len),
       .divisor(zc_divisor32),
       .clear(zc_sum_len_changed),
-      .i_tdata(qpart_zc_tdata),
-      .i_tlast(qpart_zc_tlast),
-      .i_tvalid(qpart_zc_tvalid),
-      .i_tready(qpart_zc_tready),
+      .i_tdata(qpart_zcf_tdata),
+      .i_tlast(qpart_zcf_tlast),
+      .i_tvalid(qpart_zcf_tvalid),
+      .i_tready(qpart_zcf_tready),
       .o_tdata(qpart_zc_mavg_tdata),
       .o_tlast(qpart_zc_mavg_tlast),
       .o_tvalid(qpart_zc_mavg_tvalid),
       .o_tready(qpart_zc_mavg_tready));
 
+
+//   assign ipart_zc_sign_2b = (ipart_zc_sign==1) ? 2'b11 : 2'b01;
+//   assign qpart_zc_sign_2b = (qpart_zc_sign==1) ? 2'b11 : 2'b01;
+//
+// // signed moving average of zc signs.
+//   moving_sum #(
+//     .MAX_LEN(255),
+//     .WIDTH(2))
+//   i_zc_sign_moving_sum (
+//     .clk(ce_clk),
+//     .reset(ce_rst),
+//     .clear(zc_sum_len_changed),
+//     .len(zc_sum_len),
+//     .i_tdata(ipart_zc_sign_2b),
+//     .i_tlast(ipart_zc_tlast),
+//     .i_tvalid(ipart_zc_tvalid),
+//     .i_tready(),
+//     .o_tdata(ipart_zc_sign_sum_tdata),
+//     .o_tlast(),
+//     .o_tvalid(ipart_zc_sign_sum_tvalid),
+//     .o_tready(1'b1));
+//
+//   moving_sum #(
+//     .MAX_LEN(255),
+//     .WIDTH(2))
+//   q_zc_sign_moving_sum (
+//     .clk(ce_clk),
+//     .reset(ce_rst),
+//     .clear(zc_sum_len_changed),
+//     .len(zc_sum_len),
+//     .i_tdata(qpart_zc_sign_2b),
+//     .i_tlast(qpart_zc_tlast),
+//     .i_tvalid(qpart_zc_tvalid),
+//     .i_tready(),
+//     .o_tdata(qpart_zc_sign_sum_tdata),
+//     .o_tlast(),
+//     .o_tvalid(qpart_zc_sign_sum_tvalid),
+//     .o_tready(1'b1));
 
 always @(posedge ce_clk) begin
   if (ce_rst) begin
@@ -457,6 +608,18 @@ always @(posedge ce_clk) begin
         ipart_zc_mavg_tdata_r     <= ipart_zc_mavg_tdata;
     if (qpart_zc_mavg_tvalid && qpart_zc_mavg_tready)
         qpart_zc_mavg_tdata_r     <= qpart_zc_mavg_tdata;
+  end
+end
+
+always @(posedge ce_clk) begin
+  if (ce_rst) begin
+    qpart_zc_tdata_r     <= 0;
+    ipart_zc_tdata_r     <= 0;
+  end else begin
+    if (ipart_zc_tvalid && ipart_zc_tready)
+        ipart_zc_tdata_r     <= ipart_zc_tdata;
+    if (qpart_zc_tvalid && qpart_zc_tready)
+        qpart_zc_tdata_r     <= qpart_zc_tdata;
   end
 end
 
@@ -477,6 +640,8 @@ assign ipart_zc_mavg_tready = 1'b1;
       8'd2    : rb_data <= {ipart_cycles_per_sec,qpart_cycles_per_sec};
       8'd3    : rb_data <= {ipart_zc_mavg_tdata_r,qpart_zc_mavg_tdata_r};
       8'd4    : rb_data <= {threshold_i,threshold_q,offset_auto_i,offset_auto_q};
+      8'd5    : rb_data <= {ipart_zc_tdata_r,qpart_zc_tdata_r};
+      8'd6    : rb_data <= {32'b0,doppler_freq_numerator};
       default : rb_data <= 64'h0BADC0DE0BADC0DE;
     endcase
 

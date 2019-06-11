@@ -30,6 +30,7 @@ module zero_crossing_detect #(
     output [COUNTER_SIZE-1:0] o_tdata, output o_tvalid, output o_tlast, input o_tready,
     output [COUNTER_SIZE-1:0] cycles_per_sec,
     input iq_sign,
+    output zc_sign,
     input pps
 );
 localparam     IDLE      = 2'b00,
@@ -44,6 +45,12 @@ reg [COUNTER_SIZE-1:0] zc_count_r;
 reg [COUNTER_SIZE-1:0] zc_persec;
 reg [COUNTER_SIZE-1:0] zc_persec_r;
 reg [COUNTER_SIZE-1:0] zc_count_period;
+reg [COUNTER_SIZE-1:0] zc_persec_sign;
+reg [COUNTER_SIZE-1:0] zc_persec_sign_r;
+
+// add one to correct counter value
+wire [COUNTER_SIZE-1:0] zc_count_fixed;
+
 
 reg zc_valid;
 reg zc_valid_next;
@@ -62,6 +69,8 @@ reg signed [63:0] cal_sum;
 reg signed [63:0] cal_result;
 wire signed [63:0] offset_cal64;
 wire signed [(WIDTH-1):0] offset_use;
+
+wire cycles_per_sec_sign;
 
 wire [47:0] cal_len = (48'b1 << log_cal_len);
 
@@ -211,11 +220,16 @@ begin
    if (reset | clear) begin
       zc_persec <= 0;
       zc_persec_r <= 0;
+      zc_persec_sign <= 0;
+      zc_persec_sign_r <= 0;
    end else if (pps_edge) begin
       zc_persec <= 0;
       zc_persec_r <= zc_persec;
+      zc_persec_sign <= 0;
+      zc_persec_sign_r <= zc_persec_sign;
    end else if (gen_state == N_SIG && p_sig_det)begin
        zc_persec <= zc_persec  + 1;
+       zc_persec_sign <= zc_persec_sign + iq_sign_s;
    end
 end
 
@@ -230,15 +244,21 @@ end
 
 assign o_tvalid = o_tvalid_r;
 
+assign cycles_per_sec_sign = (zc_persec_sign_r >= (zc_persec_r>>1)) ? 1'b1 : 1'b0;
+
 // If we're looking at the real part:
 //  +freq: when I goes from - to +, Q should be -
 //  -freq: when I goes from - to +, Q should be +
 // If we're looking at the imag part:
 //  +freq: when Q goes from - to +, I part should be +
 //  -freq: when Q goes from - to +, I part should be -
-assign o_tdata = (iq_sign_r==1) ? $signed(zc_count_r) : -$signed(zc_count_r);
+assign zc_count_fixed = (zc_count_r + 32'b1);
+assign o_tdata = (iq_sign_r==1) ? $signed(zc_count_fixed) : -$signed(zc_count_fixed);
+// assign o_tdata = zc_count_fixed;
+assign zc_sign = ~iq_sign_r;
 assign o_tlast = 0;
-assign cycles_per_sec = (iq_sign_r==1) ? $signed(zc_persec_r) : -$signed(zc_persec_r);
+// assign cycles_per_sec = (iq_sign_r==1) ? $signed(zc_persec_r) : -$signed(zc_persec_r);
+assign cycles_per_sec = (cycles_per_sec_sign==1) ? $signed(zc_persec_r) : -$signed(zc_persec_r);
 assign offset_out = offset_use;
 
 
