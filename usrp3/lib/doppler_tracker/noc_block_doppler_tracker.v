@@ -113,8 +113,8 @@ module noc_block_doppler_tracker #(
   wire ipart_zc_sign,qpart_zc_sign;
   wire [1:0] ipart_zc_sign_2b,qpart_zc_sign_2b;
 
-  wire [9:0] qpart_zc_sign_sum_tdata,qpart_zc_sign_sum_tdata;
-  wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid
+  wire [9:0] ipart_zc_sign_sum_tdata,qpart_zc_sign_sum_tdata;
+  wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid;
 
   wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
 
@@ -141,7 +141,7 @@ module noc_block_doppler_tracker #(
    wire fdopQ_tvalid, fdopQ_tready, fdopQ_tlast;
    wire fdopI_div_by_zero, fdopQ_div_by_zero;
 
-   wire [39:0] ipart_zc_tdata40, qpart_zc_tdata40
+   wire [39:0] ipart_zc_tdata40, qpart_zc_tdata40;
 
    wire [46:0] fdopI_tdata47,fdopQ_tdata47;
    wire ipart_divisor_tready, ipart_dividend_tready, qpart_divisor_tready, qpart_dividend_tready;
@@ -468,8 +468,8 @@ assign qpart_zc_tdata40 = {{8{qpart_zc_tdata[31]}},qpart_zc_tdata[31:0]};
 
   // Divide part by divisor from settings register
 divide_int40 fcI_divide_inst (
-  .aclk(clk),
-  .aresetn(~reset),
+  .aclk(ce_clk),
+  .aresetn(~ce_rst),
   .s_axis_divisor_tvalid(ipart_zc_tvalid),
   .s_axis_divisor_tready(ipart_divisor_tready),
   .s_axis_divisor_tlast(ipart_zc_tlast),
@@ -491,7 +491,7 @@ divide_int40 fcI_divide_inst (
     .WIDTH_OUT(32),
     .CLIP_BITS(8))
   axi_round_and_clip_fcI (
-    .clk(clk), .reset(reset),
+    .clk(ce_clk), .reset(ce_rst),
     .i_tdata(fdopI_tdata47), .i_tlast(fdopI_tlast), .i_tvalid(fdopI_tvalid), .i_tready(fdopI_tready),
     .o_tdata(ipart_zcf_tdata), .o_tlast(ipart_zcf_tlast), .o_tvalid(ipart_zcf_tvalid), .o_tready(ipart_zcf_tready));
 
@@ -500,8 +500,8 @@ divide_int40 fcI_divide_inst (
 
    // Divide part by divisor from settings register
  divide_int40 fcQ_divide_inst (
-   .aclk(clk),
-   .aresetn(~reset),
+   .aclk(ce_clk),
+   .aresetn(~ce_rst),
    .s_axis_divisor_tvalid(qpart_zc_tvalid),
    .s_axis_divisor_tready(qpart_divisor_tready),
    .s_axis_divisor_tlast(qpart_zc_tlast),
@@ -523,7 +523,7 @@ divide_int40 fcI_divide_inst (
      .WIDTH_OUT(32),
      .CLIP_BITS(8))
    axi_round_and_clip_fcQ (
-     .clk(clk), .reset(reset),
+     .clk(ce_clk), .reset(ce_rst),
      .i_tdata(fdopQ_tdata47), .i_tlast(fdopQ_tlast), .i_tvalid(fdopQ_tvalid), .i_tready(fdopQ_tready),
      .o_tdata(qpart_zcf_tdata), .o_tlast(qpart_zcf_tlast), .o_tvalid(qpart_zcf_tvalid), .o_tready(qpart_zcf_tready));
 

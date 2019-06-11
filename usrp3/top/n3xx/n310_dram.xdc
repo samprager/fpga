@@ -29,3 +29,4 @@ create_generated_clock -name ddr3_ps_clk [get_pins {u_ddr3_32bit/u_ddr3_32bit_mi
 
 set_property BITSTREAM.CONFIG.USR_ACCESS TIMESTAMP [current_design]
 
+
