@@ -19,13 +19,15 @@
 
 module noc_block_doppler_tracker #(
   parameter NOC_ID = 64'hDFB0_0000_0000_0000,
-  parameter STR_SINK_FIFOSIZE = 11)
+  parameter STR_SINK_FIFOSIZE = 11,
+  parameter BUS_CLK_RATE = 32'd200000000,
+  parameter CE_CLK_RATE = 32'd200000000)
 (
   input bus_clk, input bus_rst,
   input ce_clk, input ce_rst,
   input [63:0] i_tdata, input i_tlast, input i_tvalid, output i_tready,
   output [63:0] o_tdata, output o_tlast, output o_tvalid, input  o_tready,
-  output [63:0] debug, input pps
+  output [63:0] debug
 );
 
   //----------------------------------------------------------------------------
@@ -40,6 +42,9 @@ module noc_block_doppler_tracker #(
   localparam SR_CALIBRATE  = 196;
   localparam SR_ZC_SUM_LEN = 197;
   localparam SR_RATE_HZ = 198;
+  localparam SR_CAL_MODE = 199;
+  localparam SR_PPX_RATE = 200
+  localparam SR_PPX_DUTY = 201;
 
   //----------------------------------------------------------------------------
   // Wires
@@ -117,6 +122,9 @@ module noc_block_doppler_tracker #(
   wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid;
 
   wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
+  wire ipart_cycles_per_sec_valid,qpart_cycles_per_sec_valid;
+  wire ipart_cycles_per_sec_ready,qpart_cycles_per_sec_ready;
+
 
   wire [31:0] log_cal_len;
   wire init_cal;
@@ -134,6 +142,11 @@ module noc_block_doppler_tracker #(
    reg [31:0] ipart_zc_tdata_r, qpart_zc_tdata_r;
 
    wire [31:0] doppler_freq_numerator;
+
+   wire auto_cal;
+   wire [4:0] xduty_log2;
+   wire [31:0] ppx_rate;
+   wire ppx;
 
    wire [39:0] doppler_freq_numerator40;
    wire [47:0] fdopI_tdata_uncorrected,fdopQ_tdata_uncorrected;
@@ -250,6 +263,45 @@ module noc_block_doppler_tracker #(
       .addr(set_addr),
       .in(set_data),
       .out(doppler_freq_numerator),
+      .changed());
+
+  setting_reg #(
+    .my_addr(SR_CAL_MODE),
+    .width(1),
+    .at_reset(0))
+  sr_zc_cal_mode (
+    .clk(ce_clk),
+    .rst(ce_rst),
+    .strobe(set_stb),
+    .addr(set_addr),
+    .in(set_data),
+    .out(auto_cal),
+    .changed());
+
+    setting_reg #(
+      .my_addr(SR_PPX_RATE),
+      .width(32),
+      .at_reset(CE_CLK_RATE))
+    sr_ppx_rate (
+      .clk(ce_clk),
+      .rst(ce_rst),
+      .strobe(set_stb),
+      .addr(set_addr),
+      .in(set_data),
+      .out(ppx_rate),
+      .changed());
+
+    setting_reg #(
+      .my_addr(SR_PPX_DUTY),
+      .width(5),
+      .at_reset(2))
+    sr_ppx_duty_div (
+      .clk(ce_clk),
+      .rst(ce_rst),
+      .strobe(set_stb),
+      .addr(set_addr),
+      .in(set_data),
+      .out(xduty_log2),
       .changed());
 
   assign {threshold_i,threshold_q} = threshold;
@@ -395,6 +447,16 @@ assign o_mavg_use_tlast  = (sum_len32 == 32'b1) ? m_axis_data_tlast : o_mavg_tla
 assign o_mavg_use_tvalid  = (sum_len32 == 32'b1) ? m_axis_data_tvalid : o_mavg_tvalid;
 assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_data_tready;
 
+
+    ppx_generator #(.CLK_FREQ(CE_CLK_RATE))
+    ppx_generator(
+      .clk(ce_clk),
+      .reset(ce_rst),
+      .xcount(ppx_rate),
+      .xduty_log2(xduty_log2),
+      .ppx(ppx)
+    );
+
     zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16),.IS_Q_PART(0))
     zc_detect_i(
         .clk(ce_clk),
@@ -404,6 +466,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .offset(offset_i),
         .offset_out(offset_auto_i),
         .init_cal(init_cal),
+        .auto_cal(auto_cal),
         .log_cal_len(log_cal_len),
         .i_tdata(ipart_tdata),
         .i_tlast(ipart_tlast),
@@ -414,9 +477,11 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tvalid(ipart_zc_tvalid),
         .o_tready(ipart_zc_tready),
         .cycles_per_sec(ipart_cycles_per_sec),
+        .cycles_per_sec_valid(ipart_cycles_per_sec_valid),
+        .cycles_per_sec_ready(ipart_cycles_per_sec_ready),
         .iq_sign(qpart_tdata[15]),
         .zc_sign(ipart_zc_sign),
-        .pps(pps)
+        .pps(ppx)
     );
 
     zero_crossing_detect #(.COUNTER_SIZE(32),.WIDTH(16),.IS_Q_PART(1))
@@ -428,6 +493,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .offset(offset_q),
         .offset_out(offset_auto_q),
         .init_cal(init_cal),
+        .auto_cal(auto_cal),
         .log_cal_len(log_cal_len),
         .i_tdata(qpart_tdata),
         .i_tlast(qpart_tlast),
@@ -438,9 +504,11 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
         .o_tvalid(qpart_zc_tvalid),
         .o_tready(qpart_zc_tready),
         .cycles_per_sec(qpart_cycles_per_sec),
+        .cycles_per_sec_valid(qpart_cycles_per_sec_valid),
+        .cycles_per_sec_ready(qpart_cycles_per_sec_ready),
         .iq_sign(ipart_tdata[15]),
         .zc_sign(qpart_zc_sign),
-        .pps(pps)
+        .pps(ppx)
     );
 
   // // Concatenate I and Q part again
@@ -623,14 +691,24 @@ always @(posedge ce_clk) begin
   end
 end
 
+
 // don't care if we drop samples
 wire [32:0] iq_zc_sum = (qpart_zc_mavg_tdata_r + ipart_zc_mavg_tdata_r);
-assign s_axis_data_tdata = iq_zc_sum[32:1];
-assign s_axis_data_tvalid = qpart_zc_mavg_tvalid | ipart_zc_mavg_tvalid;
-assign s_axis_data_tlast =  ipart_zc_mavg_tlast | qpart_zc_mavg_tlast;
+
+// assign s_axis_data_tdata = iq_zc_sum[32:1];
+// assign s_axis_data_tvalid = qpart_zc_mavg_tvalid | ipart_zc_mavg_tvalid;
+// assign s_axis_data_tlast =  ipart_zc_mavg_tlast | qpart_zc_mavg_tlast;
 
 assign qpart_zc_mavg_tready = 1'b1;
 assign ipart_zc_mavg_tready = 1'b1;
+
+wire [32:0] iq_cycles_per_sec = (ipart_cycles_per_sec + qpart_cycles_per_sec);
+
+assign s_axis_data_tdata = iq_cycles_per_sec[32:1];
+assign s_axis_data_tvalid = ipart_cycles_per_sec_valid | qpart_cycles_per_sec_valid;
+assign s_axis_data_tlast =  0;
+ipart_cycles_per_sec_ready = s_axis_data_tready;
+qpart_cycles_per_sec_ready = s_axis_data_tready;
 
   // Readback register values
   always @*

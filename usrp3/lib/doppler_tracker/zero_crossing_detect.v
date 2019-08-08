@@ -25,10 +25,10 @@ module zero_crossing_detect #(
 (
     input clk, input reset, input clear,
     input [WIDTH-1:0] threshold,input [WIDTH-1:0] offset, output [WIDTH-1:0] offset_out,
-    input init_cal, input [31:0] log_cal_len,
+    input init_cal,input auto_cal, input [31:0] log_cal_len,
     input [WIDTH-1:0] i_tdata, input i_tvalid, input i_tlast, output i_tready,
     output [COUNTER_SIZE-1:0] o_tdata, output o_tvalid, output o_tlast, input o_tready,
-    output [COUNTER_SIZE-1:0] cycles_per_sec,
+    output [COUNTER_SIZE-1:0] cycles_per_sec, output reg cycles_per_sec_valid, input cycles_per_sec_ready,
     input iq_sign,
     output zc_sign,
     input pps
@@ -64,6 +64,7 @@ wire iq_sign_s;
 reg iq_sign_r;
 
 reg use_cal;
+
 reg [47:0] cal_counter;
 reg signed [63:0] cal_sum;
 reg signed [63:0] cal_result;
@@ -106,9 +107,9 @@ end
 
 always @(posedge clk) begin
   if (reset | clear) begin
-    cal_counter     <= 0;
+    cal_counter <= 0;
     cal_sum <= 0;
-  end else if (init_cal) begin
+  end else if (init_cal || (auto_cal && (cal_counter==0))) begin
     cal_sum <= 0;
     cal_counter <= cal_len;
   end else if ((|cal_counter) && i_tready && i_tvalid) begin
@@ -128,7 +129,7 @@ end
 always @(posedge clk) begin
   if (reset | clear) begin
     use_cal <= 0;
-  end else if (init_cal && (log_cal_len == 0)) begin
+  end else if ((init_cal || (auto_cal && (cal_counter==0))) && (log_cal_len == 0)) begin
     use_cal <= 0;
   end else if ((cal_counter == 32'b1) && i_tready && i_tvalid) begin
     use_cal <= 1;
@@ -136,6 +137,7 @@ always @(posedge clk) begin
 end
 
 assign offset_cal64 = (cal_result >>> log_cal_len);
+
 assign offset_use = use_cal ? offset_cal64[(WIDTH-1):0] : $signed(offset);
 
 always @(gen_state or p_sig_thresh_det or n_sig_thresh_det or p_sig_det or n_sig_det)
@@ -230,6 +232,17 @@ begin
    end else if (gen_state == N_SIG && p_sig_det)begin
        zc_persec <= zc_persec  + 1;
        zc_persec_sign <= zc_persec_sign + iq_sign_s;
+   end
+end
+
+always @(posedge clk)
+begin
+   if (reset | clear) begin
+      cycles_per_sec_valid <= 1'b0;
+   end else if (pps_edge) begin
+      cycles_per_sec_valid <= 1'b1;
+   end else if (cycles_per_sec_ready)begin
+       cycles_per_sec_valid <= 1'b0;
    end
 end
 
