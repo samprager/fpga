@@ -48,6 +48,10 @@ reg [COUNTER_SIZE-1:0] zc_count_period;
 reg [COUNTER_SIZE-1:0] zc_persec_sign;
 reg [COUNTER_SIZE-1:0] zc_persec_sign_r;
 
+reg [31:0] log_cal_len_r;
+reg init_cal_r;
+reg [47:0] cal_len_r
+
 // add one to correct counter value
 wire [COUNTER_SIZE-1:0] zc_count_fixed;
 
@@ -73,7 +77,7 @@ wire signed [(WIDTH-1):0] offset_use;
 
 wire cycles_per_sec_sign;
 
-wire [47:0] cal_len = (48'b1 << log_cal_len);
+wire [47:0] cal_len = (48'b1 << log_cal_len_r);
 
 wire p_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) >= ($signed(threshold)+offset_use));
 wire n_sig_thresh_det = i_tready && i_tvalid && ($signed(i_tdata) < (offset_use-$signed(threshold)));
@@ -97,6 +101,22 @@ assign i_tready = 1'b1;
 
 always @(posedge clk) begin
   if (reset | clear) begin
+    init_cal_r     <= 0;
+  end else begin
+    init_cal_r <= init_cal;
+  end
+end
+
+always @(posedge clk) begin
+  if (reset | clear) begin
+    log_cal_len_r     <= 0;
+  end else if (init_cal) begin
+    log_cal_len_r <= log_cal_len;
+  end
+end
+
+always @(posedge clk) begin
+  if (reset | clear) begin
     p_sig_det_r     <= 0;
     n_sig_det_r     <= 0;
   end else begin
@@ -109,7 +129,7 @@ always @(posedge clk) begin
   if (reset | clear) begin
     cal_counter <= 0;
     cal_sum <= 0;
-  end else if (init_cal || (auto_cal && (cal_counter==0))) begin
+  end else if (init_cal_r || (auto_cal && (cal_counter==0))) begin
     cal_sum <= 0;
     cal_counter <= cal_len;
   end else if ((|cal_counter) && i_tready && i_tvalid) begin
@@ -129,14 +149,14 @@ end
 always @(posedge clk) begin
   if (reset | clear) begin
     use_cal <= 0;
-  end else if ((init_cal || (auto_cal && (cal_counter==0))) && (log_cal_len == 0)) begin
+  end else if ((init_cal_r || (auto_cal && (cal_counter==0))) && (log_cal_len_r == 0)) begin
     use_cal <= 0;
   end else if ((cal_counter == 32'b1) && i_tready && i_tvalid) begin
     use_cal <= 1;
   end
 end
 
-assign offset_cal64 = (cal_result >>> log_cal_len);
+assign offset_cal64 = (cal_result >>> log_cal_len_r);
 
 assign offset_use = use_cal ? offset_cal64[(WIDTH-1):0] : $signed(offset);
 

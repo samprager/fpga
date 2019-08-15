@@ -43,7 +43,7 @@ module noc_block_doppler_tracker #(
   localparam SR_ZC_SUM_LEN = 197;
   localparam SR_RATE_HZ = 198;
   localparam SR_CAL_MODE = 199;
-  localparam SR_PPX_RATE = 200
+  localparam SR_PPX_RATE = 200;
   localparam SR_PPX_DUTY = 201;
 
   //----------------------------------------------------------------------------
@@ -707,8 +707,8 @@ wire [32:0] iq_cycles_per_sec = (ipart_cycles_per_sec + qpart_cycles_per_sec);
 assign s_axis_data_tdata = iq_cycles_per_sec[32:1];
 assign s_axis_data_tvalid = ipart_cycles_per_sec_valid | qpart_cycles_per_sec_valid;
 assign s_axis_data_tlast =  0;
-ipart_cycles_per_sec_ready = s_axis_data_tready;
-qpart_cycles_per_sec_ready = s_axis_data_tready;
+assign ipart_cycles_per_sec_ready = s_axis_data_tready;
+assign qpart_cycles_per_sec_ready = s_axis_data_tready;
 
   // Readback register values
   always @*

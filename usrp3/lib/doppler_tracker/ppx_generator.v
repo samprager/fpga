@@ -25,7 +25,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ppx_generator #(
-   parameter CLK_FREQ  = 32'd10_000_000, //Min:10kHz, Max:4GHz
+   parameter CLK_FREQ  = 32'd10_000_000 //Min:10kHz, Max:4GHz
 ) (
    input  clk,
    input  reset,
