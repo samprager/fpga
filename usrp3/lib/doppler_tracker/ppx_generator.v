@@ -31,7 +31,7 @@ module ppx_generator #(
    input  reset,
    input [31:0] xcount,
    input [4:0] xduty_log2,
-
+   input en,
    output ppx
 );
     reg [31:0] count;
@@ -40,9 +40,9 @@ module ppx_generator #(
     always @(posedge clk) begin
         if (reset) begin
             count <= 32'd0;
-        end else if (count >= (count_max - 1)) begin
+        end else if (en && (count >= (count_max - 1))) begin
             count <= 32'd0;
-        end else begin
+        end else if (en) begin
             count <= count + 32'd1;
         end
     end

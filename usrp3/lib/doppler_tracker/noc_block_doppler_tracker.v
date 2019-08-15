@@ -454,6 +454,7 @@ assign m_axis_data_tready = (sum_len32 == 32'b1) ? o_mavg_tready : m_axis_mavg_d
       .reset(ce_rst),
       .xcount(ppx_rate),
       .xduty_log2(xduty_log2),
+      .en(1'b1),
       .ppx(ppx)
     );
 
