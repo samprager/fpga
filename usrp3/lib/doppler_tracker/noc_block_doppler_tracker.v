@@ -21,7 +21,7 @@ module noc_block_doppler_tracker #(
   parameter NOC_ID = 64'hDFB0_0000_0000_0000,
   parameter STR_SINK_FIFOSIZE = 11,
   parameter BUS_CLK_RATE = 32'd200000000,
-  parameter CE_CLK_RATE = 32'd200000000)
+  parameter CE_CLK_RATE = 32'd125000000)
 (
   input bus_clk, input bus_rst,
   input ce_clk, input ce_rst,
@@ -126,7 +126,7 @@ module noc_block_doppler_tracker #(
   wire ipart_cycles_per_sec_ready,qpart_cycles_per_sec_ready;
 
 
-  wire [31:0] log_cal_len;
+  (* dont_touch = "true" *) wire [31:0] log_cal_len;
   wire init_cal;
 
   // I part

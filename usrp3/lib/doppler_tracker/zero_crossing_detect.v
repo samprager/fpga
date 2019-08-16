@@ -49,8 +49,10 @@ reg [COUNTER_SIZE-1:0] zc_persec_sign;
 reg [COUNTER_SIZE-1:0] zc_persec_sign_r;
 
 // Keep constraint to ensure these signals are not resource shared which can cause timing failures
-(* keep = "true" *) reg [31:0] log_cal_len_r;
-(* keep = "true" *) reg init_cal_r;
+(* dont_touch = "true" *) reg [31:0] log_cal_len_r;
+(* dont_touch = "true" *) reg init_cal_r;
+// (* keep = "true" *) reg [31:0] log_cal_len_r;
+// (* keep = "true" *) reg init_cal_r;
 
 reg [47:0] cal_len_r;
 
