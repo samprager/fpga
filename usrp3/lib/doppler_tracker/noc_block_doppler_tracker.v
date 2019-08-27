@@ -598,36 +598,117 @@ divide_int40 fcI_divide_inst (
 
     assign qpart_zc_tready = qpart_divisor_tready & qpart_dividend_tready;
 
+  axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+     i_zc_moving_avg_inst (
+       .clk(ce_clk), .reset(ce_rst),
+       .len(zc_sum_len),
+       .divisor(zc_divisor32),
+       .clear(zc_sum_len_changed),
+       .i_tdata(ipart_zcf_tdata),
+       .i_tlast(ipart_zcf_tlast),
+       .i_tvalid(ipart_zcf_tvalid),
+       .i_tready(ipart_zcf_tready),
+       .o_tdata(ipart_zc_mavg_tdata),
+       .o_tlast(ipart_zc_mavg_tlast),
+       .o_tvalid(ipart_zc_mavg_tvalid),
+       .o_tready(ipart_zc_mavg_tready));
+
+   axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+      q_zc_moving_avg_inst (
+        .clk(ce_clk), .reset(ce_rst),
+        .len(zc_sum_len),
+        .divisor(zc_divisor32),
+        .clear(zc_sum_len_changed),
+        .i_tdata(qpart_zcf_tdata),
+        .i_tlast(qpart_zcf_tlast),
+        .i_tvalid(qpart_zcf_tvalid),
+        .i_tready(qpart_zcf_tready),
+        .o_tdata(qpart_zc_mavg_tdata),
+        .o_tlast(qpart_zc_mavg_tlast),
+        .o_tvalid(qpart_zc_mavg_tvalid),
+        .o_tready(qpart_zc_mavg_tready));
+
+// sign and magnitude separately
+assign ipart_zc_sign_tdata = ipart_zc_tdata;
+assign ipart_zc_sign_tvalid = ipart_zc_tvalid;
+assign ipart_zc_sign_tlast = ipart_zc_tlast;
+
+assign ipart_zc_mag_tdata = (({32{ipart_zc_tdata[31]}}^ipart_zc_tdata)+{31'b0,ipart_zc_tdata[31]});
+assign ipart_zc_mag_tvalid = ipart_zc_tvalid;
+assign ipart_zc_mag_tlast = ipart_zc_tlast;
+
+assign ipart_zc_tready = ipart_zc_sign_tready & ipart_zc_mag_tready;
+
+
+assign qpart_zc_sign_tdata = qpart_zc_tdata;
+assign qpart_zc_sign_tvalid = qpart_zc_tvalid;
+assign qpart_zc_sign_tlast = qpart_zc_tlast;
+
+assign qpart_zc_mag_tdata = (({32{qpart_zc_tdata[31]}}^qpart_zc_tdata)+{31'b0,qpart_zc_tdata[31]});
+assign qpart_zc_mag_tvalid = qpart_zc_tvalid;
+assign qpart_zc_mag_tlast = qpart_zc_tlast;
+
+assign qpart_zc_tready = qpart_zc_sign_tready & qpart_zc_mag_tready;
 
 axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
-   i_zc_moving_avg_inst (
+   i_zc_sign_moving_avg_inst (
      .clk(ce_clk), .reset(ce_rst),
      .len(zc_sum_len),
      .divisor(zc_divisor32),
      .clear(zc_sum_len_changed),
-     .i_tdata(ipart_zcf_tdata),
-     .i_tlast(ipart_zcf_tlast),
-     .i_tvalid(ipart_zcf_tvalid),
-     .i_tready(ipart_zcf_tready),
-     .o_tdata(ipart_zc_mavg_tdata),
-     .o_tlast(ipart_zc_mavg_tlast),
-     .o_tvalid(ipart_zc_mavg_tvalid),
-     .o_tready(ipart_zc_mavg_tready));
+     .i_tdata(ipart_zc_sign_tdata),
+     .i_tlast(ipart_zc_sign_tlat),
+     .i_tvalid(ipart_zc_sign_tvalid),
+     .i_tready(ipart_zc_sign_tready),
+     .o_tdata(ipart_zc_sign_mavg_tdata),
+     .o_tlast(ipart_zc_sign_mavg_tlast),
+     .o_tvalid(ipart_zc_sign_mavg_tvalid),
+     .o_tready(ipart_zc_sign_mavg_tready));
 
  axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
-    q_zc_moving_avg_inst (
+    i_zc_mag_moving_avg_inst (
       .clk(ce_clk), .reset(ce_rst),
       .len(zc_sum_len),
       .divisor(zc_divisor32),
       .clear(zc_sum_len_changed),
-      .i_tdata(qpart_zcf_tdata),
-      .i_tlast(qpart_zcf_tlast),
-      .i_tvalid(qpart_zcf_tvalid),
-      .i_tready(qpart_zcf_tready),
-      .o_tdata(qpart_zc_mavg_tdata),
-      .o_tlast(qpart_zc_mavg_tlast),
-      .o_tvalid(qpart_zc_mavg_tvalid),
-      .o_tready(qpart_zc_mavg_tready));
+      .i_tdata(ipart_zc_mag_tdata),
+      .i_tlast(ipart_zc_mag_tlat),
+      .i_tvalid(ipart_zc_mag_tvalid),
+      .i_tready(ipart_zc_mag_tready),
+      .o_tdata(ipart_zc_mag_mavg_tdata),
+      .o_tlast(ipart_zc_mag_mavg_tlast),
+      .o_tvalid(ipart_zc_mag_mavg_tvalid),
+      .o_tready(ipart_zc_mag_mavg_tready));
+
+  axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+     q_zc_sign_moving_avg_inst (
+       .clk(ce_clk), .reset(ce_rst),
+       .len(zc_sum_len),
+       .divisor(zc_divisor32),
+       .clear(zc_sum_len_changed),
+       .i_tdata(qpart_zc_sign_tdata),
+       .i_tlast(qpart_zc_sign_tlat),
+       .i_tvalid(qpart_zc_sign_tvalid),
+       .i_tready(qpart_zc_sign_tready),
+       .o_tdata(qpart_zc_sign_mavg_tdata),
+       .o_tlast(qpart_zc_sign_mavg_tlast),
+       .o_tvalid(qpart_zc_sign_mavg_tvalid),
+       .o_tready(qpart_zc_sign_mavg_tready));
+
+   axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
+      q_zc_mag_moving_avg_inst (
+        .clk(ce_clk), .reset(ce_rst),
+        .len(zc_sum_len),
+        .divisor(zc_divisor32),
+        .clear(zc_sum_len_changed),
+        .i_tdata(qpart_zc_mag_tdata),
+        .i_tlast(qpart_zc_mag_tlat),
+        .i_tvalid(qpart_zc_mag_tvalid),
+        .i_tready(qpart_zc_mag_tready),
+        .o_tdata(qpart_zc_mag_mavg_tdata),
+        .o_tlast(qpart_zc_mag_mavg_tlast),
+        .o_tvalid(qpart_zc_mag_mavg_tvalid),
+        .o_tready(qpart_zc_mag_mavg_tready));
 
 
 //   assign ipart_zc_sign_2b = (ipart_zc_sign==1) ? 2'b11 : 2'b01;
