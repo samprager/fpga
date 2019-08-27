@@ -45,7 +45,7 @@ module noc_block_doppler_tracker #(
   localparam SR_CAL_MODE = 199;
   localparam SR_PPX_RATE = 200;
   localparam SR_PPX_DUTY = 201;
-
+  localparam SR_MAVG_MODE = 202;
   //----------------------------------------------------------------------------
   // Wires
   //----------------------------------------------------------------------------
@@ -101,6 +101,24 @@ module noc_block_doppler_tracker #(
   wire [31:0] ipart_zcf_tdata;
   wire ipart_zcf_tlast, ipart_zcf_tvalid, ipart_zcf_tready;
 
+  wire [31:0] ipart_zcf_mavg_tdata;
+  wire ipart_zcf_mavg_tlast, ipart_zcf_mavg_tvalid, ipart_zcf_mavg_tready;
+
+  wire [31:0] ipart_zc_sign_tdata;
+  wire ipart_zc_sign_tlast, ipart_zc_sign_tvalid, ipart_zc_sign_tready;
+
+  wire [31:0] ipart_zc_sign_mavg_tdata;
+  wire ipart_zc_sign_mavg_tlast, ipart_zc_sign_mavg_tvalid, ipart_zc_sign_mavg_tready;
+
+  wire [31:0] ipart_zc_mag_tdata;
+  wire ipart_zc_mag_tlast, ipart_zc_mag_tvalid, ipart_zc_mag_tready;
+
+  wire [31:0] ipart_zc_mag_mavg_tdata;
+  wire ipart_zc_mag_mavg_tlast, ipart_zc_mag_mavg_tvalid, ipart_zc_mag_mavg_tready;
+
+  wire [31:0] ipart_zc_signmag_mavg_tdata;
+  wire ipart_zc_signmag_mavg_tlast, ipart_zc_signmag_mavg_tvalid, ipart_zc_signmag_mavg_tready;
+
   wire [31:0] ipart_zc_mavg_tdata;
   wire ipart_zc_mavg_tlast, ipart_zc_mavg_tvalid, ipart_zc_mavg_tready;
 
@@ -112,14 +130,32 @@ module noc_block_doppler_tracker #(
   wire [31:0] qpart_zcf_tdata;
   wire qpart_zcf_tlast, qpart_zcf_tvalid, qpart_zcf_tready;
 
+  wire [31:0] qpart_zcf_mavg_tdata;
+  wire qpart_zcf_mavg_tlast, qpart_zcf_mavg_tvalid, qpart_zcf_mavg_tready;
+
+  wire [31:0] qpart_zc_sign_tdata;
+  wire qpart_zc_sign_tlast, qpart_zc_sign_tvalid, qpart_zc_sign_tready;
+
+  wire [31:0] qpart_zc_sign_mavg_tdata;
+  wire qpart_zc_sign_mavg_tlast, qpart_zc_sign_mavg_tvalid, qpart_zc_sign_mavg_tready;
+
+  wire [31:0] qpart_zc_mag_tdata;
+  wire qpart_zc_mag_tlast, qpart_zc_mag_tvalid, qpart_zc_mag_tready;
+
+  wire [31:0] qpart_zc_mag_mavg_tdata;
+  wire qpart_zc_mag_mavg_tlast, qpart_zc_mag_mavg_tvalid, qpart_zc_mag_mavg_tready;
+
+  wire [31:0] qpart_zc_signmag_mavg_tdata;
+  wire qpart_zc_signmag_mavg_tlast, qpart_zc_signmag_mavg_tvalid, qpart_zc_signmag_mavg_tready;
+
   wire [31:0] qpart_zc_mavg_tdata;
   wire qpart_zc_mavg_tlast, qpart_zc_mavg_tvalid, qpart_zc_mavg_tready;
 
   wire ipart_zc_sign,qpart_zc_sign;
   wire [1:0] ipart_zc_sign_2b,qpart_zc_sign_2b;
 
-  wire [9:0] ipart_zc_sign_sum_tdata,qpart_zc_sign_sum_tdata;
-  wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid;
+  // wire [9:0] ipart_zc_sign_sum_tdata,qpart_zc_sign_sum_tdata;
+  // wire ipart_zc_sign_sum_tvalid,qpart_zc_sign_sum_tvalid;
 
   wire [31:0] ipart_cycles_per_sec, qpart_cycles_per_sec;
   wire ipart_cycles_per_sec_valid,qpart_cycles_per_sec_valid;
@@ -147,6 +183,7 @@ module noc_block_doppler_tracker #(
    wire [4:0] xduty_log2;
    wire [31:0] ppx_rate;
    wire ppx;
+   wire mavg_mode;
 
    wire [39:0] doppler_freq_numerator40;
    wire [47:0] fdopI_tdata_uncorrected,fdopQ_tdata_uncorrected;
@@ -302,6 +339,20 @@ module noc_block_doppler_tracker #(
       .addr(set_addr),
       .in(set_data),
       .out(xduty_log2),
+      .changed());
+
+// settings for moving average mode. 0: average mag/sign separately, 1: average 1/zccount
+    setting_reg #(
+      .my_addr(SR_MAVG_MODE),
+      .width(1),
+      .at_reset(0))
+    sr_mavg_mode (
+      .clk(ce_clk),
+      .rst(ce_rst),
+      .strobe(set_stb),
+      .addr(set_addr),
+      .in(set_data),
+      .out(mavg_mode),
       .changed());
 
   assign {threshold_i,threshold_q} = threshold;
@@ -564,7 +615,7 @@ divide_int40 fcI_divide_inst (
     .i_tdata(fdopI_tdata47), .i_tlast(fdopI_tlast), .i_tvalid(fdopI_tvalid), .i_tready(fdopI_tready),
     .o_tdata(ipart_zcf_tdata), .o_tlast(ipart_zcf_tlast), .o_tvalid(ipart_zcf_tvalid), .o_tready(ipart_zcf_tready));
 
-   assign ipart_zc_tready = ipart_divisor_tready & ipart_dividend_tready;
+   // assign ipart_zc_tready = ipart_divisor_tready & ipart_dividend_tready;
 
 
    // Divide part by divisor from settings register
@@ -596,7 +647,7 @@ divide_int40 fcI_divide_inst (
      .i_tdata(fdopQ_tdata47), .i_tlast(fdopQ_tlast), .i_tvalid(fdopQ_tvalid), .i_tready(fdopQ_tready),
      .o_tdata(qpart_zcf_tdata), .o_tlast(qpart_zcf_tlast), .o_tvalid(qpart_zcf_tvalid), .o_tready(qpart_zcf_tready));
 
-    assign qpart_zc_tready = qpart_divisor_tready & qpart_dividend_tready;
+    // assign qpart_zc_tready = qpart_divisor_tready & qpart_dividend_tready;
 
   axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
      i_zc_moving_avg_inst (
@@ -608,10 +659,10 @@ divide_int40 fcI_divide_inst (
        .i_tlast(ipart_zcf_tlast),
        .i_tvalid(ipart_zcf_tvalid),
        .i_tready(ipart_zcf_tready),
-       .o_tdata(ipart_zc_mavg_tdata),
-       .o_tlast(ipart_zc_mavg_tlast),
-       .o_tvalid(ipart_zc_mavg_tvalid),
-       .o_tready(ipart_zc_mavg_tready));
+       .o_tdata(ipart_zcf_mavg_tdata),
+       .o_tlast(ipart_zcf_mavg_tlast),
+       .o_tvalid(ipart_zcf_mavg_tvalid),
+       .o_tready(ipart_zcf_mavg_tready));
 
    axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
       q_zc_moving_avg_inst (
@@ -623,10 +674,13 @@ divide_int40 fcI_divide_inst (
         .i_tlast(qpart_zcf_tlast),
         .i_tvalid(qpart_zcf_tvalid),
         .i_tready(qpart_zcf_tready),
-        .o_tdata(qpart_zc_mavg_tdata),
-        .o_tlast(qpart_zc_mavg_tlast),
-        .o_tvalid(qpart_zc_mavg_tvalid),
-        .o_tready(qpart_zc_mavg_tready));
+        .o_tdata(qpart_zcf_mavg_tdata),
+        .o_tlast(qpart_zcf_mavg_tlast),
+        .o_tvalid(qpart_zcf_mavg_tvalid),
+        .o_tready(qpart_zcf_mavg_tready));
+
+assign ipart_zcf_mavg_tready = ipart_zc_mavg_tready;
+assign qpart_zcf_mavg_tready = qpart_zc_mavg_tready;
 
 // sign and magnitude separately
 assign ipart_zc_sign_tdata = ipart_zc_tdata;
@@ -637,7 +691,7 @@ assign ipart_zc_mag_tdata = (({32{ipart_zc_tdata[31]}}^ipart_zc_tdata)+{31'b0,ip
 assign ipart_zc_mag_tvalid = ipart_zc_tvalid;
 assign ipart_zc_mag_tlast = ipart_zc_tlast;
 
-assign ipart_zc_tready = ipart_zc_sign_tready & ipart_zc_mag_tready;
+assign ipart_zc_tready = (mavg_mode==1) ? (ipart_divisor_tready & ipart_dividend_tready) : (ipart_zc_sign_tready & ipart_zc_mag_tready);
 
 
 assign qpart_zc_sign_tdata = qpart_zc_tdata;
@@ -648,7 +702,7 @@ assign qpart_zc_mag_tdata = (({32{qpart_zc_tdata[31]}}^qpart_zc_tdata)+{31'b0,qp
 assign qpart_zc_mag_tvalid = qpart_zc_tvalid;
 assign qpart_zc_mag_tlast = qpart_zc_tlast;
 
-assign qpart_zc_tready = qpart_zc_sign_tready & qpart_zc_mag_tready;
+assign qpart_zc_tready = (mavg_mode==1) ? (qpart_divisor_tready & qpart_dividend_tready) : (qpart_zc_sign_tready & qpart_zc_mag_tready);
 
 axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
    i_zc_sign_moving_avg_inst (
@@ -709,6 +763,33 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
         .o_tlast(qpart_zc_mag_mavg_tlast),
         .o_tvalid(qpart_zc_mag_mavg_tvalid),
         .o_tready(qpart_zc_mag_mavg_tready));
+
+assign ipart_zc_signmag_mavg_tdata = (ipart_zc_sign_mavg_tdata[31]==1) ? -$signed(ipart_zc_mag_mavg_tdata) : $signed(ipart_zc_mag_mavg_tdata);
+assign qpart_zc_signmag_mavg_tdata = (qpart_zc_sign_mavg_tdata[31]==1) ? -$signed(qpart_zc_mag_mavg_tdata) : $signed(qpart_zc_mag_mavg_tdata);
+
+assign ipart_zc_signmag_mavg_tvalid = qpart_zc_sign_tvalid & qpart_zc_mag_tvalid;
+assign qpart_zc_signmag_mavg_tvalid = qpart_zc_sign_tvalid & qpart_zc_mag_tvalid;
+
+assign ipart_zc_signmag_mavg_tlast = qpart_zc_sign_tlast & qpart_zc_mag_tlast;
+assign qpart_zc_signmag_mavg_tlast = qpart_zc_sign_tlast & qpart_zc_mag_tlast;
+
+assign ipart_zc_mag_mavg_tready = ipart_zc_signmag_mavg_tready;
+assign ipart_zc_sign_mavg_tready = ipart_zc_signmag_mavg_tready;
+
+assign qpart_zc_mag_mavg_tready = qpart_zc_signmag_mavg_tready;
+assign qpart_zc_sign_mavg_tready = qpart_zc_signmag_mavg_tready;
+
+assign ipart_zc_signmag_mavg_tready = ipart_zc_mavg_tready;
+assign qpart_zc_signmag_mavg_tready = qpart_zc_mavg_tready;
+
+assign ipart_zc_mavg_tdata = (mavg_mode==1) ? ipart_zcf_mavg_tdata : ipart_zc_signmag_mavg_tdata;
+assign qpart_zc_mavg_tdata = (mavg_mode==1) ? qpart_zcf_mavg_tdata : qpart_zc_signmag_mavg_tdata;
+
+assign ipart_zc_mavg_tvalid = (mavg_mode==1) ? ipart_zcf_mavg_tvalid : ipart_zc_signmag_mavg_tvalid;
+assign qpart_zc_mavg_tvalid = (mavg_mode==1) ? qpart_zcf_mavg_tvalid : qpart_zc_signmag_mavg_tvalid;
+
+assign ipart_zc_mavg_tlast = (mavg_mode==1) ? ipart_zcf_mavg_tlast : ipart_zc_signmag_mavg_tlast;
+assign qpart_zc_mavg_tlast = (mavg_mode==1) ? qpart_zcf_mavg_tlast : qpart_zc_signmag_mavg_tlast;
 
 
 //   assign ipart_zc_sign_2b = (ipart_zc_sign==1) ? 2'b11 : 2'b01;
