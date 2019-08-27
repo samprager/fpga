@@ -767,10 +767,10 @@ axi_moving_avg #(.MAX_LEN(255),.COMPLEX_IQ(0))
 assign ipart_zc_signmag_mavg_tdata = (ipart_zc_sign_mavg_tdata[31]==1) ? -$signed(ipart_zc_mag_mavg_tdata) : $signed(ipart_zc_mag_mavg_tdata);
 assign qpart_zc_signmag_mavg_tdata = (qpart_zc_sign_mavg_tdata[31]==1) ? -$signed(qpart_zc_mag_mavg_tdata) : $signed(qpart_zc_mag_mavg_tdata);
 
-assign ipart_zc_signmag_mavg_tvalid = qpart_zc_sign_tvalid & qpart_zc_mag_tvalid;
+assign ipart_zc_signmag_mavg_tvalid = ipart_zc_sign_tvalid & ipart_zc_mag_tvalid;
 assign qpart_zc_signmag_mavg_tvalid = qpart_zc_sign_tvalid & qpart_zc_mag_tvalid;
 
-assign ipart_zc_signmag_mavg_tlast = qpart_zc_sign_tlast & qpart_zc_mag_tlast;
+assign ipart_zc_signmag_mavg_tlast = ipart_zc_sign_tlast & ipart_zc_mag_tlast;
 assign qpart_zc_signmag_mavg_tlast = qpart_zc_sign_tlast & qpart_zc_mag_tlast;
 
 assign ipart_zc_mag_mavg_tready = ipart_zc_signmag_mavg_tready;
