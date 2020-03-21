@@ -1,0 +1,10 @@
+
+##################################################
+# Radar Sources
+##################################################
+CIR_AVG_SRCS = $(abspath $(addprefix $(BASE_DIR)/../lib/cir_avg/, \
+noc_block_cir_avg.v \
+averaging.v \
+FIFO_averaging_data_fifo_V_V.v \
+FIFO_averaging_out_fifo_V_V.v \
+))

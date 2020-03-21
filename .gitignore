@@ -10,3 +10,4 @@ a.out
 *.jou
 *.log
 *.pyc
+*.DS_Store

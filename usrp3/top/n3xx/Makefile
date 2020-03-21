@@ -31,6 +31,7 @@ AA_DEFS=SFP0_AURORA=1 SFP1_AURORA=1 BUILD_AURORA=1                $(OPTIONS)
 XQ_DEFS=SFP0_WR=1     QSFP_10GBE=1  USE_REPLAY=1   BUILD_WR=1     BUILD_10G=1    QSFP_LANES=2 $(OPTIONS)
 AQ_DEFS=SFP0_10GBE=1  SFP1_10GBE=1  QSFP_AURORA=1  USE_REPLAY=1   BUILD_10G=1    BUILD_AURORA=1    QSFP_LANES=4 $(OPTIONS)
 EISCAT_DEFS=SFP0_10GBE=1 SFP1_10GBE=1 USE_REPLAY=1   BUILD_10G=1 BUILD_AURORA=1 NPIO0=1 NPIO_LANES=1 $(OPTIONS)
+AWG_DEFS=SFP0_1GBE=1   SFP1_10GBE=1  BUILD_1G=1     BUILD_10G=1    BUILD_AWG=1 BUILD_DOPPLERTRACK=1 	$(OPTIONS)
 
 # Option to stop after RTL elaboration. Use this flag as a synthesis check.
 ifdef CHECK
@@ -153,6 +154,11 @@ N310_RFNOC_AA:
 	$(call vivado_build,N310,$(AA_DEFS) RFNOC=1 N310=1)
 	$(call post_build,N310,RFNOC_AA)
 
+##N310_RFNOC_AWG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+N310_RFNOC_AWG:
+	$(call vivado_build,N310,$(AWG_DEFS) RFNOC=1 N310=1 AWG=1)
+	$(call post_build,N310,RFNOC_AWG)
+
 ##N300_RFNOC_WX: 1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
 N300_RFNOC_WX:
 	$(call vivado_build,N300,$(WX_DEFS) RFNOC=1 N300=1)
@@ -182,6 +188,11 @@ N300_RFNOC_XA:
 N300_RFNOC_AA:
 	$(call vivado_build,N300,$(AA_DEFS) RFNOC=1 N300=1)
 	$(call post_build,N300,RFNOC_AA)
+
+##N300_RFNOC_AWG: 1GigE on SFP+ Port0, 10Gig on SFP+ Port1. RFNoC CEs enabled.
+N300_RFNOC_AWG:
+	$(call vivado_build,N300,$(AWG_DEFS) RFNOC=1 N300=1 AWG=1)
+	$(call post_build,N300,RFNOC_AWG)
 
 ##N320_WX:  1GigE White Rabbit on SFP+ Port0, 10Gig on SFP+ Port1.
 N320_WX:  build/usrp_n320_fpga_WX.dts

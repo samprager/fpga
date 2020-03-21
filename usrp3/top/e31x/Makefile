@@ -70,6 +70,22 @@ E310_SG3_RFNOC E310_RFNOC_sg3: build/usrp_e310_sg3_fpga.dts
 	$(call vivado_build,E310_SG3,RFNOC=1 E310_SG3=1)
 	$(call post_build,$@,E310_SG3_RFNOC)
 
+##E310_SG1_RFNOC: Speed-grade 1, RFNOC CEs enabled.
+E310_SG1_RFNOC_AWG E310_RFNOC_AWG:  build/usrp_e310_sg1_fpga.dts
+	$(call vivado_build,E310_SG1,RFNOC=1 E310_SG1=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,$@,E310_SG1_RFNOC_AWG)
+
+##E310_SG3_RFNOC_AWG_PULSECIRAVG: Speed-grade 3, RFNOC CEs enabled.
+E310_SG3_RFNOC_AWG E310_RFNOC_AWG_sg3: build/usrp_e310_sg3_fpga.dts
+	$(call vivado_build,E310_SG3,RFNOC=1 E310_SG3=1 AWG=1 BUILD_AWG=1)
+	$(call post_build,$@,E310_SG3_RFNOC_AWG)
+
+##E310_SG3_RFNOC_AWG_PULSECIRAVG: Speed-grade 3, RFNOC CEs enabled.
+E310_SG3_RFNOC_AWG_PULSECIRAVG E310_RFNOC_AWG_PULSECIRAVG_sg3: build/usrp_e310_sg3_fpga.dts
+	$(call vivado_build,E310_SG3,RFNOC=1 E310_SG3=1 AWG=1 BUILD_AWG=1 BUILD_PULSECIRAVG=1)
+	$(call post_build,$@,E310_SG3_RFNOC_AWG_PULSECIRAVG)
+
+
 build/%.dts: dts/%.dts dts/*.dtsi
 	-mkdir -p build
 	${CC} -o $@ -E -I dts -nostdinc -undef -x assembler-with-cpp -D__DTS__ $<

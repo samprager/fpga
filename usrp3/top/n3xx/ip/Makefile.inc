@@ -25,6 +25,10 @@ include $(IP_DIR)/axi4_to_axi3_protocol_converter_64/Makefile.inc
 include $(IP_DIR)/n310_ps_bd/Makefile.inc
 include $(IP_DIR)/delay_tap_bram/Makefile.inc
 
+include $(IP_DIR)/axi_waveform_bram_ctrl/Makefile.inc
+include $(IP_DIR)/axi_waveform_datamover/Makefile.inc
+include $(IP_DIR)/SP_DDS/Makefile.inc
+
 BD_SRCS = \
 $(IP_AXI_INTERCON_2X64_256_BD_SRCS) \
 $(IP_AXI_INTERCON_4X64_256_BD_SRCS) \
@@ -46,7 +50,10 @@ $(IP_FIFO_SHORT_2CLK_SRCS) \
 $(IP_AXI_ETH_DMA_SRCS) \
 $(IP_ONE_GIG_ETH_PCS_PMA_SRCS) \
 $(IP_TEN_GIG_ETH_PCS_PMA_SRCS) \
-$(IP_AURORA_64B66B_PCS_PMA_SRCS)
+$(IP_AURORA_64B66B_PCS_PMA_SRCS) \
+$(IP_AXI_WAVEFORM_BRAM_SRCS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_SRCS) \
+$(IP_SP_DDS_SRCS)
 
 IP_DRAM_XCI_SRCS = \
 $(IP_DDR3_32BIT_SRCS)
@@ -74,7 +81,10 @@ $(IP_FIFO_SHORT_2CLK_OUTS) \
 $(IP_ONE_GIG_ETH_PCS_PMA_OUTS) \
 $(IP_AXI_ETH_DMA_OUTS) \
 $(IP_TEN_GIG_ETH_PCS_PMA_OUTS) \
-$(IP_AURORA_64B66B_PCS_PMA_OUTS)
+$(IP_AURORA_64B66B_PCS_PMA_OUTS) \
+$(IP_AXI_WAVEFORM_BRAM_OUTS) \
+$(IP_AXI_WAVEFORM_DATAMOVER_OUTS) \
+$(IP_SP_DDS_OUTS)
 
 BD_OUTPUTS = \
 $(IP_AXI_INTERCON_2X64_256_BD_OUTS) \
@@ -88,4 +98,3 @@ $(IP_N310_PS_BD_OUTS)
 ip: $(IP_SYNTH_OUTPUTS) $(IP_CODEGEN_SRCS) $(BD_OUTPUTS)
 
 .PHONY: ip
-

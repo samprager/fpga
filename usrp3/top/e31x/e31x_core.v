@@ -564,7 +564,11 @@ module e31x_core #(
   // Included automatically instantiated CEs sources file created by RFNoC mod tool
 
 `ifdef RFNOC
+  `ifdef AWG
+       `include "rfnoc_ce_awg_inst_e31x.v"
+   `else
   `include "rfnoc_ce_auto_inst_e31x.v"
+   `endif
 `else
   `include "rfnoc_ce_default_inst_e31x.v"
 `endif
@@ -706,4 +710,3 @@ module e31x_core #(
   endgenerate
 
 endmodule //e31x_core
-

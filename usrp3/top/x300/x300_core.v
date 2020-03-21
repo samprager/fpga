@@ -228,7 +228,19 @@ module x300_core #(
    // Included automatically instantiated CEs sources file created by RFNoC mod tool
 `ifdef RFNOC
  `ifdef X300
+   `ifdef AWG
+     `ifdef CIRAVG
+       `include "rfnoc_ce_ciravg_inst_x300.v"
+       // SARINA KAPAI EDIT
+     `endif
+      `ifdef PULSECIRAVG
+       `include "rfnoc_ce_pulseciravg_inst_x300.v"
+     `else
+       `include "rfnoc_ce_awg_inst_x300.v"
+     `endif
+   `else
    `include "rfnoc_ce_auto_inst_x300.v"
+ `endif
  `endif
  `ifdef X310
    `include "rfnoc_ce_auto_inst_x310.v"
@@ -503,7 +515,7 @@ module x300_core #(
             .bus_rst (bus_rst),
             .ce_clk  (ddr3_axi_clk_x2),
             .ce_rst  (ddr3_axi_rst),
-            
+
             .i_tdata  (ioce_o_tdata[0]),
             .i_tlast  (ioce_o_tlast[0]),
             .i_tvalid (ioce_o_tvalid[0]),
@@ -512,7 +524,7 @@ module x300_core #(
             .o_tlast  (ioce_i_tlast[0]),
             .o_tvalid (ioce_i_tvalid[0]),
             .o_tready (ioce_i_tready[0]),
-            
+
             .m_axi_awid     ({s01_axi_awid, s00_axi_awid}),
             .m_axi_awaddr   ({s01_axi_awaddr, s00_axi_awaddr}),
             .m_axi_awlen    ({s01_axi_awlen, s00_axi_awlen}),
@@ -557,10 +569,10 @@ module x300_core #(
             .m_axi_ruser    ({s01_axi_ruser, s00_axi_ruser}),
             .m_axi_rvalid   ({s01_axi_rvalid, s00_axi_rvalid}),
             .m_axi_rready   ({s01_axi_rready, s00_axi_rready}),
-            
+
             .debug ()
          );
-         
+
       end else begin
 
          noc_block_axi_dma_fifo #(
@@ -636,12 +648,12 @@ module x300_core #(
    /////////////////////////////////////////////////////////////////////////////////////////////
 
    // We need enough input buffering for 4 MTU sized packets.
-   // Regardless of the sample rate the radio consumes data at 200MS/s so we need a 
+   // Regardless of the sample rate the radio consumes data at 200MS/s so we need a
    // decent amount of buffering at the input. With 4k samples we have 20us.
    localparam RADIO_INPUT_BUFF_SIZE  = 8'd12;
    // The radio needs a larger output buffer compared to other blocks because it is a finite
-   // rate producer i.e. the input is not backpressured. 
-   // Here, we allocate enough room from 2 MTU sized packets. This buffer serves as a 
+   // rate producer i.e. the input is not backpressured.
+   // Here, we allocate enough room from 2 MTU sized packets. This buffer serves as a
    // packet gate so we need room for an additional packet if the first one is held due to
    // contention on the crossbar. Any additional buffering will be largely a waste.
    localparam RADIO_OUTPUT_BUFF_SIZE = 8'd11;
@@ -688,7 +700,7 @@ module x300_core #(
       .tx({tx_data[1],tx_data[0]}), .tx_stb({tx_stb[1],tx_stb[0]}),
       // Timing and sync
       .pps(pps_rclk), .sync_in(time_sync_r), .sync_out(sync_out[0]),
-      .rx_running({rx_running[1], rx_running[0]}), .tx_running({tx_running[1], tx_running[0]}), 
+      .rx_running({rx_running[1], rx_running[0]}), .tx_running({tx_running[1], tx_running[0]}),
       // Ctrl ports connected to radio dboard and front end core
       .db_fe_set_stb({db_fe_set_stb[1],db_fe_set_stb[0]}),
       .db_fe_set_addr({db_fe_set_addr[1],db_fe_set_addr[0]}),
@@ -720,7 +732,7 @@ module x300_core #(
       .tx({tx_data[3],tx_data[2]}), .tx_stb({tx_stb[3],tx_stb[2]}),
       // Timing and sync
       .pps(pps_rclk), .sync_in(time_sync_r), .sync_out(sync_out[1]),
-      .rx_running({rx_running[3], rx_running[2]}), .tx_running({tx_running[3], tx_running[2]}), 
+      .rx_running({rx_running[3], rx_running[2]}), .tx_running({tx_running[3], tx_running[2]}),
       // Ctrl ports connected to radio dboard and front end core
       .db_fe_set_stb({db_fe_set_stb[3],db_fe_set_stb[2]}),
       .db_fe_set_addr({db_fe_set_addr[3],db_fe_set_addr[2]}),
@@ -743,7 +755,7 @@ module x300_core #(
          .set_stb(db_fe_set_stb[i]), .set_addr(db_fe_set_addr[i]), .set_data(db_fe_set_data[i]),
          .rb_stb(db_fe_rb_stb[i]),  .rb_addr(db_fe_rb_addr[i]), .rb_data(db_fe_rb_data[i]),
          .time_sync(sync_out[i < 2 ? 0 : 1]),
-         .tx_stb(tx_stb[i]), .tx_data_in(tx_data[i]), .tx_data_out(tx_data_out[i]), .tx_running(tx_running[i]), 
+         .tx_stb(tx_stb[i]), .tx_data_in(tx_data[i]), .tx_data_out(tx_data_out[i]), .tx_running(tx_running[i]),
          .rx_stb(rx_stb[i]), .rx_data_in(rx_data_in[i]), .rx_data_out(rx_data[i]), .rx_running(rx_running[i]),
          .misc_ins(misc_ins[i]), .misc_outs(misc_outs[i]),
          .fp_gpio_in(fp_gpio_r_in[i]), .fp_gpio_out(fp_gpio_r_out[i]), .fp_gpio_ddr(fp_gpio_r_ddr[i]), .fp_gpio_fab(),
